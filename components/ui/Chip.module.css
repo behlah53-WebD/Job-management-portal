@@ -1,0 +1,70 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--mint-100);
+  color: var(--green-800);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(203, 235, 214, 0.6);
+  line-height: 1;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.sm {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.md {
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  background-color: var(--mint-200);
+  transform: translateY(-1px);
+}
+
+.active {
+  background-color: var(--green-600);
+  color: var(--white);
+  border-color: var(--green-600);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(30, 154, 86, 0.2);
+}
+
+.active:hover {
+  background-color: var(--green-700);
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.removeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-left: 2px;
+  font-size: 14px;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+}
+
+.removeBtn:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.08);
+}

@@ -1,0 +1,520 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-page);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.breadcrumb a {
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+}
+
+.breadcrumb a:hover {
+  color: var(--green-700);
+}
+
+.breadSep {
+  opacity: 0.5;
+}
+
+.breadCurrent {
+  color: var(--green-900);
+  font-weight: 600;
+  max-width: 280px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Header Card */
+.headerCard {
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 36px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  flex: 1;
+}
+
+.companyLogo {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+  background-color: var(--white);
+}
+
+.logoImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.companyLogoFallback {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  background-color: var(--mint-100);
+  color: var(--green-700);
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--mint-200);
+  flex-shrink: 0;
+}
+
+.headerMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.badgeRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.deadlinePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--bg-soft);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.jobTitle {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--green-900);
+  line-height: 1.2;
+}
+
+.companyMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.companyName {
+  font-weight: 600;
+  color: var(--text-main);
+  transition: color var(--transition-fast);
+}
+
+.companyName:hover {
+  color: var(--green-700);
+}
+
+.verifiedTick {
+  color: var(--green-600);
+  display: flex;
+  align-items: center;
+}
+
+.dot {
+  opacity: 0.4;
+}
+
+.locationText {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.inlineIcon {
+  color: var(--sage);
+}
+
+.chipsRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.salaryChip {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--green-700);
+  background-color: var(--mint-100);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--green-300);
+}
+
+.headerActions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.applyBtn {
+  min-width: 180px;
+}
+
+.subActionButtons {
+  display: flex;
+  gap: 8px;
+}
+
+/* Body Grid */
+.bodyGrid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.contentCard {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.sectionHeading {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.descriptionText {
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--text-main);
+}
+
+.contentSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.subHeading {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--green-900);
+}
+
+.bulletList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bulletItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-main);
+}
+
+.bulletCheck {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background-color: var(--mint-100);
+  color: var(--green-700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.skillsGrid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Right Column */
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: sticky;
+  top: 100px;
+}
+
+.overviewCard,
+.companyCard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.overviewTitle {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--green-900);
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 12px;
+}
+
+.overviewList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.overviewItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.overviewIcon {
+  color: var(--green-600);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.ovLabel {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.ovValue {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.compHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.compName {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.compIndustry {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.compAbout {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.compMetaRows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.compMetaItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.compWebLink {
+  color: var(--green-600);
+  font-weight: 600;
+}
+
+.companyActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 16px;
+}
+
+.reportBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 6px;
+  transition: color var(--transition-fast);
+}
+
+.reportBtn:hover {
+  color: var(--danger);
+}
+
+/* Similar Jobs */
+.similarSection {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.similarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.similarTitle {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.seeMoreLink {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green-700);
+}
+
+.similarGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* Mobile Sticky Bottom Bar */
+.mobileStickyBar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--white);
+  border-top: 1px solid var(--border);
+  padding: 14px 20px;
+  z-index: 100;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 -4px 16px rgba(11, 61, 36, 0.08);
+}
+
+.mobileSalaryBox {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobileSalaryVal {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--green-800);
+}
+
+.mobileLocation {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Report Modal Form */
+.reportForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reportLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.reportTextarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  outline: none;
+}
+
+.reportTextarea:focus {
+  border-color: var(--danger);
+}
+
+.reportActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+@media (max-width: 960px) {
+  .headerCard {
+    flex-direction: column;
+  }
+  .headerActions {
+    width: 100%;
+    align-items: stretch;
+  }
+  .bodyGrid {
+    grid-template-columns: 1fr;
+  }
+  .rightCol {
+    position: static;
+  }
+  .similarGrid {
+    grid-template-columns: 1fr;
+  }
+  .mobileStickyBar {
+    display: flex;
+  }
+}

@@ -1,0 +1,54 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 32px;
+}
+
+.pagesList {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.navBtn,
+.pageBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.navBtn:hover:not(:disabled),
+.pageBtn:hover {
+  background-color: var(--mint-100);
+  border-color: var(--green-300);
+  color: var(--green-700);
+}
+
+.pageBtn.active {
+  background-color: var(--green-600);
+  border-color: var(--green-600);
+  color: var(--white);
+  box-shadow: 0 4px 12px rgba(30, 154, 86, 0.25);
+}
+
+.navBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.dots {
+  padding: 0 6px;
+  color: var(--text-muted);
+}

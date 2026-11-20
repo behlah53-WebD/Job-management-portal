@@ -1,0 +1,110 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background-color: rgba(11, 61, 36, 0.4);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: fadeIn 200ms ease-out;
+}
+
+.drawer {
+  position: fixed;
+  background-color: var(--white);
+  box-shadow: -10px 0 40px rgba(11, 61, 36, 0.2);
+  display: flex;
+  flex-direction: column;
+  z-index: 1001;
+}
+
+.right {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  border-left: 1px solid var(--border);
+  animation: slideRightIn 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.left {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  border-right: 1px solid var(--border);
+  animation: slideLeftIn 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bottom {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-top-left-radius: var(--radius-modal);
+  border-top-right-radius: var(--radius-modal);
+  border-top: 1px solid var(--border);
+  animation: slideBottomIn 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 28px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-soft);
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--green-900);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.closeBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--text-muted);
+  background: var(--white);
+  border: 1px solid var(--border);
+  transition: all var(--transition-fast);
+}
+
+.closeBtn:hover {
+  background: var(--mint-100);
+  color: var(--green-800);
+}
+
+.body {
+  padding: 28px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideRightIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideLeftIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideBottomIn {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}

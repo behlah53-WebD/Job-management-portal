@@ -1,0 +1,254 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-page);
+}
+
+/* Sidebar in green-900 with lime indicators */
+.sidebar {
+  width: 270px;
+  background-color: var(--green-900);
+  color: var(--white);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+  padding: 24px 18px;
+}
+
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  padding: 0 4px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.logoIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #2FB36A 0%, #1E9A56 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(30, 154, 86, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoMeta {
+  display: flex;
+  flex-direction: column;
+}
+
+.logoText {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.1;
+}
+
+.adminBadge {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--lime-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.closeBtn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--sage);
+}
+
+.navMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sage);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.navItem:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+}
+
+.navItemActive {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: var(--white);
+}
+
+.limeActivePill {
+  margin-left: auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--lime-accent);
+  box-shadow: 0 0 8px var(--lime-accent);
+}
+
+.navIcon {
+  flex-shrink: 0;
+}
+
+.sidebarFooter {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.viewPublicLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--sage);
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.viewPublicLink:hover {
+  color: var(--lime-accent);
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #FFA59E;
+  border-radius: var(--radius-md);
+  width: 100%;
+  background: rgba(229, 88, 79, 0.1);
+  border: 1px solid rgba(229, 88, 79, 0.2);
+  cursor: pointer;
+}
+
+.logoutBtn:hover {
+  background: rgba(229, 88, 79, 0.2);
+}
+
+/* Main Content */
+.mainContent {
+  flex: 1;
+  margin-left: 270px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  height: 70px;
+  background-color: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.topbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.mobileToggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--green-900);
+}
+
+.securityIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green-800);
+  background-color: var(--mint-100);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+}
+
+.shieldIcon {
+  color: var(--green-600);
+}
+
+.envBadge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background-color: var(--bg-soft);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.pageBody {
+  padding: 32px;
+  flex: 1;
+}
+
+@media (max-width: 960px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--transition-normal);
+  }
+  .mobileOpen {
+    transform: translateX(0);
+  }
+  .closeBtn {
+    display: block;
+  }
+  .mainContent {
+    margin-left: 0;
+  }
+  .mobileToggle {
+    display: block;
+  }
+  .pageBody {
+    padding: 20px 16px;
+  }
+  .topbar {
+    padding: 0 16px;
+  }
+}

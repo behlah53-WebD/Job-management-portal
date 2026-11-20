@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="verdantBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2FB36A"/>
+      <stop offset="100%" stop-color="#1E9A56"/>
+    </linearGradient>
+    <filter id="badgeShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#0B3D24" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <!-- Green Squircle Badge -->
+  <rect width="512" height="512" rx="128" fill="url(#verdantBg)"/>
+
+  <!-- Centered Lucide Sprout Icon in White -->
+  <g transform="translate(106, 106) scale(12.5)" stroke="#FFFFFF" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M7 20h10"/>
+    <path d="M10 20c5.5-2.5.8-6.4 3-10"/>
+    <path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/>
+    <path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/>
+  </g>
+</svg>

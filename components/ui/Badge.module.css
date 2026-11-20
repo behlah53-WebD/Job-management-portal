@@ -1,0 +1,113 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.sm {
+  padding: 4px 10px;
+  font-size: 11px;
+}
+
+.md {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.lg {
+  padding: 8px 16px;
+  font-size: 13px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+/* Status Colors */
+.applied {
+  background-color: var(--info-bg);
+  color: #1A7AB8;
+  border: 1px solid rgba(74, 159, 216, 0.25);
+}
+
+.viewed {
+  background-color: #F1F6F3;
+  color: #537563;
+  border: 1px solid #DCEBE1;
+}
+
+.shortlisted {
+  background-color: #F6FBEB;
+  color: #55750A;
+  border: 1px solid #D6EFA0;
+}
+
+.interview {
+  background-color: var(--warning-bg);
+  color: #B57F0E;
+  border: 1px solid rgba(242, 184, 75, 0.3);
+}
+
+.offered {
+  background-color: var(--mint-100);
+  color: var(--green-700);
+  border: 1px solid var(--mint-200);
+}
+
+.rejected {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid rgba(229, 88, 79, 0.25);
+}
+
+.withdrawn {
+  background-color: #F0F2F1;
+  color: #7A8780;
+  border: 1px solid #DCE0DE;
+}
+
+/* Special Badges */
+.verified {
+  background-color: var(--mint-100);
+  color: var(--green-700);
+  border: 1px solid var(--green-300);
+}
+
+.hiring-fast {
+  background-color: #F3FDE0;
+  color: #4D6B0B;
+  border: 1px solid var(--lime-accent);
+}
+
+.new {
+  background-color: var(--lime-accent);
+  color: var(--green-900);
+  font-weight: 700;
+  border: 1px solid #B7E84B;
+}
+
+.active {
+  background-color: var(--mint-100);
+  color: var(--green-700);
+  border: 1px solid var(--green-300);
+}
+
+.closed {
+  background-color: #F0F2F1;
+  color: #7A8780;
+  border: 1px solid #DCE0DE;
+}
+
+.draft {
+  background-color: #FEF8ED;
+  color: #B57F0E;
+  border: 1px solid #F5DCA3;
+}

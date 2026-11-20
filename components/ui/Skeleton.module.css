@@ -1,0 +1,51 @@
+.skeleton {
+  background: linear-gradient(90deg, #EEF7F1 25%, #E3F4E9 50%, #EEF7F1 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite;
+  display: inline-block;
+}
+
+.jobCardSkeleton {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.headerRow {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.textCols {
+  flex: 1;
+}
+
+.chipRow {
+  display: flex;
+  gap: 8px;
+}
+
+.footerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.tableRowSkeleton td {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}

@@ -1,0 +1,448 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.loadingBox {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.coverStrip {
+  height: 140px;
+  background: linear-gradient(135deg, #2FB36A 0%, #167A44 100%);
+  border-radius: var(--radius-card);
+  position: relative;
+  overflow: hidden;
+}
+
+.coverPattern {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 80% 20%, rgba(200, 241, 105, 0.25) 0%, transparent 50%);
+}
+
+.headerBar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-top: -48px;
+  padding: 0 24px;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.avatarWrapper {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background-color: var(--white);
+  border: 4px solid var(--white);
+  box-shadow: 0 4px 16px rgba(11, 61, 36, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--green-700);
+}
+
+.avatarEditBtn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--green-600);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--white);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.userMainMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 260px;
+  margin-top: 54px;
+}
+
+.editHeadlineBtn {
+  margin-top: 54px;
+  align-self: flex-start;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userName {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.roleBadge {
+  background-color: var(--mint-100);
+  color: var(--green-700);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.userHeadline {
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 28px;
+  align-items: flex-start;
+}
+
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardTitle {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  transition: color var(--transition-fast);
+}
+
+.iconBtn:hover {
+  color: var(--green-700);
+}
+
+.aboutText {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-main);
+}
+
+.addSkillForm {
+  display: flex;
+  gap: 10px;
+}
+
+.skillsWrapper {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Experience */
+.timelineList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  padding-left: 20px;
+  border-left: 2px solid var(--border);
+}
+
+.expItem {
+  position: relative;
+}
+
+.expDot {
+  position: absolute;
+  left: -27px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--green-500);
+  border: 2px solid var(--white);
+  box-shadow: 0 0 0 2px var(--green-500);
+}
+
+.expContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.expTitle {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.expCompany {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.expDesc {
+  font-size: 14px;
+  color: var(--text-main);
+  line-height: 1.5;
+  margin-top: 6px;
+}
+
+/* Education */
+.eduList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.eduItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.eduIcon {
+  color: var(--green-600);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.eduDegree {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.eduInstitute {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Resume Box */
+.resumePreviewBox {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  background-color: var(--bg-soft);
+  border-radius: var(--radius-md);
+}
+
+.resumeIcon {
+  color: var(--green-600);
+  flex-shrink: 0;
+}
+
+.resumeInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.resumeName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.resumeViewLink {
+  font-size: 12px;
+  color: var(--green-700);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.uploadZone {
+  margin-top: 8px;
+}
+
+.fileHidden {
+  display: none;
+}
+
+.uploadLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green-700);
+  cursor: pointer;
+  background-color: #FBFDFB;
+  transition: all var(--transition-fast);
+}
+
+.uploadLabel:hover {
+  background-color: var(--mint-100);
+  border-color: var(--green-400);
+}
+
+/* Links */
+.linksList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.linkItem {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.linkName {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.linkUrl {
+  color: var(--text-muted);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.emptyNotice {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Modal styles */
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dateRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.descField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  outline: none;
+}
+
+.textarea:focus {
+  border-color: var(--green-500);
+}
+
+.modalActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .headerBar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 0 16px;
+  }
+  .userMainMeta {
+    margin-top: 8px;
+  }
+  .editHeadlineBtn {
+    margin-top: 0;
+  }
+}

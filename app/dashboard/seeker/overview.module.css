@@ -1,0 +1,340 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.leftCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.appsCard {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.cardTitle {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.cardSubtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.appsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.appItem {
+  background-color: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all var(--transition-fast);
+}
+
+.appItem:hover {
+  background-color: #F4FAF5;
+  border-color: var(--green-300);
+}
+
+.appTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.appJobInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.appTitleLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.appJobTitle {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.appTitleLink:hover .appJobTitle {
+  color: var(--green-600);
+}
+
+.appCompanyName {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Stepper inside card */
+.miniStepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.stepNode {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.stepNodeLabel {
+  font-weight: 600;
+}
+
+.stepReached {
+  color: var(--green-600);
+}
+
+.stepCurrent {
+  color: var(--green-700);
+  font-weight: 700;
+}
+
+.stepConnector {
+  flex: 1;
+  height: 2px;
+  background-color: var(--border);
+  margin: 0 8px;
+}
+
+.connectorReached {
+  background-color: var(--green-400);
+}
+
+.appFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-top: 1px dashed var(--border);
+  padding-top: 10px;
+}
+
+.noteIndicator {
+  color: var(--green-700);
+  font-style: italic;
+}
+
+/* Right Column */
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.profileRingCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ringHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ringTitle {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.ringScore {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--green-700);
+}
+
+.ringDesc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.ringBarTrack {
+  height: 8px;
+  background-color: var(--bg-soft);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.ringBarFill {
+  height: 100%;
+  background: var(--gradient-primary);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.interviewAlert {
+  background: var(--warning-bg);
+  border: 1px solid rgba(242, 184, 75, 0.4);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.alertIconCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: var(--white);
+  color: #B57F0E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alertTitle {
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  color: #8C5F05;
+}
+
+.alertSub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Recommended */
+.recomCard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.recomHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.recomTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sparkleIcon {
+  color: var(--green-600);
+}
+
+.recomTitle {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.recomSeeAll {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green-700);
+}
+
+.recomList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recomItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background-color: var(--bg-soft);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.recomItem:hover {
+  background-color: var(--mint-100);
+  transform: translateX(4px);
+}
+
+.recomJobTitle {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.recomCompany {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.recomSalary {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green-700);
+}
+
+@media (max-width: 1024px) {
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .statsRow {
+    grid-template-columns: 1fr;
+  }
+  .miniStepper {
+    display: none;
+  }
+}

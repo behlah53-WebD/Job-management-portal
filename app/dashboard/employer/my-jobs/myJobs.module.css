@@ -1,0 +1,156 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.loadingBox {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.tableWrapper {
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  overflow-x: auto;
+  box-shadow: var(--shadow-sm);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.thead {
+  background-color: var(--bg-soft);
+  border-bottom: 1px solid var(--border);
+}
+
+.th {
+  padding: 16px 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--green-900);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.tr {
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background-color var(--transition-fast);
+}
+
+.tr:hover {
+  background-color: #F8FCF9;
+}
+
+.tdTitle {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.titleLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.jobTitleText {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--green-900);
+  transition: color var(--transition-fast);
+}
+
+.titleLink:hover .jobTitleText {
+  color: var(--green-600);
+}
+
+.jobTypeSub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.td {
+  padding: 18px 20px;
+  font-size: 14px;
+  color: var(--text-main);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.metaStat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+}
+
+.dateText {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.tdActions {
+  padding: 18px 20px;
+  text-align: right;
+  vertical-align: middle;
+}
+
+.actionButtons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.actionBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.actionBtn:hover {
+  background-color: var(--mint-100);
+  color: var(--green-700);
+  border-color: var(--green-300);
+}
+
+.deleteAction:hover {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+  border-color: var(--danger);
+}

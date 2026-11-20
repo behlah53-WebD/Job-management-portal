@@ -1,0 +1,40 @@
+.card {
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.hoverable:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--green-300);
+}
+
+.padding-none {
+  padding: 0;
+}
+
+.padding-small {
+  padding: 16px;
+}
+
+.padding-normal {
+  padding: 24px;
+}
+
+.padding-large {
+  padding: 32px;
+}
+
+@media (max-width: 640px) {
+  .padding-normal {
+    padding: 18px;
+  }
+  .padding-large {
+    padding: 20px;
+  }
+}

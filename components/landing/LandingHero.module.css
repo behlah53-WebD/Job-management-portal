@@ -1,0 +1,380 @@
+.heroSection {
+  position: relative;
+  overflow: hidden;
+  padding: 60px 0 80px 0;
+  background: var(--gradient-hero-glow);
+}
+
+.blobOne {
+  position: absolute;
+  top: -100px;
+  right: -50px;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(203, 235, 214, 0.45) 0%, transparent 70%);
+  pointer-events: none;
+  filter: blur(40px);
+}
+
+.blobTwo {
+  position: absolute;
+  bottom: 0;
+  left: -80px;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(227, 244, 233, 0.6) 0%, transparent 70%);
+  pointer-events: none;
+  filter: blur(40px);
+}
+
+.heroContainer {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: 48px;
+  position: relative;
+  z-index: 2;
+}
+
+.leftCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.pillBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--lime-accent);
+  color: var(--green-900);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 24px;
+  align-self: flex-start;
+  box-shadow: 0 2px 10px rgba(200, 241, 105, 0.4);
+}
+
+.pillIcon {
+  color: var(--green-800);
+}
+
+.heroTitle {
+  font-family: var(--font-serif);
+  font-size: 54px;
+  line-height: 1.15;
+  color: var(--green-900);
+  letter-spacing: -0.025em;
+  margin-bottom: 20px;
+}
+
+.growWord {
+  color: var(--green-600);
+  position: relative;
+  display: inline-block;
+}
+
+.growWord::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 7px;
+  background: var(--lime-accent);
+  border-radius: 4px;
+  z-index: -1;
+  transform: rotate(-1deg);
+}
+
+.heroSubtitle {
+  font-size: 18px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 540px;
+  margin-bottom: 36px;
+}
+
+/* Search bar */
+.searchBar {
+  display: flex;
+  align-items: center;
+  background-color: var(--white);
+  border-radius: var(--radius-card);
+  padding: 8px 10px;
+  box-shadow: 0 12px 36px rgba(15, 92, 51, 0.1);
+  border: 1px solid var(--border);
+  gap: 8px;
+  margin-bottom: 24px;
+  transition: all var(--transition-normal);
+}
+
+.searchBar:focus-within {
+  border-color: var(--green-400);
+  box-shadow: 0 16px 40px rgba(15, 92, 51, 0.14);
+}
+
+.searchSegment {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  flex: 1;
+}
+
+.segmentIcon {
+  color: var(--sage);
+  flex-shrink: 0;
+}
+
+.segmentInput {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--text-main);
+}
+
+.segmentInput::placeholder {
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+.divider {
+  width: 1px;
+  height: 36px;
+  background-color: var(--border);
+}
+
+.searchBtn {
+  flex-shrink: 0;
+}
+
+/* Popular tags */
+.popularTags {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.popularLabel {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.tagsRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tagBtn {
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green-800);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tagBtn:hover {
+  background-color: var(--mint-100);
+  border-color: var(--green-300);
+  color: var(--green-700);
+  transform: translateY(-1px);
+}
+
+/* Right collage */
+.rightCol {
+  position: relative;
+  height: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floatingCard {
+  position: absolute;
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: 0 14px 40px rgba(11, 61, 36, 0.12);
+  transition: transform var(--transition-normal);
+}
+
+.jobCardFloat {
+  top: 40px;
+  left: 20px;
+  width: 320px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation: floatSlow 5s ease-in-out infinite;
+}
+
+.floatLogo {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: var(--mint-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.floatJobMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.floatJobTitle {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--green-900);
+}
+
+.floatCompany {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.floatSalary {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green-700);
+  margin-top: 2px;
+}
+
+.floatBadge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background-color: var(--lime-accent);
+  color: var(--green-900);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.notificationFloat {
+  bottom: 80px;
+  left: 60px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation: floatSlow 6s ease-in-out 1s infinite;
+  z-index: 3;
+}
+
+.notifIconCircle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--mint-100);
+  color: var(--green-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notifTitle {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.notifSub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.statsFloat {
+  top: 160px;
+  right: 20px;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation: floatSlow 5.5s ease-in-out 0.5s infinite;
+  z-index: 2;
+}
+
+.statsIconCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background-color: #F1FCE4;
+  color: #4D6B0B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.statsNum {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--green-900);
+  line-height: 1;
+}
+
+.statsLabel {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@media (max-width: 960px) {
+  .heroContainer {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .heroTitle {
+    font-size: 40px;
+  }
+  .searchBar {
+    flex-direction: column;
+    padding: 14px;
+    gap: 12px;
+  }
+  .divider {
+    display: none;
+  }
+  .searchSegment {
+    width: 100%;
+    padding: 8px 0;
+  }
+  .searchBtn {
+    width: 100%;
+  }
+  .rightCol {
+    height: 320px;
+  }
+}

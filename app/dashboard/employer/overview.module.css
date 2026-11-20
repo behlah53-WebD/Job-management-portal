@@ -1,0 +1,195 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.chartsGrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 28px;
+}
+
+.chartCard,
+.donutCard {
+  display: flex;
+  flex-direction: column;
+}
+
+.chartHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.chartTitle {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.chartSub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.legendPills {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.legendApp {
+  color: var(--green-600);
+}
+
+.legendView {
+  color: var(--sage);
+}
+
+.chartWrapper {
+  margin-left: -10px;
+}
+
+.totalBadge {
+  background-color: var(--mint-100);
+  color: var(--green-700);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+}
+
+.donutWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.donutLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+  justify-content: center;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.legendText {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Latest applicants */
+.latestCard {
+  display: flex;
+  flex-direction: column;
+}
+
+.latestHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.applicantsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.applicantRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background-color: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.applicantRow:hover {
+  background-color: #F4FAF5;
+  border-color: var(--green-300);
+}
+
+.applicantMeta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.appAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--mint-100);
+  color: var(--green-700);
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.applicantName {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.appliedJobText {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.appRowRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+@media (max-width: 1024px) {
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .chartsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .statsRow {
+    grid-template-columns: 1fr;
+  }
+  .applicantRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}

@@ -1,0 +1,342 @@
+.layoutWrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-page);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background-color: var(--white);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+  padding: 24px 16px;
+}
+
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  padding: 0 8px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.logoIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+}
+
+.logoText {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.closeDrawerBtn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+}
+
+.navMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.navItem:hover {
+  background-color: var(--bg-soft);
+  color: var(--green-700);
+}
+
+.navItemActive {
+  background-color: var(--mint-100);
+  color: var(--green-700);
+}
+
+.navItemActive::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 6px;
+  bottom: 6px;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background-color: var(--green-600);
+}
+
+.navIcon {
+  flex-shrink: 0;
+}
+
+/* Profile completion card */
+.profileProgressCard {
+  background-color: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.progressTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.treeIconCircle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.treeGrown {
+  color: var(--green-700);
+}
+
+.sproutGrowing {
+  color: var(--green-500);
+}
+
+.progressTitle {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.progressPercent {
+  font-size: 11px;
+  color: var(--green-700);
+  font-weight: 600;
+}
+
+.progressBarTrack {
+  height: 6px;
+  background-color: var(--white);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  background: var(--gradient-primary);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.completeProfileLink {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green-700);
+  text-decoration: underline;
+}
+
+.sidebarFooter {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 16px;
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger);
+  border-radius: var(--radius-md);
+  width: 100%;
+  transition: background-color var(--transition-fast);
+}
+
+.logoutBtn:hover {
+  background-color: var(--danger-bg);
+}
+
+/* Main workspace */
+.mainContent {
+  flex: 1;
+  margin-left: 260px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  height: 76px;
+  background-color: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.topbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.mobileHamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--green-900);
+}
+
+.greetingText {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.topbarRight {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.findJobsLink {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green-600);
+  background-color: var(--mint-100);
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+}
+
+.userProfileLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.topAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--mint-100);
+  color: var(--green-700);
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topUserName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.pageBody {
+  padding: 32px;
+  flex: 1;
+}
+
+.mobileTabBar {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--transition-normal);
+  }
+  .mobileOpen {
+    transform: translateX(0);
+  }
+  .closeDrawerBtn {
+    display: block;
+  }
+  .mainContent {
+    margin-left: 0;
+    padding-bottom: 70px;
+  }
+  .mobileHamburger {
+    display: block;
+  }
+  .topbar {
+    padding: 0 16px;
+  }
+  .pageBody {
+    padding: 20px 16px;
+  }
+  .mobileTabBar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background-color: var(--white);
+    border-top: 1px solid var(--border);
+    z-index: 60;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .tabBarItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .tabBarActive {
+    color: var(--green-600);
+  }
+}

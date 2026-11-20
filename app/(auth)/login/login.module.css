@@ -1,0 +1,261 @@
+.splitLayout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--white);
+}
+
+.brandPanel {
+  flex: 1;
+  background: linear-gradient(145deg, #167A44 0%, #0B3D24 100%);
+  color: var(--white);
+  padding: 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.brandPanel::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: -20%;
+  width: 140%;
+  height: 140%;
+  background-image: radial-gradient(circle at 30% 30%, rgba(200, 241, 105, 0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.brandContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.brandLogo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.logoIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  box-shadow: 0 4px 14px rgba(30, 154, 86, 0.35);
+}
+
+.logoText {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.quoteBlock {
+  max-width: 460px;
+  margin: 60px 0;
+}
+
+.quoteHeadline {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  line-height: 1.3;
+  color: var(--white);
+  margin-bottom: 16px;
+}
+
+.quoteSub {
+  font-size: 16px;
+  color: var(--sage);
+  line-height: 1.6;
+}
+
+.floatingPreview {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  padding: 18px 24px;
+  border-radius: var(--radius-card);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 380px;
+}
+
+.previewIcon {
+  font-size: 24px;
+}
+
+.previewTitle {
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--white);
+}
+
+.previewSub {
+  font-size: 12px;
+  color: var(--sage);
+}
+
+/* Form Container */
+.formContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background-color: var(--bg-page);
+}
+
+.formCard {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+}
+
+.formHeader {
+  margin-bottom: 28px;
+}
+
+.formTitle {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--green-900);
+  margin-bottom: 8px;
+}
+
+.formSubtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.errorAlert {
+  background-color: var(--danger-bg);
+  border: 1px solid rgba(229, 88, 79, 0.25);
+  color: var(--danger);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.passwordField {
+  display: flex;
+  flex-direction: column;
+}
+
+.eyeBtn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.eyeBtn:hover {
+  color: var(--green-700);
+}
+
+.forgotRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+.forgotBtn {
+  font-size: 12px;
+  color: var(--green-600);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.demoBox {
+  margin-top: 28px;
+  padding: 14px 16px;
+  background-color: var(--white);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+}
+
+.demoLabel {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.demoButtons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.demoPill {
+  background-color: var(--mint-100);
+  border: 1px solid var(--mint-200);
+  color: var(--green-800);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.demoPill:hover {
+  background-color: var(--green-600);
+  color: var(--white);
+  border-color: var(--green-600);
+}
+
+.switchText {
+  margin-top: 24px;
+  font-size: 14px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.switchLink {
+  color: var(--green-600);
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .splitLayout {
+    flex-direction: column;
+  }
+  .brandPanel {
+    padding: 32px 24px;
+    flex: none;
+  }
+  .quoteBlock {
+    display: none;
+  }
+  .floatingPreview {
+    display: none;
+  }
+}
