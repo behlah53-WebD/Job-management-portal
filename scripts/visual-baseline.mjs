@@ -256,7 +256,7 @@ async function run() {
       try {
         await page.goto(`${BASE_URL}${route.path}`, { waitUntil: 'domcontentloaded', timeout: 30000 });
         await page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => {});
-        await page.waitForTimeout(600);
+        await page.waitForTimeout(1500);
       } catch (e) {
         console.warn(`Warning loading ${route.path}: ${e.message}`);
       }

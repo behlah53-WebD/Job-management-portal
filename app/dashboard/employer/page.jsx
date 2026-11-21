@@ -165,8 +165,8 @@ export default function EmployerOverviewPage() {
                     boxShadow: '0 4px 16px rgba(15, 92, 51, 0.08)',
                   }}
                 />
-                <Area type="monotone" dataKey="views" stroke="#8FAE9A" strokeWidth={2} fillOpacity={1} fill="url(#colorViews)" />
-                <Area type="monotone" dataKey="applications" stroke="#1E9A56" strokeWidth={2.5} fillOpacity={1} fill="url(#colorApps)" />
+                <Area type="monotone" dataKey="views" stroke="#8FAE9A" strokeWidth={2} fillOpacity={1} fill="url(#colorViews)" isAnimationActive={false} />
+                <Area type="monotone" dataKey="applications" stroke="#1E9A56" strokeWidth={2.5} fillOpacity={1} fill="url(#colorApps)" isAnimationActive={false} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -190,6 +190,7 @@ export default function EmployerOverviewPage() {
                   outerRadius={84}
                   paddingAngle={4}
                   dataKey="value"
+                  isAnimationActive={false}
                 >
                   {donutData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={DONUT_COLORS[index % DONUT_COLORS.length]} />

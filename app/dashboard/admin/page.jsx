@@ -185,8 +185,8 @@ export default function AdminOverviewPage() {
                   border: '1px solid #DCEBE1',
                 }}
               />
-              <Area type="monotone" dataKey="candidates" stroke="#1E9A56" strokeWidth={2.5} fillOpacity={1} fill="url(#colorCandidates)" />
-              <Area type="monotone" dataKey="jobs" stroke="#A7DB34" strokeWidth={2} fillOpacity={1} fill="url(#colorJobs)" />
+              <Area type="monotone" dataKey="candidates" stroke="#1E9A56" strokeWidth={2.5} fillOpacity={1} fill="url(#colorCandidates)" isAnimationActive={false} />
+              <Area type="monotone" dataKey="jobs" stroke="#A7DB34" strokeWidth={2} fillOpacity={1} fill="url(#colorJobs)" isAnimationActive={false} />
             </AreaChart>
           </ResponsiveContainer>
         </div>

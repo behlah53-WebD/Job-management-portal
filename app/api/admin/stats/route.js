@@ -19,7 +19,7 @@ export async function GET() {
 
     // Generate real monthly growth data for the last 6 months
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const now = new Date();
+    const now = process.env.VISUAL_TEST === 'true' ? new Date('2026-11-21T00:00:00.000Z') : new Date();
     const growth = [];
     for (let i = 5; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
