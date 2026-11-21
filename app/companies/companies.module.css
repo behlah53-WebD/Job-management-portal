@@ -172,4 +172,8 @@
   .grid {
     grid-template-columns: 1fr;
   }
+  .webBtn {
+    width: 44px;
+    height: 44px;
+  }
 }

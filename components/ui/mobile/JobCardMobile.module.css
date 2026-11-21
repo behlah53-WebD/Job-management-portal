@@ -1,0 +1,288 @@
+.card {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  background-color: var(--white);
+  border: 1px solid var(--border-card-mobile, #DCEBE1);
+  border-radius: var(--radius-card-mobile, 22px);
+  padding: 16px;
+  box-shadow: 0 1px 2px rgba(16, 64, 40, 0.04), 0 8px 24px rgba(16, 64, 40, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+  position: relative;
+  text-align: left;
+}
+
+.card:active {
+  transform: scale(0.985);
+}
+
+.rowTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.logoAndMeta {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.logoBox {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  overflow: hidden;
+  background-color: var(--mint-100, #E3F4E9);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoImg {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.fallbackLogo {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--green-800);
+}
+
+.titleArea {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.titleLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.jobTitle {
+  font-family: var(--font-serif);
+  font-size: 16.5px;
+  font-weight: 700;
+  color: var(--green-900);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.companyRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.companyName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.verifiedIcon {
+  color: var(--green-600);
+  flex-shrink: 0;
+}
+
+.topRightActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Badges */
+.badgeRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.badgeNew {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background-color: var(--lime-accent, #C8F169);
+  color: var(--green-900);
+}
+
+.badgeHiring {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background-color: #FEF8ED;
+  color: #B57F0E;
+  border: 1px solid rgba(242, 184, 75, 0.4);
+}
+
+.badgeMatch {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background-color: var(--mint-100);
+  color: var(--green-700);
+}
+
+/* Scrollable chips row */
+.chipsRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;
+}
+
+.chipsRow::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background-color: var(--bg-soft, #EEF7F1);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--border-subtle);
+  margin: 2px 0;
+}
+
+/* Bottom Row */
+.rowBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.locationTimeCol {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.locationItem,
+.timeItem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.icon {
+  color: var(--sage);
+  flex-shrink: 0;
+}
+
+.locText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.timeText {
+  white-space: nowrap;
+}
+
+.salaryActionCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.salaryText {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--green-700);
+  line-height: 1.2;
+}
+
+.applyBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 40px;
+  min-width: 96px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2FB36A 0%, #1E9A56 100%);
+  color: var(--white);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(30, 154, 86, 0.2);
+  touch-action: manipulation;
+  transition: all 150ms ease;
+}
+
+.applyBtn:active {
+  transform: scale(0.96);
+}
+
+/* Compact view (e.g. carousel or grid) */
+.compactCard {
+  width: 260px;
+  flex-shrink: 0;
+  padding: 14px;
+  gap: 10px;
+}
+
+.compactCard .jobTitle {
+  font-size: 15px;
+}
+
+.compactCard .rowBottom {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.compactCard .salaryActionCol {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}

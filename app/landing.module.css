@@ -387,43 +387,216 @@
   flex-wrap: wrap;
 }
 
-@media (max-width: 1024px) {
-  .categoryGrid {
-    grid-template-columns: repeat(2, 1fr);
+@media (max-width: 1023.98px) {
+  .trustedStrip {
+    padding: 24px 0;
   }
-  .featuredGrid {
-    grid-template-columns: repeat(2, 1fr);
+  .trustedLogos {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 6px 16px;
+    white-space: nowrap;
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    justify-content: flex-start;
   }
-  .stepsGrid {
-    grid-template-columns: 1fr;
+  .trustedLogos::-webkit-scrollbar {
+    display: none;
   }
-  .testimonialsGrid {
-    grid-template-columns: 1fr;
+  .brandBadge {
+    flex-shrink: 0;
+    font-size: 14px;
+    padding: 6px 12px;
+    background: var(--bg-soft);
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border-subtle);
   }
-  .statsGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 
-@media (max-width: 640px) {
-  .categoryGrid {
-    grid-template-columns: 1fr;
-  }
-  .featuredGrid {
-    grid-template-columns: 1fr;
+  .categorySection,
+  .howItWorksSection,
+  .testimonialsSection {
+    padding: 48px 0;
   }
   .sectionTitle {
-    font-size: 28px;
-  }
-  .ctaBanner {
-    padding: 40px 20px;
-  }
-  .ctaTitle {
-    font-size: 28px;
+    font-size: 26px;
   }
   .sectionHeader {
     flex-direction: column;
     align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  /* 2-column discipline grid */
+  .categoryGrid {
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
+  }
+  .categoryCard {
+    padding: 16px;
+    border-radius: 18px;
+  }
+  .categoryIconCircle {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  .categoryName {
+    font-size: 15px;
+  }
+  .categoryCount {
+    font-size: 12px;
+  }
+
+  /* Featured jobs snap carousel */
+  .featuredGrid {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+  }
+  .featuredGrid::-webkit-scrollbar {
+    display: none;
+  }
+  .featuredGrid > * {
+    flex: 0 0 88%;
+    max-width: 320px;
+    scroll-snap-align: start;
+  }
+
+  /* Vertical timeline for How Your Next Step Grows */
+  .howHeader {
+    margin-bottom: 36px;
+    text-align: left;
+  }
+  .stepsGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+    padding-left: 20px;
+    margin-left: 12px;
+  }
+  .stepsGrid::before {
+    content: '';
+    position: absolute;
+    top: 24px;
+    bottom: 24px;
+    left: 0;
+    width: 2px;
+    background: var(--green-400);
+    border-radius: 2px;
+  }
+  .stepCard {
+    position: relative;
+    padding: 20px;
+    border-radius: 20px;
+    margin-left: 12px;
+  }
+  .stepNumber {
+    position: absolute;
+    left: -33px;
+    top: 20px;
+    right: auto;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--green-700);
+    color: var(--white);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--white);
+    box-shadow: 0 2px 8px rgba(11, 61, 36, 0.2);
+  }
+  .stepIconBox {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    margin-bottom: 14px;
+  }
+  .stepTitle {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  .stepDesc {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  /* Stats band */
+  .statsBand {
+    padding: 44px 0;
+  }
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .statNumber {
+    font-size: 32px;
+  }
+  .statLabel {
+    font-size: 12px;
+  }
+
+  /* Testimonials horizontal snap carousel */
+  .testimonialsGrid {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+  }
+  .testimonialsGrid::-webkit-scrollbar {
+    display: none;
+  }
+  .testimonialsGrid > * {
+    flex: 0 0 88%;
+    max-width: 320px;
+    scroll-snap-align: start;
+  }
+  .testCard {
+    padding: 24px;
+    border-radius: 20px;
+  }
+
+  /* Hiring CTA banner */
+  .ctaSection {
+    padding: 32px 0 64px 0;
+  }
+  .ctaBanner {
+    padding: 36px 20px;
+    border-radius: 22px;
+  }
+  .ctaTitle {
+    font-size: 26px;
+  }
+  .ctaDesc {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .ctaActions {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .ctaActions > a {
+    width: 100%;
+  }
+  .ctaActions button {
+    width: 100%;
+    min-height: 50px;
   }
 }

@@ -11,6 +11,18 @@
   gap: 28px;
 }
 
+/* ==========================================================================
+   DESKTOP STYLES (>= 1024px)
+   100% pixel-identical desktop experience.
+   ========================================================================== */
+.desktopView {
+  display: block;
+}
+
+.mobileView {
+  display: none;
+}
+
 .breadcrumb {
   display: flex;
   align-items: center;
@@ -41,7 +53,7 @@
   text-overflow: ellipsis;
 }
 
-/* Header Card */
+/* Header Card (Desktop) */
 .headerCard {
   background-color: var(--white);
   border: 1px solid var(--border);
@@ -199,12 +211,13 @@
   gap: 8px;
 }
 
-/* Body Grid */
+/* Body Grid (Desktop) */
 .bodyGrid {
   display: grid;
   grid-template-columns: 1fr 340px;
   gap: 32px;
   align-items: flex-start;
+  margin-top: 28px;
 }
 
 .contentCard {
@@ -274,7 +287,7 @@
   flex-wrap: wrap;
 }
 
-/* Right Column */
+/* Right Column (Desktop) */
 .rightCol {
   display: flex;
   flex-direction: column;
@@ -398,7 +411,7 @@
   color: var(--danger);
 }
 
-/* Similar Jobs */
+/* Similar Jobs (Desktop) */
 .similarSection {
   margin-top: 48px;
   display: flex;
@@ -429,38 +442,6 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-}
-
-/* Mobile Sticky Bottom Bar */
-.mobileStickyBar {
-  display: none;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: var(--white);
-  border-top: 1px solid var(--border);
-  padding: 14px 20px;
-  z-index: 100;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 -4px 16px rgba(11, 61, 36, 0.08);
-}
-
-.mobileSalaryBox {
-  display: flex;
-  flex-direction: column;
-}
-
-.mobileSalaryVal {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--green-800);
-}
-
-.mobileLocation {
-  font-size: 12px;
-  color: var(--text-muted);
 }
 
 /* Report Modal Form */
@@ -497,24 +478,498 @@
   gap: 12px;
 }
 
-@media (max-width: 960px) {
-  .headerCard {
+/* ==========================================================================
+   MOBILE & TABLET STYLES (< 1024px)
+   ========================================================================== */
+@media (max-width: 1023.98px) {
+  .desktopView {
+    display: none !important;
+  }
+
+  .mobileView {
+    display: flex !important;
     flex-direction: column;
-  }
-  .headerActions {
+    gap: 16px;
+    padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px) + 24px);
     width: 100%;
-    align-items: stretch;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: clip;
   }
-  .bodyGrid {
-    grid-template-columns: 1fr;
-  }
-  .rightCol {
-    position: static;
-  }
-  .similarGrid {
-    grid-template-columns: 1fr;
-  }
-  .mobileStickyBar {
+
+  /* Back navigation row */
+  .mobileBackNav {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px;
+    margin-bottom: 4px;
+  }
+
+  .mobileBackLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--green-800);
+    text-decoration: none;
+    min-height: 44px;
+  }
+
+  .mobileShareIconBtn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background-color: var(--white);
+    color: var(--green-800);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  /* Mobile Hero Card */
+  .mobileHeroCard {
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 20px;
+    box-shadow: 0 4px 18px rgba(11, 61, 36, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .mobileHeroTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .mobileLogoBox {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .mobileLogoImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .mobileLogoFallback {
+    width: 100%;
+    height: 100%;
+    background-color: var(--mint-100);
+    color: var(--green-700);
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobileHeroBadges {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .mBadgeNew {
+    background-color: var(--mint-100);
+    color: var(--green-800);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--green-300);
+  }
+
+  .mBadgeFeatured {
+    background-color: #FEF3C7;
+    color: #92400E;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: var(--radius-pill);
+  }
+
+  .mBadgeDeadline {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background-color: var(--bg-soft);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: var(--radius-pill);
+  }
+
+  .mobileHeroTitle {
+    font-family: var(--font-serif);
+    font-size: clamp(22px, 5.5vw, 28px);
+    font-weight: 700;
+    color: var(--green-900);
+    line-height: 1.25;
+    margin: 0;
+  }
+
+  .mobileHeroMeta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--text-muted);
+    flex-wrap: wrap;
+  }
+
+  .mobileHeroCompany {
+    font-weight: 700;
+    color: var(--green-900);
+  }
+
+  .mobileVerifiedTick {
+    color: var(--green-600);
+  }
+
+  .mDot {
+    opacity: 0.4;
+  }
+
+  .mobileHeroLoc {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .mInlineIcon {
+    color: var(--sage);
+  }
+
+  .mobileChipsRow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding-top: 4px;
+  }
+
+  .mChip {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    background-color: var(--bg-soft);
+    border: 1px solid var(--border-subtle);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green-800);
+  }
+
+  /* Section Cards */
+  .mobileSectionCard {
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(11, 61, 36, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .mobileSectionTitle {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--green-900);
+    margin: 0;
+  }
+
+  .mobileParagraph {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text-main);
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  /* Snapshot Grid */
+  .mobileSnapshotGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .mobileSnapshotItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .snapshotIcon {
+    color: var(--green-600);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .snapshotLabel {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+  }
+
+  .snapshotValue {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green-900);
+  }
+
+  /* Bullet List */
+  .mobileBulletList {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .mobileBulletItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-main);
+  }
+
+  .mobileCheckCircle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--mint-100);
+    color: var(--green-700);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* Skills wrap */
+  .mobileSkillsWrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .mobileSkillChip {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    background-color: var(--mint-100);
+    border: 1px solid var(--green-300);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green-800);
+  }
+
+  /* Company Card Internals */
+  .mobileCompanyCardHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .mobileCompanySub {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .mobileVerifiedBadge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: var(--radius-pill);
+    background-color: var(--mint-100);
+    color: var(--green-700);
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .mobileCompanyMetaList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .mCompRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mCompLink {
+    color: var(--green-700);
+    font-weight: 600;
+  }
+
+  .mobileCompanyFooter {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .mViewCompBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    border-radius: var(--radius-pill);
+    background-color: var(--bg-soft);
+    border: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--green-800);
+    text-decoration: none;
+  }
+
+  .mReportBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    font-size: 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+    min-height: 36px;
+  }
+
+  /* Similar section */
+  .mobileSimilarSection {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .mobileSimilarHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px;
+  }
+
+  .mobileSimilarLink {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green-700);
+    text-decoration: none;
+  }
+
+  .mobileSnapCarousel {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+  }
+
+  .mobileSnapCarousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobileSnapSlide {
+    flex: 0 0 85%;
+    max-width: 320px;
+    scroll-snap-align: start;
+  }
+
+  /* Sticky Bottom Action Bar */
+  .mobileStickyBottomBar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)) 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    z-index: 40;
+    box-shadow: 0 -4px 20px rgba(11, 61, 36, 0.08);
+  }
+
+  .mobileStickyLeft {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .mobileSalaryLabel {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+  }
+
+  .mobileSalaryText {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--green-800);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mobileStickyRight {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .mobileStickyApplyBtn {
+    min-height: 48px;
+    min-width: 140px;
+    border-radius: var(--radius-pill);
+    font-weight: 700;
+    font-size: 15px;
   }
 }

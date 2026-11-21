@@ -1,0 +1,45 @@
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background-color: var(--white);
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  touch-action: manipulation;
+  transition: all 180ms ease;
+  padding: 0;
+  outline: none;
+}
+
+.btn:active {
+  transform: scale(0.92);
+}
+
+.btnSaved {
+  background-color: var(--mint-100, #E3F4E9);
+  border-color: var(--green-400, #5CC689);
+  color: var(--green-700, #167A44);
+}
+
+.bookmarkIcon {
+  color: var(--text-muted);
+  transition: color 150ms ease;
+}
+
+.btn:hover .bookmarkIcon {
+  color: var(--green-700);
+}
+
+.leafIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.leafIcon {
+  color: var(--green-600);
+  fill: var(--green-500);
+}

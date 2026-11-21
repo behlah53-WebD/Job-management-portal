@@ -1,0 +1,154 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Desktop (>= 1024px) */
+.desktopView {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.desktopHeader {
+  display: flex;
+  flex-direction: column;
+}
+
+.desktopTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.desktopTitle {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  color: var(--green-900);
+}
+
+.desktopSub {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.desktopList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Mobile (< 1024px) */
+.mobileView {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.mobileHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mobileTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sparkleIcon {
+  color: var(--green-600);
+}
+
+.mobileTitle {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--green-900);
+  line-height: 1.15;
+}
+
+.mobileSubtitle {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Skill filter chips row */
+.filterChipsRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px 0;
+  margin: 0 -16px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.filterChipsRow::-webkit-scrollbar {
+  display: none;
+}
+
+.filterChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: all 150ms ease;
+  flex-shrink: 0;
+}
+
+.filterChip:active {
+  transform: scale(0.96);
+}
+
+.filterChipActive {
+  background: linear-gradient(135deg, #2FB36A 0%, #1E9A56 100%);
+  border-color: #1E9A56;
+  color: var(--white);
+  box-shadow: 0 2px 8px rgba(30, 154, 86, 0.2);
+}
+
+.mobileList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 1023.98px) {
+  .desktopView {
+    display: none !important;
+  }
+  .mobileView {
+    display: flex !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mobileView {
+    display: none !important;
+  }
+}

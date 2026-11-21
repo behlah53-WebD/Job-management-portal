@@ -1,0 +1,88 @@
+.tabsOuterWrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.stickyTabs {
+  position: relative;
+  background: transparent;
+  padding: 0;
+  margin: 0 0 14px 0;
+}
+
+.scrollContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 4px 2px 8px 2px;
+  margin: 0;
+  scroll-snap-type: x mandatory;
+}
+
+.scrollContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.tabPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  cursor: pointer;
+  scroll-snap-align: start;
+  flex-shrink: 0;
+  min-height: 38px;
+  touch-action: manipulation;
+  transition: all 180ms ease;
+  outline: none;
+}
+
+.tabPill:active {
+  transform: scale(0.96);
+}
+
+.activePill {
+  background: linear-gradient(135deg, #2FB36A 0%, #1E9A56 100%);
+  border-color: #1E9A56;
+  color: var(--white);
+  box-shadow: 0 4px 14px rgba(30, 154, 86, 0.25);
+}
+
+.tabLabel {
+  line-height: 1;
+}
+
+.countCircle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background-color: var(--bg-soft);
+  color: var(--green-800);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.activeCountCircle {
+  background-color: rgba(255, 255, 255, 0.28);
+  color: var(--white);
+}

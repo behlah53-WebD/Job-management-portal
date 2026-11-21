@@ -1,0 +1,182 @@
+.stepperWrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  background-color: var(--bg-soft, #EEF7F1);
+  border: 1px solid var(--border-subtle, #E9F3EC);
+  border-radius: 16px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.compactWrapper {
+  background: transparent;
+  border: none;
+  padding: 4px 0;
+  gap: 0;
+}
+
+.trackRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 0;
+}
+
+.stageNode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.nodeCircle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 250ms ease;
+  background-color: var(--white);
+  border: 1.5px solid var(--border);
+  color: var(--text-muted);
+}
+
+.completedCircle {
+  background: linear-gradient(135deg, #2FB36A 0%, #1E9A56 100%);
+  border-color: #1E9A56;
+  color: var(--white);
+}
+
+.currentCircle {
+  background-color: var(--mint-100);
+  border: 2px solid var(--green-600);
+  color: var(--green-700);
+  box-shadow: 0 0 0 4px rgba(47, 179, 106, 0.18);
+}
+
+.upcomingCircle {
+  background-color: var(--white);
+  border: 1.5px dashed var(--border);
+  color: var(--sage);
+  opacity: 0.7;
+}
+
+.pulseHalo {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid var(--green-400);
+  animation: sproutPulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes sproutPulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  60% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+.stageLabel {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.activeLabel {
+  color: var(--green-800);
+  font-weight: 700;
+}
+
+.completedLabel {
+  color: var(--green-700);
+  font-weight: 600;
+}
+
+.connectorLine {
+  flex: 1;
+  height: 2px;
+  background-color: var(--border);
+  margin: 0 6px;
+  border-radius: 2px;
+  position: relative;
+  margin-bottom: 18px; /* Offset for label below circle */
+}
+
+.compactWrapper .connectorLine {
+  margin-bottom: 0;
+}
+
+.completedLine {
+  background: linear-gradient(90deg, #2FB36A, #1E9A56);
+}
+
+.statusSentenceRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
+}
+
+.sentenceDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--green-600);
+  flex-shrink: 0;
+}
+
+.sentenceText {
+  font-size: 12px;
+  color: var(--green-900);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.closedState {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #FDF1F0;
+  border: 1px solid rgba(229, 88, 79, 0.25);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+
+.closedIcon {
+  color: var(--danger);
+  flex-shrink: 0;
+}
+
+.closedText {
+  font-size: 12px;
+  font-weight: 600;
+  color: #9C2E27;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulseHalo {
+    animation: none;
+    display: none;
+  }
+}

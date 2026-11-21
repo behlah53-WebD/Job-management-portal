@@ -185,7 +185,8 @@
 
 @media (max-width: 640px) {
   .statsRow {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
   .applicantRow {
     flex-direction: column;

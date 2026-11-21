@@ -1,0 +1,114 @@
+.shimmer {
+  background: linear-gradient(90deg, #EEF7F1 25%, #E3F4E9 50%, #EEF7F1 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.cardSkeleton {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card-mobile, 22px);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rowTop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoSkeleton {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  flex-shrink: 0;
+}
+
+.titleArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lineTitle {
+  height: 18px;
+  width: 75%;
+}
+
+.lineSub {
+  height: 12px;
+  width: 45%;
+}
+
+.chipsRow {
+  display: flex;
+  gap: 8px;
+}
+
+.chipSkeleton {
+  height: 24px;
+  width: 60px;
+  border-radius: 999px;
+}
+
+.rowBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: 10px;
+}
+
+.lineMeta {
+  height: 14px;
+  width: 90px;
+}
+
+.btnSkeleton {
+  height: 38px;
+  width: 88px;
+  border-radius: 999px;
+}
+
+.statSkeleton {
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 140px;
+}
+
+.statIconSkeleton {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+}
+
+.statNumSkeleton {
+  height: 26px;
+  width: 50%;
+}
+
+.statLabelSkeleton {
+  height: 12px;
+  width: 80%;
+}

@@ -1,10 +1,18 @@
 .tableContainer {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   background-color: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 640px) {
+  .th, .td {
+    padding: 12px 14px;
+    font-size: 13px;
+  }
 }
 
 .table {

@@ -1,13 +1,26 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .loadingBox {
   padding: 40px;
   text-align: center;
   color: var(--text-muted);
+}
+
+/* ========================================================
+   DESKTOP PROFILE EXPERIENCE (>= 1024px)
+   UNTOUCHED ORIGINAL STYLES
+   ======================================================== */
+.desktopProfile {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
 .coverStrip {
@@ -28,7 +41,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-top: -48px;
+  margin-top: 0;
   padding: 0 24px;
   gap: 24px;
   flex-wrap: wrap;
@@ -39,6 +52,7 @@
   width: 96px;
   height: 96px;
   flex-shrink: 0;
+  margin-top: -48px;
 }
 
 .avatar {
@@ -71,21 +85,24 @@
   justify-content: center;
   border: 2px solid var(--white);
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast);
+}
+
+.avatarEditBtn:hover {
+  transform: scale(1.08);
 }
 
 .userMainMeta {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  flex: 1;
-  min-width: 260px;
-  margin-top: 54px;
+  padding-top: 10px;
 }
 
 .editHeadlineBtn {
-  margin-top: 54px;
-  align-self: flex-start;
+  margin-top: 10px;
 }
 
 .nameRow {
@@ -102,11 +119,11 @@
 }
 
 .roleBadge {
-  background-color: var(--mint-100);
-  color: var(--green-700);
   font-size: 11px;
   font-weight: 700;
-  padding: 2px 8px;
+  color: var(--green-700);
+  background-color: var(--mint-100);
+  padding: 3px 10px;
   border-radius: var(--radius-pill);
 }
 
@@ -118,10 +135,9 @@
 .metaRow {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   font-size: 13px;
   color: var(--text-muted);
-  margin-top: 4px;
 }
 
 .metaItem {
@@ -132,17 +148,12 @@
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: 2fr 1fr;
   gap: 28px;
   align-items: flex-start;
 }
 
-.leftCol {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
+.leftCol,
 .rightCol {
   display: flex;
   flex-direction: column;
@@ -152,7 +163,7 @@
 .card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .cardHeader {
@@ -163,65 +174,69 @@
 
 .cardTitle {
   font-family: var(--font-serif);
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 700;
   color: var(--green-900);
 }
 
 .iconBtn {
-  background: none;
-  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--text-muted);
-  cursor: pointer;
-  padding: 4px;
-  transition: color var(--transition-fast);
+  transition: all var(--transition-fast);
 }
 
 .iconBtn:hover {
+  background-color: var(--mint-100);
   color: var(--green-700);
 }
 
 .aboutText {
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.7;
   color: var(--text-main);
 }
 
 .addSkillForm {
   display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
 .skillsWrapper {
   display: flex;
-  gap: 8px;
   flex-wrap: wrap;
+  gap: 8px;
 }
 
-/* Experience */
 .timelineList {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  position: relative;
-  padding-left: 20px;
   border-left: 2px solid var(--border);
+  padding-left: 16px;
+  margin-left: 8px;
 }
 
 .expItem {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .expDot {
   position: absolute;
-  left: -27px;
+  left: -22px;
   top: 4px;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background-color: var(--green-500);
   border: 2px solid var(--white);
-  box-shadow: 0 0 0 2px var(--green-500);
 }
 
 .expContent {
@@ -243,13 +258,12 @@
 }
 
 .expDesc {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-main);
   line-height: 1.5;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
-/* Education */
 .eduList {
   display: flex;
   flex-direction: column;
@@ -264,8 +278,8 @@
 
 .eduIcon {
   color: var(--green-600);
-  margin-top: 2px;
   flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .eduDegree {
@@ -280,14 +294,20 @@
   color: var(--text-muted);
 }
 
-/* Resume Box */
+.emptyNotice {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
 .resumePreviewBox {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 14px;
   background-color: var(--bg-soft);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
+  padding: 14px;
 }
 
 .resumeIcon {
@@ -299,12 +319,17 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  flex: 1;
+  min-width: 0;
 }
 
 .resumeName {
-  font-size: 14px;
   font-weight: 600;
-  color: var(--text-main);
+  font-size: 13px;
+  color: var(--green-900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .resumeViewLink {
@@ -314,10 +339,22 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  text-decoration: underline;
 }
 
 .uploadZone {
-  margin-top: 8px;
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  text-align: center;
+  background-color: var(--bg-soft);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.uploadZone:hover {
+  border-color: var(--green-400);
+  background-color: var(--mint-100);
 }
 
 .fileHidden {
@@ -326,60 +363,45 @@
 
 .uploadLabel {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  padding: 12px;
-  border: 1.5px dashed var(--border);
-  border-radius: var(--radius-md);
+  color: var(--text-muted);
   font-size: 13px;
   font-weight: 600;
-  color: var(--green-700);
   cursor: pointer;
-  background-color: #FBFDFB;
-  transition: all var(--transition-fast);
 }
 
-.uploadLabel:hover {
-  background-color: var(--mint-100);
-  border-color: var(--green-400);
-}
-
-/* Links */
 .linksList {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .linkItem {
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  padding: 10px 12px;
+  background-color: var(--bg-soft);
+  border-radius: 8px;
   font-size: 13px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border-subtle);
 }
 
 .linkName {
   font-weight: 600;
-  color: var(--text-main);
+  color: var(--green-900);
 }
 
 .linkUrl {
   color: var(--text-muted);
   max-width: 180px;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.emptyNotice {
-  font-size: 13px;
-  color: var(--text-muted);
-  font-style: italic;
-}
-
-/* Modal styles */
+/* Modal styles (Desktop) */
 .modalForm {
   display: flex;
   flex-direction: column;
@@ -426,23 +448,666 @@
   margin-top: 8px;
 }
 
-@media (max-width: 900px) {
-  .grid {
-    grid-template-columns: 1fr;
+/* ========================================================
+   MOBILE PROFILE EXPERIENCE (< 1024px)
+   ======================================================== */
+.mobileProfile {
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.mobileCoverStrip {
+  height: 120px;
+  background: linear-gradient(135deg, #1E9A56 0%, #0F5C33 100%);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.mobileCoverPattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  background-image: radial-gradient(#C8F169 1.5px, transparent 1.5px);
+  background-size: 14px 14px;
+}
+
+.mobileProfileHeader {
+  display: flex;
+  flex-direction: column;
+  margin-top: -44px;
+  padding: 0 4px;
+  gap: 12px;
+}
+
+.mobileAvatarWrapper {
+  position: relative;
+  width: 88px;
+  height: 88px;
+}
+
+.mobileAvatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background-color: var(--white);
+  border: 4px solid var(--white);
+  box-shadow: 0 4px 16px rgba(11, 61, 36, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--green-700);
+}
+
+.mobileCameraBtn {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--green-600);
+  color: var(--white);
+  border: 2px solid var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.mobileIdentity {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mobileNameRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobileUserName {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--green-900);
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+.mobileRoleBadge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green-700);
+  background-color: var(--mint-100);
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.mobileHeadline {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mobileContactRows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.mobileContactItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.mobileContactIcon {
+  color: var(--sage);
+  flex-shrink: 0;
+}
+
+.mobileEditProfileBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 44px;
+  border-radius: 14px;
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  color: var(--green-800);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  touch-action: manipulation;
+  transition: all 120ms ease;
+}
+
+.mobileEditProfileBtn:active {
+  transform: scale(0.98);
+  background-color: var(--bg-soft);
+}
+
+/* Mobile Strength Card */
+.mobileStrengthCard {
+  background-color: var(--white);
+  border: 1px solid var(--border-card-mobile, #DCEBE1);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 1px 2px rgba(16, 64, 40, 0.04), 0 8px 24px rgba(16, 64, 40, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.strengthTopRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.strengthInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.strengthHeading {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.strengthSub {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.checklistGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: 12px;
+}
+
+.checkItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.itemComplete {
+  color: var(--green-800);
+  font-weight: 600;
+}
+
+.checkDone {
+  color: var(--green-600);
+  flex-shrink: 0;
+}
+
+/* Collapsible Mobile Section Card */
+.mobileSectionCard {
+  background-color: var(--white);
+  border: 1px solid var(--border-card-mobile, #DCEBE1);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 1px 2px rgba(16, 64, 40, 0.03), 0 6px 20px rgba(16, 64, 40, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionTitle {
+  font-family: var(--font-serif);
+  font-size: 17.5px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.sectionCount {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green-700);
+  background-color: var(--mint-100);
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.sectionEditBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-soft);
+  color: var(--green-700);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 120ms ease;
+  padding: 0;
+}
+
+.sectionEditBtn:active {
+  transform: scale(0.92);
+}
+
+/* Bio */
+.bioText {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-main);
+}
+
+.bioClamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.readMoreBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: var(--green-700);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+  align-self: flex-start;
+}
+
+/* Skills */
+.mobileAddSkillForm {
+  display: flex;
+  gap: 8px;
+}
+
+.mobileSkillInput {
+  flex: 1;
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--text-main);
+  background-color: var(--bg-soft);
+  outline: none;
+}
+
+.mobileSkillInput:focus {
+  border-color: var(--green-500);
+  background-color: var(--white);
+}
+
+.mobileAddSkillBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 48px;
+  padding: 0 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2FB36A 0%, #1E9A56 100%);
+  color: var(--white);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+
+.mobileSkillsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Timeline */
+.mobileTimelineList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-left: 2px solid var(--border);
+  padding-left: 14px;
+  margin-left: 6px;
+}
+
+.mobileTimelineItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timelineDot {
+  position: absolute;
+  left: -20px;
+  top: 5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--green-600);
+  border: 2px solid var(--white);
+}
+
+.timelineContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timelineRole {
+  font-family: var(--font-serif);
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.timelineCompany {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.timelineDesc {
+  font-size: 13px;
+  color: var(--text-main);
+  line-height: 1.45;
+  margin-top: 4px;
+}
+
+.mobileAddBlockBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 44px;
+  border-radius: 14px;
+  background-color: var(--bg-soft);
+  border: 1px dashed var(--border);
+  color: var(--green-700);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* Education */
+.mobileEduList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobileEduItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.eduIconCircle {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background-color: var(--mint-100);
+  color: var(--green-700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Resume */
+.mobileResumeFileRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.resumeFileIcon {
+  color: var(--green-600);
+  flex-shrink: 0;
+}
+
+.resumeFileInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.resumeFileName {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--green-900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resumeFileType {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.resumeViewBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  color: var(--green-700);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.mobileUploadZone {
+  border: 1.5px dashed var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  text-align: center;
+  background-color: var(--bg-soft);
+  cursor: pointer;
+}
+
+.mobileUploadLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.uploadIcon {
+  color: var(--green-600);
+  margin-bottom: 2px;
+}
+
+.uploadMainText {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--green-900);
+}
+
+.uploadSubText {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Profiles */
+.mobileProfilesList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profileLinkRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background-color: var(--bg-soft);
+  border: 1px solid var(--border-subtle);
+}
+
+.profilePlatformIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: var(--white);
+  color: var(--green-800);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profilePlatformMeta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.profilePlatformName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green-900);
+}
+
+.profilePlatformUrl {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profileOpenIcon {
+  color: var(--sage);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+/* Bottom Sheet form styles */
+.sheetForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sheetInput {
+  width: 100%;
+  height: 50px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--text-main);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.sheetInput:focus {
+  border-color: var(--green-500);
+}
+
+.sheetTextarea {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--text-main);
+  outline: none;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.sheetTextarea:focus {
+  border-color: var(--green-500);
+}
+
+.sheetActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* ========================================================
+   MEDIA QUERY CONDITIONAL TOGGLING
+   ======================================================== */
+@media (max-width: 1023.98px) {
+  .desktopProfile {
+    display: none !important;
+  }
+  .mobileProfile {
+    display: flex !important;
   }
 }
 
-@media (max-width: 640px) {
-  .headerBar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 0 16px;
-  }
-  .userMainMeta {
-    margin-top: 8px;
-  }
-  .editHeadlineBtn {
-    margin-top: 0;
+@media (min-width: 1024px) {
+  .mobileProfile {
+    display: none !important;
   }
 }

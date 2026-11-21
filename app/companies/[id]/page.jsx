@@ -29,7 +29,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await Promise.resolve(params);
-  const company = await getCompanyById(resolvedParams.id);
+  let company = null;
+  try {
+    company = await getCompanyById(resolvedParams.id);
+  } catch {}
+
   if (!company) {
     return { title: 'Company Not Found — Verdant' };
   }
@@ -43,7 +47,10 @@ export async function generateMetadata({ params }) {
 
 export default async function CompanyDetailPage({ params }) {
   const resolvedParams = await Promise.resolve(params);
-  const company = await getCompanyById(resolvedParams.id);
+  let company = null;
+  try {
+    company = await getCompanyById(resolvedParams.id);
+  } catch {}
 
   if (!company) {
     notFound();

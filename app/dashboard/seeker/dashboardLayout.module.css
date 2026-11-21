@@ -197,6 +197,11 @@
   background-color: var(--danger-bg);
 }
 
+.logoutBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Main workspace */
 .mainContent {
   flex: 1;
@@ -289,54 +294,41 @@
   display: none;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1023.98px) {
   .sidebar {
-    transform: translateX(-100%);
-    transition: transform var(--transition-normal);
+    display: none !important;
   }
-  .mobileOpen {
-    transform: translateX(0);
+  .topbar {
+    display: none !important;
   }
   .closeDrawerBtn {
-    display: block;
+    display: none !important;
+  }
+  .mobileHamburger {
+    display: none !important;
   }
   .mainContent {
     margin-left: 0;
-    padding-bottom: 70px;
-  }
-  .mobileHamburger {
-    display: block;
-  }
-  .topbar {
-    padding: 0 16px;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 24px);
   }
   .pageBody {
     padding: 20px 16px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
   .mobileTabBar {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 64px;
-    background-color: var(--white);
-    border-top: 1px solid var(--border);
-    z-index: 60;
-    justify-content: space-around;
-    align-items: center;
+    display: none !important;
   }
-  .tabBarItem {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    color: var(--text-muted);
-    font-size: 10px;
-    font-weight: 600;
-    text-decoration: none;
-  }
-  .tabBarActive {
-    color: var(--green-600);
+}
+
+@media (min-width: 412px) and (max-width: 1023.98px) {
+  .pageBody {
+    padding: 24px 20px;
   }
 }

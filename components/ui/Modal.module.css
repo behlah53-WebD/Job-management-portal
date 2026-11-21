@@ -87,3 +87,42 @@
     transform: scale(1) translateY(0);
   }
 }
+
+@keyframes slideBottomIn {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .modal {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    border-bottom: none;
+    max-height: 88dvh;
+    max-height: 88vh;
+    animation: slideBottomIn 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .modal::before {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 4px;
+    background: #D1D5DB;
+    border-radius: 2px;
+    margin: 10px auto 4px auto;
+  }
+  .content {
+    padding: 20px;
+    padding-bottom: max(20px, env(safe-area-inset-bottom, 20px));
+  }
+}

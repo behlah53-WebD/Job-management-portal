@@ -1,6 +1,18 @@
 .container {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* ========================================================
+   DESKTOP OVERVIEW (>= 1024px)
+   ======================================================== */
+.desktopLayout {
+  display: flex;
+  flex-direction: column;
   gap: 32px;
 }
 
@@ -103,7 +115,6 @@
   color: var(--text-muted);
 }
 
-/* Stepper inside card */
 .miniStepper {
   display: flex;
   align-items: center;
@@ -158,7 +169,6 @@
   font-style: italic;
 }
 
-/* Right Column */
 .rightCol {
   display: flex;
   flex-direction: column;
@@ -245,7 +255,6 @@
   color: var(--text-muted);
 }
 
-/* Recommended */
 .recomCard {
   display: flex;
   flex-direction: column;
@@ -321,20 +330,442 @@
   color: var(--green-700);
 }
 
-@media (max-width: 1024px) {
-  .statsRow {
-    grid-template-columns: repeat(2, 1fr);
+/* ========================================================
+   MOBILE OVERVIEW (< 1024px)
+   ======================================================== */
+.mobileLayout {
+  display: none;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.mobileGreetingBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mobileOverline {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green-700);
+  text-transform: capitalize;
+}
+
+.mobileGreetingName {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--green-900);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.mobileSupportiveText {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin-top: 2px;
+}
+
+/* Snapshot Card */
+.snapshotCard {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F5FAF6 100%);
+  border: 1px solid rgba(220, 235, 225, 0.95);
+  border-radius: 22px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 1px 2px rgba(16, 64, 40, 0.04), 0 8px 24px rgba(16, 64, 40, 0.06);
+}
+
+.snapshotLeft {
+  flex-shrink: 0;
+}
+
+.snapshotRight {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.snapshotTitle {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.snapshotDesc {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.snapshotAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green-700);
+  margin-top: 4px;
+  text-decoration: none;
+}
+
+/* 2x2 Mobile Stats Grid (all cards displayed in front, no horizontal scroll) */
+.mobileStatsSection {
+  width: 100%;
+}
+
+.mobileStatsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.mobileStatCard {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  background-color: var(--white);
+  border: 1px solid var(--border-card-mobile, #DCEBE1);
+  border-radius: 18px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 1px 2px rgba(16, 64, 40, 0.03), 0 6px 16px rgba(16, 64, 40, 0.04);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 120ms ease;
+  outline: none;
+}
+
+.mobileStatCard:active {
+  transform: scale(0.96);
+}
+
+.mobileStatIconBox {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconBoxGreen {
+  background-color: var(--mint-100);
+  color: var(--green-700);
+}
+
+.iconBoxLime {
+  background-color: #F1FCE4;
+  color: #4D6B0B;
+}
+
+.iconBoxSage {
+  background-color: #EDF3F0;
+  color: #385645;
+}
+
+.mobileStatNumber {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--green-900);
+  line-height: 1.1;
+  margin-top: 2px;
+}
+
+.mobileStatLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.mobileDeltaChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green-700);
+  background-color: var(--mint-100);
+  padding: 2px 6px;
+  border-radius: 999px;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+.mobileStatSub {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Interview Highlight Card */
+.interviewHighlightCard {
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  border-left: 4.5px solid var(--green-600);
+  border-radius: 18px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 4px 16px rgba(11, 61, 36, 0.05);
+}
+
+.interviewDateBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background-color: var(--mint-100);
+  color: var(--green-800);
+  flex-shrink: 0;
+}
+
+.interviewDayNumber {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.interviewMonth {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.interviewInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.interviewOverline {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green-700);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.interviewRoleTitle {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--green-900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.interviewCompanyName {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.interviewChevronBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sage);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+/* Sections */
+.mobileSection {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mobileSectionHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.mobileSectionTitle {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.mobileSectionCount {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin-left: 6px;
+}
+
+.mobileViewAllLink {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--green-700);
+  text-decoration: none;
+}
+
+.sparkleTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mobileAppsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobileAppCard {
+  background-color: var(--white);
+  border: 1px solid var(--border-card-mobile, #DCEBE1);
+  border-radius: 18px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 1px 2px rgba(16, 64, 40, 0.03), 0 6px 18px rgba(16, 64, 40, 0.04);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 120ms ease;
+  outline: none;
+}
+
+.mobileAppCard:active {
+  transform: scale(0.985);
+}
+
+.mobileAppRowTop {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.mobileAppLogo {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background-color: var(--mint-100);
+  color: var(--green-800);
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobileAppMeta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mobileAppJobTitle {
+  font-family: var(--font-serif);
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--green-900);
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mobileAppComp {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobileAppFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: 8px;
+}
+
+.mobileAppDate {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.mobileAppViewLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--green-700);
+  text-decoration: none;
+}
+
+/* Recommended Carousel */
+.mobileRecomCarousel {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 4px 0 12px 0;
+  margin: 0 -16px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.mobileRecomCarousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* ========================================================
+   MEDIA QUERY CONDITIONAL TOGGLING
+   ======================================================== */
+@media (max-width: 1023.98px) {
+  .desktopLayout {
+    display: none !important;
   }
-  .contentGrid {
-    grid-template-columns: 1fr;
+  .mobileLayout {
+    display: flex !important;
   }
 }
 
-@media (max-width: 640px) {
-  .statsRow {
-    grid-template-columns: 1fr;
-  }
-  .miniStepper {
-    display: none;
+@media (min-width: 1024px) {
+  .mobileLayout {
+    display: none !important;
   }
 }

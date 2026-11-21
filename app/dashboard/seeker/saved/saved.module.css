@@ -1,0 +1,120 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Desktop (>= 1024px) */
+.desktopView {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.desktopHeader {
+  display: flex;
+  flex-direction: column;
+}
+
+.desktopTitle {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  color: var(--green-900);
+}
+
+.desktopSub {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.desktopList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Mobile (< 1024px) */
+.mobileView {
+  display: none;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.mobileHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobileTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobileTitle {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--green-900);
+  line-height: 1.15;
+}
+
+.countChip {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green-700);
+  background-color: var(--mint-100);
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.sortBtn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  color: var(--green-800);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 120ms ease;
+}
+
+.sortBtn:active {
+  transform: scale(0.92);
+}
+
+.mobileList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 1023.98px) {
+  .desktopView {
+    display: none !important;
+  }
+  .mobileView {
+    display: flex !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mobileView {
+    display: none !important;
+  }
+}

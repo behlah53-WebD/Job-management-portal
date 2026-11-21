@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -15,10 +15,46 @@ import Button from '@/components/ui/Button';
 import Chip from '@/components/ui/Chip';
 import styles from './LandingHero.module.css';
 
+const MOBILE_HERO_JOBS = [
+  {
+    title: 'Staff Design Engineer',
+    company: 'Fern & Stone • Remote',
+    salary: '₹28 - 36 LPA',
+    badge: 'New',
+  },
+  {
+    title: 'Lead Product Designer',
+    company: 'Sproutify • Bangalore',
+    salary: '₹32 - 45 LPA',
+    badge: 'Hiring Fast',
+  },
+  {
+    title: 'Founding Engineer (Next.js)',
+    company: 'Canopy AI • Remote',
+    salary: '₹35 - 50 LPA',
+    badge: 'Verified',
+  },
+];
+
 export default function LandingHero({ jobCount }) {
   const router = useRouter();
   const [keyword, setKeyword] = useState('');
   const [location, setLocation] = useState('');
+  const [activeJobIndex, setActiveJobIndex] = useState(0);
+
+  // Auto-rotate mobile active card every 4s with reduced-motion support
+  useEffect(() => {
+    const isReduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isReduced) return;
+
+    const timer = setInterval(() => {
+      setActiveJobIndex((prev) => (prev + 1) % MOBILE_HERO_JOBS.length);
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -32,6 +68,8 @@ export default function LandingHero({ jobCount }) {
     router.push(`/jobs?q=${encodeURIComponent(tag)}`);
   };
 
+  const activeMobileJob = MOBILE_HERO_JOBS[activeJobIndex];
+
   return (
     <section className={styles.heroSection}>
       {/* Organic blob decorations */}
@@ -39,7 +77,7 @@ export default function LandingHero({ jobCount }) {
       <div className={styles.blobTwo} />
 
       <div className={`container ${styles.heroContainer}`}>
-        {/* Left Column: Headline, Subtext, Search, Tags */}
+        {/* Left Column: Headline, Subtext, Search, Tags, Mobile Activity Stack */}
         <div className={styles.leftCol}>
           <div className={styles.pillBadge}>
             <Sparkles size={14} className={styles.pillIcon} />
@@ -108,9 +146,47 @@ export default function LandingHero({ jobCount }) {
               ))}
             </div>
           </div>
+
+          {/* Mobile Only: Tidy Centered Live Activity Card Stack (< 1024px) */}
+          <div className={styles.mobileActivityStack}>
+            {/* Offset Card Behind */}
+            <div className={styles.mobileBackdropCard} />
+
+            {/* Top Interactive Card */}
+            <div className={styles.mobileActiveCard}>
+              <div className={styles.mobileActiveLogo}>🌱</div>
+              <div className={styles.mobileActiveMeta}>
+                <div className={styles.mobileActiveTitleRow}>
+                  <span className={styles.mobileActiveTitle}>
+                    {activeMobileJob.title}
+                  </span>
+                  <span className={styles.mobileActiveBadge}>
+                    {activeMobileJob.badge}
+                  </span>
+                </div>
+                <span className={styles.mobileActiveCompany}>
+                  {activeMobileJob.company}
+                </span>
+                <span className={styles.mobileActiveSalary}>
+                  {activeMobileJob.salary}
+                </span>
+              </div>
+            </div>
+
+            {/* Notification Pill */}
+            <div className={styles.mobileShortlistPill}>
+              <div className={styles.mobileShortlistIcon}>
+                <CheckCircle2 size={16} />
+              </div>
+              <div className={styles.mobileShortlistText}>
+                <span className={styles.shortlistBold}>Application Shortlisted!</span>
+                <span className={styles.shortlistSub}>Invited to round 1 interview</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Right Column: Layered floating collage */}
+        {/* Right Column: Layered floating collage (Desktop >= 1024px only) */}
         <div className={styles.rightCol}>
           {/* Card 1: Mini Job Card */}
           <div className={`${styles.floatingCard} ${styles.jobCardFloat}`}>

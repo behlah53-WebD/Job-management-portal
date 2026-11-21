@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import JobCard from '@/components/jobs/JobCard';
@@ -11,6 +12,13 @@ import EmptyState from '@/components/ui/EmptyState';
 import Pagination from '@/components/ui/Pagination';
 import Chip from '@/components/ui/Chip';
 import Button from '@/components/ui/Button';
+import MobileTopBar from '@/components/layout/mobile/MobileTopBar';
+import MobileTabBar from '@/components/layout/mobile/MobileTabBar';
+import AccountSheet from '@/components/layout/mobile/AccountSheet';
+import BottomSheet from '@/components/ui/mobile/BottomSheet';
+import JobCardMobile from '@/components/ui/mobile/JobCardMobile';
+import EmptyStateMobile from '@/components/ui/mobile/EmptyStateMobile';
+import { JobCardSkeletonMobile } from '@/components/ui/mobile/SkeletonMobile';
 import {
   Search,
   MapPin,
@@ -22,6 +30,9 @@ import {
   ChevronDown,
   Clock,
   History,
+  ArrowUpDown,
+  ArrowUp,
+  Check,
 } from 'lucide-react';
 import styles from './jobs.module.css';
 
@@ -35,9 +46,18 @@ const DATE_POSTED_OPTIONS = [
   { label: 'Past month', value: '30d' },
 ];
 
+const SALARY_PRESETS = [
+  { label: '5 LPA', value: '500000' },
+  { label: '10 LPA', value: '1000000' },
+  { label: '15 LPA', value: '1500000' },
+  { label: '25 LPA', value: '2500000' },
+  { label: '50 LPA', value: '5000000' },
+];
+
 function JobsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { data: session } = useSession();
 
   // Search state
   const [keyword, setKeyword] = useState(searchParams.get('q') || '');
@@ -64,6 +84,10 @@ function JobsContent() {
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState('list'); // 'list' | 'grid'
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [mobileSortOpen, setMobileSortOpen] = useState(false);
+  const [accountSheetOpen, setAccountSheetOpen] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const [savedJobIds, setSavedJobIds] = useState(new Set());
 
   // Apply modal
   const [selectedJobForApply, setSelectedJobForApply] = useState(null);
@@ -71,6 +95,19 @@ function JobsContent() {
   // Cancellation and debounce refs
   const abortControllerRef = useRef(null);
   const debounceTimerRef = useRef(null);
+
+  // Back to top scroll listener
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > window.innerHeight * 1.5) {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Load recent searches from localStorage
   useEffect(() => {
@@ -87,6 +124,20 @@ function JobsContent() {
       .then((data) => setCategories(data))
       .catch(() => {});
   }, []);
+
+  // Fetch saved job IDs for seeker
+  useEffect(() => {
+    if (session?.user?.role === 'jobseeker') {
+      fetch('/api/saved')
+        .then((r) => (r.ok ? r.json() : []))
+        .then((data) => {
+          if (Array.isArray(data)) {
+            setSavedJobIds(new Set(data.map((j) => j._id?.toString())));
+          }
+        })
+        .catch(() => {});
+    }
+  }, [session]);
 
   // URL sync helper
   const syncToUrl = useCallback(
@@ -217,6 +268,8 @@ function JobsContent() {
     setDatePosted('');
     setSalaryMin('');
     setSalaryMax('');
+    setKeyword('');
+    setLocation('');
     setPage(1);
   };
 
@@ -229,420 +282,986 @@ function JobsContent() {
     }
   };
 
+  const handleSaveToggle = (jobId, isSaved) => {
+    setSavedJobIds((prev) => {
+      const next = new Set(prev);
+      if (isSaved) {
+        next.add(jobId.toString());
+      } else {
+        next.delete(jobId.toString());
+      }
+      return next;
+    });
+  };
+
   const activeFilterCount =
     selectedTypes.length +
     selectedModes.length +
     selectedExp.length +
     (selectedCategory ? 1 : 0) +
     (datePosted ? 1 : 0) +
-    (salaryMin || salaryMax ? 1 : 0);
+    (salaryMin || salaryMax ? 1 : 0) +
+    (keyword ? 1 : 0) +
+    (location ? 1 : 0);
+
+  const isSeeker = session?.user?.role === 'jobseeker';
 
   return (
     <div className={styles.page}>
-      <Navbar />
+      {/* =========================================================================
+          1. NAVIGATION:
+          - Desktop (>= 1024px): Always original Navbar
+          - Mobile (< 1024px):
+            - If logged in as Job Seeker: MobileTopBar + MobileTabBar
+            - If public / employer / admin: Navbar
+         ========================================================================= */}
+      <div className={styles.desktopOnlyNav}>
+        <Navbar />
+      </div>
 
-      {/* Top Sticky Search Bar */}
-      <section className={styles.searchHeader}>
-        <div className="container">
-          <form className={styles.compactSearch} onSubmit={handleSearchSubmit}>
-            <div className={styles.searchFieldWrapper}>
-              <Search size={18} className={styles.fieldIcon} />
-              <input
-                type="text"
-                placeholder="Search job title, skills, or company..."
-                value={keyword}
-                onChange={(e) => handleKeywordChange(e.target.value)}
-                onFocus={() => setShowRecent(true)}
-                className={styles.compactInput}
-              />
-              {/* Recent searches dropdown */}
-              {showRecent && recentSearches.length > 0 && (
-                <div className={styles.recentDropdown}>
-                  <div className={styles.recentHeader}>
-                    <History size={14} />
-                    <span>Recent searches</span>
+      <div className={styles.mobileOnlyHeader}>
+        {isSeeker ? (
+          <MobileTopBar
+            title="Find Jobs"
+            onOpenAccount={() => setAccountSheetOpen(true)}
+            hasSearch={false}
+          />
+        ) : (
+          <Navbar />
+        )}
+      </div>
+
+      {/* =========================================================================
+          2. DESKTOP MAIN LAYOUT (>= 1024px)
+         ========================================================================= */}
+      <div className={styles.desktopLayout}>
+        <div className={`container ${styles.mainLayout}`}>
+          {/* Left Sticky Filters (Desktop) */}
+          <aside className={styles.filterSidebar}>
+            <div className={styles.filterCard}>
+              <div className={styles.filterCardHeader}>
+                <div className={styles.filterTitleRow}>
+                  <SlidersHorizontal size={18} className={styles.filterIcon} />
+                  <h3 className={styles.filterTitle}>Filter Roles</h3>
+                </div>
+                {activeFilterCount > 0 && (
+                  <button
+                    type="button"
+                    className={styles.clearAllBtn}
+                    onClick={clearAllFilters}
+                  >
+                    Clear all
+                  </button>
+                )}
+              </div>
+
+              {/* Sidebar Search Fields */}
+              <form onSubmit={handleSearchSubmit} className={styles.sidebarSearchForm}>
+                <div className={styles.filterGroup}>
+                  <span className={styles.groupLabel}>Search Keyword</span>
+                  <div className={styles.sidebarSearchInputWrapper}>
+                    <Search size={16} className={styles.sidebarFieldIcon} />
+                    <input
+                      type="text"
+                      placeholder="Title, skill, or company..."
+                      value={keyword}
+                      onChange={(e) => handleKeywordChange(e.target.value)}
+                      onFocus={() => setShowRecent(true)}
+                      className={styles.sidebarSearchInput}
+                    />
+                    {keyword && (
+                      <button
+                        type="button"
+                        className={styles.sidebarClearInputBtn}
+                        onClick={() => {
+                          setKeyword('');
+                          setPage(1);
+                        }}
+                        aria-label="Clear keyword"
+                      >
+                        &times;
+                      </button>
+                    )}
+                    {showRecent && recentSearches.length > 0 && (
+                      <div className={styles.recentDropdown}>
+                        <div className={styles.recentHeader}>
+                          <History size={14} />
+                          <span>Recent searches</span>
+                        </div>
+                        {recentSearches.map((s) => (
+                          <button
+                            key={s}
+                            type="button"
+                            className={styles.recentItem}
+                            onClick={() => {
+                              setKeyword(s);
+                              setShowRecent(false);
+                            }}
+                          >
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  {recentSearches.map((s) => (
-                    <button
-                      key={s}
-                      type="button"
-                      className={styles.recentItem}
-                      onClick={() => {
-                        setKeyword(s);
-                        setShowRecent(false);
+                </div>
+
+                <div className={styles.filterGroup}>
+                  <span className={styles.groupLabel}>Location</span>
+                  <div className={styles.sidebarSearchInputWrapper}>
+                    <MapPin size={16} className={styles.sidebarFieldIcon} />
+                    <input
+                      type="text"
+                      placeholder="City or Remote..."
+                      value={location}
+                      onChange={(e) => {
+                        setLocation(e.target.value);
+                        setPage(1);
                       }}
-                    >
-                      {s}
-                    </button>
+                      className={styles.sidebarSearchInput}
+                    />
+                    {location && (
+                      <button
+                        type="button"
+                        className={styles.sidebarClearInputBtn}
+                        onClick={() => {
+                          setLocation('');
+                          setPage(1);
+                        }}
+                        aria-label="Clear location"
+                      >
+                        &times;
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </form>
+
+              {/* Filter 1: Work Mode */}
+              <div className={styles.filterGroup}>
+                <span className={styles.groupLabel}>Work Mode</span>
+                <div className={styles.chipGroup}>
+                  {WORK_MODES.map((mode) => {
+                    const active = selectedModes.includes(mode);
+                    return (
+                      <Chip
+                        key={mode}
+                        size="sm"
+                        active={active}
+                        onClick={() => toggleArrayFilter(selectedModes, setSelectedModes, mode)}
+                      >
+                        {mode}
+                      </Chip>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Filter 2: Job Type */}
+              <div className={styles.filterGroup}>
+                <span className={styles.groupLabel}>Employment Type</span>
+                <div className={styles.checkboxList}>
+                  {JOB_TYPES.map((type) => (
+                    <label key={type} className={styles.checkLabel}>
+                      <input
+                        type="checkbox"
+                        checked={selectedTypes.includes(type)}
+                        onChange={() => toggleArrayFilter(selectedTypes, setSelectedTypes, type)}
+                        className={styles.checkbox}
+                      />
+                      <span>{type}</span>
+                    </label>
                   ))}
                 </div>
+              </div>
+
+              {/* Filter 3: Category */}
+              <div className={styles.filterGroup}>
+                <span className={styles.groupLabel}>Craft & Discipline</span>
+                <select
+                  className={styles.selectFilter}
+                  value={selectedCategory}
+                  onChange={(e) => {
+                    setSelectedCategory(e.target.value);
+                    setPage(1);
+                  }}
+                >
+                  <option value="">All Disciplines</option>
+                  {categories.map((c) => (
+                    <option key={c.slug} value={c.name}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Filter 4: Experience Level */}
+              <div className={styles.filterGroup}>
+                <span className={styles.groupLabel}>Experience (Years)</span>
+                <div className={styles.chipGroup}>
+                  {EXPERIENCE_LEVELS.map((exp) => {
+                    const active = selectedExp.includes(exp);
+                    return (
+                      <Chip
+                        key={exp}
+                        size="sm"
+                        active={active}
+                        onClick={() => toggleArrayFilter(selectedExp, setSelectedExp, exp)}
+                      >
+                        {exp === 'Fresher' ? 'Fresher' : `${exp} yrs`}
+                      </Chip>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Filter 5: Date Posted */}
+              <div className={styles.filterGroup}>
+                <span className={styles.groupLabel}>Date Posted</span>
+                <div className={styles.radioList}>
+                  {DATE_POSTED_OPTIONS.map((opt) => (
+                    <label key={opt.value} className={styles.radioLabel}>
+                      <input
+                        type="radio"
+                        name="datePostedDesktop"
+                        checked={datePosted === opt.value}
+                        onChange={() => {
+                          setDatePosted(opt.value);
+                          setPage(1);
+                        }}
+                        className={styles.radio}
+                      />
+                      <span>{opt.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Filter 6: Min Salary */}
+              <div className={styles.filterGroup}>
+                <span className={styles.groupLabel}>Min Salary (INR / LPA)</span>
+                <div className={styles.salaryInputRow}>
+                  <input
+                    type="number"
+                    placeholder="e.g. 1500000"
+                    value={salaryMin}
+                    onChange={(e) => {
+                      setSalaryMin(e.target.value);
+                      setPage(1);
+                    }}
+                    className={styles.numInput}
+                  />
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          {/* Right Job Results (Desktop) */}
+          <main className={styles.resultsArea}>
+            <div className={styles.resultsHeader}>
+              <div className={styles.countText}>
+                <span className={styles.highlightCount}>{total}</span>{' '}
+                {total === 1 ? 'opportunity' : 'opportunities'} found
+              </div>
+
+              <div className={styles.viewAndSort}>
+                <div className={styles.sortWrapper}>
+                  <span className={styles.sortLabel}>Sort by:</span>
+                  <select
+                    className={styles.sortSelect}
+                    value={sort}
+                    onChange={(e) => {
+                      setSort(e.target.value);
+                      setPage(1);
+                    }}
+                  >
+                    <option value="recent">Most Recent</option>
+                    <option value="salary">Salary: High to Low</option>
+                    <option value="views">Most Viewed</option>
+                  </select>
+                </div>
+
+                <div className={styles.viewToggle}>
+                  <button
+                    type="button"
+                    className={`${styles.viewBtn} ${viewMode === 'list' ? styles.viewActive : ''}`}
+                    onClick={() => setViewMode('list')}
+                    aria-label="List view"
+                  >
+                    <List size={18} />
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.viewBtn} ${viewMode === 'grid' ? styles.viewActive : ''}`}
+                    onClick={() => setViewMode('grid')}
+                    aria-label="Grid view"
+                  >
+                    <LayoutGrid size={18} />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Applied filters tags */}
+            {activeFilterCount > 0 && (
+              <div className={styles.appliedChipsRow}>
+                {selectedCategory && (
+                  <Chip size="sm" removable onRemove={() => setSelectedCategory('')}>
+                    Category: {selectedCategory}
+                  </Chip>
+                )}
+                {datePosted && (
+                  <Chip size="sm" removable onRemove={() => setDatePosted('')}>
+                    Time: {DATE_POSTED_OPTIONS.find((o) => o.value === datePosted)?.label}
+                  </Chip>
+                )}
+                {selectedModes.map((m) => (
+                  <Chip
+                    key={m}
+                    size="sm"
+                    removable
+                    onRemove={() => toggleArrayFilter(selectedModes, setSelectedModes, m)}
+                  >
+                    {m}
+                  </Chip>
+                ))}
+                {selectedTypes.map((t) => (
+                  <Chip
+                    key={t}
+                    size="sm"
+                    removable
+                    onRemove={() => toggleArrayFilter(selectedTypes, setSelectedTypes, t)}
+                  >
+                    {t}
+                  </Chip>
+                ))}
+                {selectedExp.map((e) => (
+                  <Chip
+                    key={e}
+                    size="sm"
+                    removable
+                    onRemove={() => toggleArrayFilter(selectedExp, setSelectedExp, e)}
+                  >
+                    Exp: {e}
+                  </Chip>
+                ))}
+                {salaryMin && (
+                  <Chip size="sm" removable onRemove={() => setSalaryMin('')}>
+                    Min ₹{(salaryMin / 100000).toFixed(0)}L
+                  </Chip>
+                )}
+                <button
+                  type="button"
+                  className={styles.resetBtn}
+                  onClick={clearAllFilters}
+                >
+                  Reset all
+                </button>
+              </div>
+            )}
+
+            {/* Jobs Listing */}
+            {loading ? (
+              <div className={viewMode === 'grid' ? styles.jobsGrid : styles.jobsList}>
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <JobCardSkeleton key={i} />
+                ))}
+              </div>
+            ) : jobs.length === 0 ? (
+              <EmptyState
+                title="No roles match your search 🌱"
+                description="Try relaxing your filters or exploring another craft category. We add new verified opportunities every week."
+                actionLabel="Clear all filters"
+                onAction={clearAllFilters}
+              />
+            ) : (
+              <>
+                <div className={viewMode === 'grid' ? styles.jobsGrid : styles.jobsList}>
+                  {jobs.map((job) => (
+                    <JobCard
+                      key={job._id}
+                      job={job}
+                      viewMode={viewMode}
+                      isSaved={savedJobIds.has(job._id?.toString())}
+                      onSaveToggle={handleSaveToggle}
+                      onApplyClick={(j) => setSelectedJobForApply(j)}
+                    />
+                  ))}
+                </div>
+
+                <Pagination
+                  currentPage={page}
+                  totalPages={totalPages}
+                  onPageChange={(p) => {
+                    setPage(p);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                />
+              </>
+            )}
+          </main>
+        </div>
+      </div>
+
+      {/* =========================================================================
+          3. MOBILE LAYOUT (< 1024px)
+          Engineered for 360px - 430px mobile + 768px tablet viewports.
+         ========================================================================= */}
+      <div className={styles.mobileLayout}>
+        {/* Mobile Search Card */}
+        <section className={styles.mobileSearchSection}>
+          <form className={styles.mobileSearchCard} onSubmit={handleSearchSubmit}>
+            {/* Row 1: Keyword */}
+            <div className={styles.mobileSearchRow}>
+              <Search size={18} className={styles.mobileFieldIcon} />
+              <input
+                type="text"
+                placeholder="Search job title, skills, company..."
+                value={keyword}
+                onChange={(e) => handleKeywordChange(e.target.value)}
+                className={styles.mobileSearchInput}
+              />
+              {keyword && (
+                <button
+                  type="button"
+                  className={styles.mobileClearIconBtn}
+                  onClick={() => {
+                    setKeyword('');
+                    setPage(1);
+                  }}
+                  aria-label="Clear keyword"
+                >
+                  <X size={16} />
+                </button>
               )}
             </div>
 
-            <div className={styles.fieldDivider} />
+            <div className={styles.mobileHairline} />
 
-            <div className={styles.searchFieldWrapper}>
-              <MapPin size={18} className={styles.fieldIcon} />
+            {/* Row 2: Location */}
+            <div className={styles.mobileSearchRow}>
+              <MapPin size={18} className={styles.mobileFieldIcon} />
               <input
                 type="text"
-                placeholder="Location (city or Remote)..."
+                placeholder="City or 'Remote'..."
                 value={location}
                 onChange={(e) => {
                   setLocation(e.target.value);
                   setPage(1);
                 }}
-                className={styles.compactInput}
+                className={styles.mobileSearchInput}
               />
+              {location && (
+                <button
+                  type="button"
+                  className={styles.mobileClearIconBtn}
+                  onClick={() => {
+                    setLocation('');
+                    setPage(1);
+                  }}
+                  aria-label="Clear location"
+                >
+                  <X size={16} />
+                </button>
+              )}
             </div>
 
-            <Button type="submit" variant="primary" size="md">
-              Search
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              variant="primary"
+              fullWidth
+              className={styles.mobileSearchSubmit}
+            >
+              Search Jobs
             </Button>
+          </form>
+        </section>
 
+        {/* Sticky Mobile Controls Bar (56px) */}
+        <div className={styles.stickyControlsBar}>
+          <div className={styles.mobileCountText}>
+            <span className={styles.mobileCountNumber}>{total}</span> roles
+          </div>
+
+          <div className={styles.mobileControlsRight}>
+            {/* Sort Button */}
             <button
               type="button"
-              className={styles.mobileFilterToggle}
-              onClick={() => setMobileFilterOpen(true)}
+              className={styles.mobilePillBtn}
+              onClick={() => setMobileSortOpen(true)}
+              aria-label="Sort jobs"
             >
-              <SlidersHorizontal size={18} />
-              <span>Filters ({activeFilterCount})</span>
+              <ArrowUpDown size={15} />
+              <span>
+                {sort === 'salary' ? 'Salary' : sort === 'views' ? 'Viewed' : 'Recent'}
+              </span>
             </button>
-          </form>
-        </div>
-      </section>
 
-      {/* Main 2-Column Content */}
-      <div className={`container ${styles.mainLayout}`}>
-        {/* Left Sticky Filters (Desktop) */}
-        <aside
-          className={`${styles.filterSidebar} ${
-            mobileFilterOpen ? styles.mobileFilterDrawerOpen : ''
-          }`}
-        >
-          <div className={styles.filterCard}>
-            <div className={styles.filterCardHeader}>
-              <div className={styles.filterTitleRow}>
-                <SlidersHorizontal size={18} className={styles.filterIcon} />
-                <h3 className={styles.filterTitle}>Filter Roles</h3>
-              </div>
+            {/* Filter Button */}
+            <button
+              type="button"
+              className={`${styles.mobilePillBtn} ${
+                activeFilterCount > 0 ? styles.mobilePillBtnActive : ''
+              }`}
+              onClick={() => setMobileFilterOpen(true)}
+              aria-label="Filter jobs"
+            >
+              <SlidersHorizontal size={15} />
+              <span>Filters</span>
               {activeFilterCount > 0 && (
-                <button
-                  type="button"
-                  className={styles.clearAllBtn}
-                  onClick={clearAllFilters}
-                >
-                  Clear all
-                </button>
+                <span className={styles.mobileActiveFilterBadge}>{activeFilterCount}</span>
               )}
-              {mobileFilterOpen && (
-                <button
-                  type="button"
-                  className={styles.drawerClose}
-                  onClick={() => setMobileFilterOpen(false)}
-                >
-                  <X size={20} />
-                </button>
-              )}
-            </div>
+            </button>
 
-            {/* Filter 1: Work Mode */}
-            <div className={styles.filterGroup}>
-              <span className={styles.groupLabel}>Work Mode</span>
-              <div className={styles.chipGroup}>
-                {WORK_MODES.map((mode) => {
-                  const active = selectedModes.includes(mode);
-                  return (
-                    <Chip
-                      key={mode}
-                      size="sm"
-                      active={active}
-                      onClick={() => toggleArrayFilter(selectedModes, setSelectedModes, mode)}
-                    >
-                      {mode}
-                    </Chip>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Filter 2: Job Type */}
-            <div className={styles.filterGroup}>
-              <span className={styles.groupLabel}>Employment Type</span>
-              <div className={styles.checkboxList}>
-                {JOB_TYPES.map((type) => (
-                  <label key={type} className={styles.checkLabel}>
-                    <input
-                      type="checkbox"
-                      checked={selectedTypes.includes(type)}
-                      onChange={() => toggleArrayFilter(selectedTypes, setSelectedTypes, type)}
-                      className={styles.checkbox}
-                    />
-                    <span>{type}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Filter 3: Category */}
-            <div className={styles.filterGroup}>
-              <span className={styles.groupLabel}>Craft & Discipline</span>
-              <select
-                className={styles.selectFilter}
-                value={selectedCategory}
-                onChange={(e) => {
-                  setSelectedCategory(e.target.value);
-                  setPage(1);
-                }}
+            {/* 2-Segment View Toggle */}
+            <div className={styles.mobileViewSegment}>
+              <button
+                type="button"
+                className={`${styles.mobileSegmentBtn} ${
+                  viewMode === 'list' ? styles.mobileSegmentActive : ''
+                }`}
+                onClick={() => setViewMode('list')}
+                aria-label="List view"
               >
-                <option value="">All Disciplines</option>
-                {categories.map((c) => (
-                  <option key={c.slug} value={c.name}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Filter 4: Experience Level */}
-            <div className={styles.filterGroup}>
-              <span className={styles.groupLabel}>Experience (Years)</span>
-              <div className={styles.chipGroup}>
-                {EXPERIENCE_LEVELS.map((exp) => {
-                  const active = selectedExp.includes(exp);
-                  return (
-                    <Chip
-                      key={exp}
-                      size="sm"
-                      active={active}
-                      onClick={() => toggleArrayFilter(selectedExp, setSelectedExp, exp)}
-                    >
-                      {exp === 'Fresher' ? 'Fresher' : `${exp} yrs`}
-                    </Chip>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Filter 5: Date Posted */}
-            <div className={styles.filterGroup}>
-              <span className={styles.groupLabel}>Date Posted</span>
-              <div className={styles.radioList}>
-                {DATE_POSTED_OPTIONS.map((opt) => (
-                  <label key={opt.value} className={styles.radioLabel}>
-                    <input
-                      type="radio"
-                      name="datePosted"
-                      checked={datePosted === opt.value}
-                      onChange={() => {
-                        setDatePosted(opt.value);
-                        setPage(1);
-                      }}
-                      className={styles.radio}
-                    />
-                    <span>{opt.label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Filter 6: Min Salary */}
-            <div className={styles.filterGroup}>
-              <span className={styles.groupLabel}>Min Salary (INR / LPA)</span>
-              <div className={styles.salaryInputRow}>
-                <input
-                  type="number"
-                  placeholder="e.g. 1500000"
-                  value={salaryMin}
-                  onChange={(e) => {
-                    setSalaryMin(e.target.value);
-                    setPage(1);
-                  }}
-                  className={styles.numInput}
-                />
-              </div>
-            </div>
-
-            {/* Mobile bottom apply sticky button */}
-            {mobileFilterOpen && (
-              <div className={styles.mobileApplyBottom}>
-                <Button
-                  variant="primary"
-                  fullWidth
-                  onClick={() => setMobileFilterOpen(false)}
-                >
-                  Apply Filters ({total} found)
-                </Button>
-              </div>
-            )}
-          </div>
-        </aside>
-
-        {/* Right Job Results */}
-        <main className={styles.resultsArea}>
-          {/* Results Header */}
-          <div className={styles.resultsHeader}>
-            <div className={styles.countText}>
-              <span className={styles.highlightCount}>{total}</span>{' '}
-              {total === 1 ? 'opportunity' : 'opportunities'} found
-            </div>
-
-            <div className={styles.viewAndSort}>
-              <div className={styles.sortWrapper}>
-                <span className={styles.sortLabel}>Sort by:</span>
-                <select
-                  className={styles.sortSelect}
-                  value={sort}
-                  onChange={(e) => {
-                    setSort(e.target.value);
-                    setPage(1);
-                  }}
-                >
-                  <option value="recent">Most Recent</option>
-                  <option value="salary">Salary: High to Low</option>
-                  <option value="views">Most Viewed</option>
-                </select>
-              </div>
-
-              <div className={styles.viewToggle}>
-                <button
-                  type="button"
-                  className={`${styles.viewBtn} ${viewMode === 'list' ? styles.viewActive : ''}`}
-                  onClick={() => setViewMode('list')}
-                  aria-label="List view"
-                >
-                  <List size={18} />
-                </button>
-                <button
-                  type="button"
-                  className={`${styles.viewBtn} ${viewMode === 'grid' ? styles.viewActive : ''}`}
-                  onClick={() => setViewMode('grid')}
-                  aria-label="Grid view"
-                >
-                  <LayoutGrid size={18} />
-                </button>
-              </div>
+                <List size={16} />
+              </button>
+              <button
+                type="button"
+                className={`${styles.mobileSegmentBtn} ${
+                  viewMode === 'grid' ? styles.mobileSegmentActive : ''
+                }`}
+                onClick={() => setViewMode('grid')}
+                aria-label="Grid view"
+              >
+                <LayoutGrid size={16} />
+              </button>
             </div>
           </div>
+        </div>
 
-          {/* Applied filters tags */}
-          {activeFilterCount > 0 && (
-            <div className={styles.appliedChipsRow}>
+        {/* Applied Filter Chips (Horizontally Scrollable) */}
+        {activeFilterCount > 0 && (
+          <div className={styles.mobileAppliedChipsContainer}>
+            <div className={styles.mobileAppliedChipsTrack}>
               {selectedCategory && (
-                <Chip size="sm" removable onRemove={() => setSelectedCategory('')}>
-                  Category: {selectedCategory}
-                </Chip>
+                <span className={styles.mobileAppliedChip}>
+                  <span>{selectedCategory}</span>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCategory('')}
+                    aria-label={`Remove ${selectedCategory}`}
+                  >
+                    <X size={13} />
+                  </button>
+                </span>
               )}
               {datePosted && (
-                <Chip size="sm" removable onRemove={() => setDatePosted('')}>
-                  Time: {DATE_POSTED_OPTIONS.find((o) => o.value === datePosted)?.label}
-                </Chip>
+                <span className={styles.mobileAppliedChip}>
+                  <span>{DATE_POSTED_OPTIONS.find((o) => o.value === datePosted)?.label}</span>
+                  <button
+                    type="button"
+                    onClick={() => setDatePosted('')}
+                    aria-label="Remove date filter"
+                  >
+                    <X size={13} />
+                  </button>
+                </span>
               )}
               {selectedModes.map((m) => (
-                <Chip
-                  key={m}
-                  size="sm"
-                  removable
-                  onRemove={() => toggleArrayFilter(selectedModes, setSelectedModes, m)}
-                >
-                  {m}
-                </Chip>
+                <span key={m} className={styles.mobileAppliedChip}>
+                  <span>{m}</span>
+                  <button
+                    type="button"
+                    onClick={() => toggleArrayFilter(selectedModes, setSelectedModes, m)}
+                    aria-label={`Remove ${m}`}
+                  >
+                    <X size={13} />
+                  </button>
+                </span>
               ))}
               {selectedTypes.map((t) => (
-                <Chip
-                  key={t}
-                  size="sm"
-                  removable
-                  onRemove={() => toggleArrayFilter(selectedTypes, setSelectedTypes, t)}
-                >
-                  {t}
-                </Chip>
+                <span key={t} className={styles.mobileAppliedChip}>
+                  <span>{t}</span>
+                  <button
+                    type="button"
+                    onClick={() => toggleArrayFilter(selectedTypes, setSelectedTypes, t)}
+                    aria-label={`Remove ${t}`}
+                  >
+                    <X size={13} />
+                  </button>
+                </span>
               ))}
               {selectedExp.map((e) => (
-                <Chip
-                  key={e}
-                  size="sm"
-                  removable
-                  onRemove={() => toggleArrayFilter(selectedExp, setSelectedExp, e)}
-                >
-                  Exp: {e}
-                </Chip>
+                <span key={e} className={styles.mobileAppliedChip}>
+                  <span>Exp: {e}</span>
+                  <button
+                    type="button"
+                    onClick={() => toggleArrayFilter(selectedExp, setSelectedExp, e)}
+                    aria-label={`Remove experience ${e}`}
+                  >
+                    <X size={13} />
+                  </button>
+                </span>
               ))}
               {salaryMin && (
-                <Chip size="sm" removable onRemove={() => setSalaryMin('')}>
-                  Min ₹{(salaryMin / 100000).toFixed(0)}L
-                </Chip>
+                <span className={styles.mobileAppliedChip}>
+                  <span>Min ₹{(salaryMin / 100000).toFixed(0)}L</span>
+                  <button
+                    type="button"
+                    onClick={() => setSalaryMin('')}
+                    aria-label="Remove salary filter"
+                  >
+                    <X size={13} />
+                  </button>
+                </span>
               )}
               <button
                 type="button"
-                className={styles.resetBtn}
+                className={styles.mobileResetAllBtn}
                 onClick={clearAllFilters}
               >
-                Reset all
+                Clear all
               </button>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Jobs Listing */}
+        {/* Mobile Jobs Results */}
+        <div className={styles.mobileResultsList}>
           {loading ? (
-            <div className={viewMode === 'grid' ? styles.jobsGrid : styles.jobsList}>
-              {Array.from({ length: 6 }).map((_, i) => (
-                <JobCardSkeleton key={i} />
+            <div className={styles.mobileCardsStack}>
+              {Array.from({ length: 4 }).map((_, i) => (
+                <JobCardSkeletonMobile key={i} />
               ))}
             </div>
           ) : jobs.length === 0 ? (
-            <EmptyState
-              title="No roles match your search 🌱"
-              description="Try relaxing your filters or exploring another craft category. We add new verified opportunities every week."
-              actionLabel="Clear all filters"
+            <EmptyStateMobile
+              title="No roles match your search"
+              description="Try relaxing your filters or searching another keyword. New verified roles arrive every week."
+              actionLabel="Reset all filters"
               onAction={clearAllFilters}
             />
           ) : (
-            <>
-              <div className={viewMode === 'grid' ? styles.jobsGrid : styles.jobsList}>
-                {jobs.map((job) => (
-                  <JobCard
-                    key={job._id}
-                    job={job}
-                    viewMode={viewMode}
-                    onApplyClick={(j) => setSelectedJobForApply(j)}
-                  />
-                ))}
-              </div>
+            <div
+              className={
+                viewMode === 'grid' ? styles.mobileGridContainer : styles.mobileListContainer
+              }
+            >
+              {jobs.map((job) => (
+                <JobCardMobile
+                  key={job._id}
+                  job={job}
+                  isSaved={savedJobIds.has(job._id?.toString())}
+                  onSaveToggle={handleSaveToggle}
+                  onApplyClick={(j) => setSelectedJobForApply(j)}
+                  viewVariant={viewMode === 'grid' ? 'compact' : 'list'}
+                />
+              ))}
+            </div>
+          )}
 
-              {/* Pagination */}
-              <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                onPageChange={(p) => {
-                  setPage(p);
+          {/* Mobile Pagination */}
+          {!loading && jobs.length > 0 && totalPages > 1 && (
+            <div className={styles.mobilePaginationRow}>
+              <button
+                type="button"
+                className={styles.mobilePageBtn}
+                disabled={page <= 1}
+                onClick={() => {
+                  setPage((p) => Math.max(1, p - 1));
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-              />
-            </>
+              >
+                Previous
+              </button>
+              <span className={styles.mobilePageIndicator}>
+                Page {page} of {totalPages}
+              </span>
+              <button
+                type="button"
+                className={styles.mobilePageBtn}
+                disabled={page >= totalPages}
+                onClick={() => {
+                  setPage((p) => Math.min(totalPages, p + 1));
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              >
+                Next
+              </button>
+            </div>
           )}
-        </main>
+        </div>
       </div>
 
-      {/* Apply Modal */}
+      {/* Floating Back to Top Button */}
+      {showBackToTop && (
+        <button
+          type="button"
+          className={styles.backToTopBtn}
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          aria-label="Back to top"
+        >
+          <ArrowUp size={20} />
+        </button>
+      )}
+
+      {/* =========================================================================
+          4. BOTTOM SHEETS FOR MOBILE
+         ========================================================================= */}
+      {/* 4.1 Filters BottomSheet (80% viewport height) */}
+      <BottomSheet
+        isOpen={mobileFilterOpen}
+        onClose={() => setMobileFilterOpen(false)}
+        title="Filter Opportunities"
+      >
+        <div className={styles.sheetFilterBody}>
+          {/* Work Mode */}
+          <div className={styles.sheetFilterSection}>
+            <span className={styles.sheetSectionLabel}>Work Mode</span>
+            <div className={styles.sheetPillsRow}>
+              {WORK_MODES.map((mode) => {
+                const active = selectedModes.includes(mode);
+                return (
+                  <button
+                    key={mode}
+                    type="button"
+                    className={`${styles.sheetPill} ${active ? styles.sheetPillActive : ''}`}
+                    onClick={() => toggleArrayFilter(selectedModes, setSelectedModes, mode)}
+                  >
+                    {active && <Check size={14} className={styles.sheetCheckIcon} />}
+                    <span>{mode}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Job Type */}
+          <div className={styles.sheetFilterSection}>
+            <span className={styles.sheetSectionLabel}>Employment Type</span>
+            <div className={styles.sheetPillsRow}>
+              {JOB_TYPES.map((type) => {
+                const active = selectedTypes.includes(type);
+                return (
+                  <button
+                    key={type}
+                    type="button"
+                    className={`${styles.sheetPill} ${active ? styles.sheetPillActive : ''}`}
+                    onClick={() => toggleArrayFilter(selectedTypes, setSelectedTypes, type)}
+                  >
+                    {active && <Check size={14} className={styles.sheetCheckIcon} />}
+                    <span>{type}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Category */}
+          <div className={styles.sheetFilterSection}>
+            <span className={styles.sheetSectionLabel}>Craft & Discipline</span>
+            <select
+              className={styles.sheetSelect}
+              value={selectedCategory}
+              onChange={(e) => {
+                setSelectedCategory(e.target.value);
+                setPage(1);
+              }}
+            >
+              <option value="">All Disciplines</option>
+              {categories.map((c) => (
+                <option key={c.slug} value={c.name}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Experience */}
+          <div className={styles.sheetFilterSection}>
+            <span className={styles.sheetSectionLabel}>Experience (Years)</span>
+            <div className={styles.sheetPillsRow}>
+              {EXPERIENCE_LEVELS.map((exp) => {
+                const active = selectedExp.includes(exp);
+                return (
+                  <button
+                    key={exp}
+                    type="button"
+                    className={`${styles.sheetPill} ${active ? styles.sheetPillActive : ''}`}
+                    onClick={() => toggleArrayFilter(selectedExp, setSelectedExp, exp)}
+                  >
+                    {active && <Check size={14} className={styles.sheetCheckIcon} />}
+                    <span>{exp === 'Fresher' ? 'Fresher' : `${exp} yrs`}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Date Posted */}
+          <div className={styles.sheetFilterSection}>
+            <span className={styles.sheetSectionLabel}>Date Posted</span>
+            <div className={styles.sheetRadioList}>
+              {DATE_POSTED_OPTIONS.map((opt) => {
+                const active = datePosted === opt.value;
+                return (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    className={`${styles.sheetRadioRow} ${
+                      active ? styles.sheetRadioRowActive : ''
+                    }`}
+                    onClick={() => {
+                      setDatePosted(opt.value);
+                      setPage(1);
+                    }}
+                  >
+                    <div className={styles.sheetRadioCircle}>
+                      {active && <div className={styles.sheetRadioDot} />}
+                    </div>
+                    <span className={styles.sheetRadioText}>{opt.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Min Salary */}
+          <div className={styles.sheetFilterSection}>
+            <span className={styles.sheetSectionLabel}>Minimum Salary</span>
+            <div className={styles.sheetSalaryPresets}>
+              {SALARY_PRESETS.map((preset) => {
+                const active = salaryMin === preset.value;
+                return (
+                  <button
+                    key={preset.value}
+                    type="button"
+                    className={`${styles.sheetPill} ${active ? styles.sheetPillActive : ''}`}
+                    onClick={() => {
+                      setSalaryMin(active ? '' : preset.value);
+                      setPage(1);
+                    }}
+                  >
+                    {preset.label}
+                  </button>
+                );
+              })}
+            </div>
+            <div className={styles.sheetSalaryInputWrapper}>
+              <span className={styles.sheetRupee}>₹</span>
+              <input
+                type="number"
+                placeholder="Or enter amount (e.g. 1500000)"
+                value={salaryMin}
+                onChange={(e) => {
+                  setSalaryMin(e.target.value);
+                  setPage(1);
+                }}
+                className={styles.sheetSalaryInput}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Sticky Sheet Footer */}
+        <div className={styles.sheetStickyFooter}>
+          {activeFilterCount > 0 ? (
+            <button
+              type="button"
+              className={styles.sheetClearBtn}
+              onClick={clearAllFilters}
+            >
+              Clear all
+            </button>
+          ) : (
+            <div />
+          )}
+          <Button
+            variant="primary"
+            size="lg"
+            className={styles.sheetShowRolesBtn}
+            onClick={() => setMobileFilterOpen(false)}
+          >
+            Show {total} {total === 1 ? 'role' : 'roles'} 🌱
+          </Button>
+        </div>
+      </BottomSheet>
+
+      {/* 4.2 Sort BottomSheet */}
+      <BottomSheet
+        isOpen={mobileSortOpen}
+        onClose={() => setMobileSortOpen(false)}
+        title="Sort Opportunities"
+      >
+        <div className={styles.sheetSortBody}>
+          {[
+            { label: 'Most Recent', value: 'recent' },
+            { label: 'Salary: High to Low', value: 'salary' },
+            { label: 'Most Viewed', value: 'views' },
+          ].map((item) => {
+            const active = sort === item.value;
+            return (
+              <button
+                key={item.value}
+                type="button"
+                className={`${styles.sheetSortOption} ${
+                  active ? styles.sheetSortOptionActive : ''
+                }`}
+                onClick={() => {
+                  setSort(item.value);
+                  setPage(1);
+                  setMobileSortOpen(false);
+                }}
+              >
+                <span className={styles.sheetSortText}>{item.label}</span>
+                {active && <Check size={18} className={styles.sheetSortCheck} />}
+              </button>
+            );
+          })}
+        </div>
+      </BottomSheet>
+
+      {/* 4.3 Account Sheet (if jobseeker) */}
+      {isSeeker && (
+        <AccountSheet
+          isOpen={accountSheetOpen}
+          onClose={() => setAccountSheetOpen(false)}
+        />
+      )}
+
+      {/* 4.4 Mobile Tab Bar (if jobseeker) */}
+      {isSeeker && <MobileTabBar />}
+
+      {/* 4.5 Apply Modal */}
       {selectedJobForApply && (
         <ApplyModal
           job={selectedJobForApply}
           isOpen={!!selectedJobForApply}
           onClose={() => setSelectedJobForApply(null)}
           onApplied={() => {
-            // refresh or update state
+            setSelectedJobForApply(null);
           }}
         />
       )}
 
-      <Footer />
+      {/* Desktop footer */}
+      <div className={styles.desktopOnlyFooter}>
+        <Footer />
+      </div>
     </div>
   );
 }
 
 export default function JobsPage() {
   return (
-    <Suspense fallback={<div className="container" style={{ padding: '40px' }}><JobCardSkeleton /></div>}>
+    <Suspense
+      fallback={
+        <div className="container" style={{ padding: '40px' }}>
+          <JobCardSkeleton />
+        </div>
+      }
+    >
       <JobsContent />
     </Suspense>
   );

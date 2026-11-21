@@ -23,31 +23,8 @@
   flex-direction: column;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.brandLogoRow {
   margin-bottom: 18px;
-  text-decoration: none;
-}
-
-.logoIcon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: var(--gradient-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--white);
-}
-
-.logoText {
-  font-family: var(--font-serif);
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--white);
-  letter-spacing: -0.02em;
 }
 
 .tagline {
@@ -90,13 +67,41 @@
   gap: 32px;
 }
 
-.colTitle {
+.linkCol {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Desktop Heading */
+.colTitleDesktop {
+  display: block;
   font-family: var(--font-serif);
   font-size: 16px;
   font-weight: 600;
   color: var(--white);
   margin-bottom: 20px;
   letter-spacing: -0.01em;
+}
+
+/* Mobile Accordion Toggle (Hidden on desktop) */
+.mobileAccordionToggle {
+  display: none;
+}
+
+.colTitleMobile {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.accordionChevron {
+  color: var(--sage);
+  transition: transform 200ms ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
 }
 
 .linkList {
@@ -162,6 +167,7 @@
   justify-content: center;
   flex-shrink: 0;
   transition: transform var(--transition-fast);
+  cursor: pointer;
 }
 
 .newsletterBtn:hover {
@@ -197,24 +203,112 @@
   opacity: 0.4;
 }
 
-@media (max-width: 1024px) {
-  .topSection {
-    grid-template-columns: 1fr;
-    gap: 40px;
+/* ==========================================================================
+   MOBILE & TABLET STYLES (< 1024px)
+   ========================================================================== */
+@media (max-width: 1023.98px) {
+  .footer {
+    border-radius: 28px 28px 0 0;
+    padding: 48px 0 calc(28px + env(safe-area-inset-bottom, 0px)) 0;
   }
-  .linksGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 
-@media (max-width: 640px) {
-  .linksGrid {
-    grid-template-columns: 1fr;
-    gap: 28px;
+  .topSection {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    margin-bottom: 36px;
   }
+
+  .tagline {
+    font-size: 14px;
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .socialRow {
+    gap: 14px;
+  }
+
+  .socialIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+
+  .linksGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .colTitleDesktop {
+    display: none !important;
+  }
+
+  .mobileAccordionToggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .linkList {
+    display: none;
+    padding: 12px 0 16px 12px;
+    gap: 10px;
+  }
+
+  .linkListOpen {
+    display: flex !important;
+  }
+
+  .linkList a {
+    font-size: 14px;
+    display: inline-block;
+    padding: 4px 0;
+  }
+
+  .newsletterCol {
+    margin-top: 14px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .newsletterCol .colTitleDesktop {
+    display: block !important;
+    margin-bottom: 10px;
+  }
+
+  .newsletterForm {
+    height: 52px;
+    padding: 4px;
+  }
+
+  .newsletterInput {
+    font-size: 14px;
+    padding: 0 12px;
+  }
+
+  .newsletterBtn {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+
   .bottomBar {
     flex-direction: column;
+    align-items: center;
     gap: 14px;
     text-align: center;
+    padding-top: 24px;
   }
 }

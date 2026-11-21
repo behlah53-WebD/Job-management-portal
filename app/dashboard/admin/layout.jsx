@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { signOut } from 'next-auth/react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useSession, signOut } from 'next-auth/react';
 import {
   Sprout,
   LayoutDashboard,
@@ -20,11 +20,46 @@ import {
   ExternalLink,
   Shield,
 } from 'lucide-react';
+import MobileTopBar from '@/components/layout/mobile/MobileTopBar';
+import MobileTabBar from '@/components/layout/mobile/MobileTabBar';
+import AccountSheet from '@/components/layout/mobile/AccountSheet';
 import styles from './adminLayout.module.css';
 
 export default function AdminDashboardLayout({ children }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { data: session } = useSession();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [accountSheetOpen, setAccountSheetOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
+  const handleSignOut = async () => {
+    if (isSigningOut) return;
+    setIsSigningOut(true);
+    try {
+      if (typeof window !== 'undefined') {
+        sessionStorage.clear();
+      }
+      await signOut({ redirect: false });
+      router.push('/');
+      router.refresh();
+    } catch {
+      window.location.href = '/';
+    } finally {
+      setIsSigningOut(false);
+    }
+  };
+
+  const getPageTitle = () => {
+    if (pathname === '/dashboard/admin') return 'Admin Console';
+    if (pathname.includes('/users')) return 'Manage Users';
+    if (pathname.includes('/jobs')) return 'Moderate Jobs';
+    if (pathname.includes('/companies')) return 'Companies';
+    if (pathname.includes('/reports')) return 'Reports';
+    if (pathname.includes('/categories')) return 'Categories';
+    if (pathname.includes('/settings')) return 'Settings';
+    return 'Admin';
+  };
 
   const navItems = [
     { label: 'Overview', href: '/dashboard/admin', icon: LayoutDashboard },
@@ -38,7 +73,15 @@ export default function AdminDashboardLayout({ children }) {
 
   return (
     <div className={styles.layout}>
-      {/* Admin Dark Control Sidebar (green-900) */}
+      {/* Mobile Top Bar (< 1024px) */}
+      <div className={styles.mobileTopBarWrapper}>
+        <MobileTopBar
+          title={getPageTitle()}
+          onOpenAccount={() => setAccountSheetOpen(true)}
+        />
+      </div>
+
+      {/* Admin Dark Control Sidebar (green-900) - Desktop >= 1024px */}
       <aside className={`${styles.sidebar} ${mobileOpen ? styles.mobileOpen : ''}`}>
         <div className={styles.sidebarHeader}>
           <Link href="/" className={styles.logo}>
@@ -90,16 +133,18 @@ export default function AdminDashboardLayout({ children }) {
           <button
             type="button"
             className={styles.logoutBtn}
-            onClick={() => signOut({ callbackUrl: '/' })}
+            onClick={handleSignOut}
+            disabled={isSigningOut}
           >
             <LogOut size={16} />
-            <span>Sign out</span>
+            <span>{isSigningOut ? 'Signing out...' : 'Sign out'}</span>
           </button>
         </div>
       </aside>
 
       {/* Main Admin Workspace */}
       <div className={styles.mainContent}>
+        {/* Desktop Top Bar (>= 1024px) */}
         <header className={styles.topbar}>
           <div className={styles.topbarLeft}>
             <button
@@ -121,6 +166,16 @@ export default function AdminDashboardLayout({ children }) {
         </header>
 
         <main className={styles.pageBody}>{children}</main>
+
+        {/* Floating Mobile Tab Bar (< 1024px) */}
+        <MobileTabBar role="admin" />
+
+        {/* Mobile Account Sheet (< 1024px) */}
+        <AccountSheet
+          isOpen={accountSheetOpen}
+          onClose={() => setAccountSheetOpen(false)}
+          user={session?.user}
+        />
       </div>
     </div>
   );

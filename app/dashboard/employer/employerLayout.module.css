@@ -198,6 +198,11 @@
   background-color: var(--danger-bg);
 }
 
+.logoutBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Main Content */
 .mainContent {
   flex: 1;
@@ -279,54 +284,33 @@
   display: none;
 }
 
-@media (max-width: 900px) {
+.mobileTopBarWrapper {
+  display: none;
+}
+
+@media (max-width: 1023.98px) {
+  .mobileTopBarWrapper {
+    display: block !important;
+  }
   .sidebar {
-    transform: translateX(-100%);
-    transition: transform var(--transition-normal);
-  }
-  .mobileOpen {
-    transform: translateX(0);
-  }
-  .closeDrawerBtn {
-    display: block;
-  }
-  .mainContent {
-    margin-left: 0;
-    padding-bottom: 70px;
-  }
-  .mobileHamburger {
-    display: block;
+    display: none !important;
   }
   .topbar {
-    padding: 0 16px;
+    display: none !important;
+  }
+  .mainContent {
+    margin-left: 0 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-x: clip !important;
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px) + 24px) !important;
   }
   .pageBody {
-    padding: 20px 16px;
-  }
-  .mobileTabBar {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 64px;
-    background-color: var(--white);
-    border-top: 1px solid var(--border);
-    z-index: 60;
-    justify-content: space-around;
-    align-items: center;
-  }
-  .tabBarItem {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    color: var(--text-muted);
-    font-size: 10px;
-    font-weight: 600;
-    text-decoration: none;
-  }
-  .tabBarActive {
-    color: var(--green-600);
+    padding: 16px 14px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-x: clip !important;
   }
 }

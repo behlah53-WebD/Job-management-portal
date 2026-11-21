@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import {
   Sprout,
@@ -13,19 +13,38 @@ import {
   User,
   Settings,
   LogOut,
-  Menu,
-  X,
   TreePine,
 } from 'lucide-react';
 import { getGreeting, getInitials, calculateProfileStrength } from '@/lib/utils';
 import Logo from '@/components/ui/Logo';
+import MobileTopBar from '@/components/layout/mobile/MobileTopBar';
+import MobileTabBar from '@/components/layout/mobile/MobileTabBar';
+import AccountSheet from '@/components/layout/mobile/AccountSheet';
 import styles from './dashboardLayout.module.css';
 
 export default function SeekerDashboardLayout({ children }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { data: session } = useSession();
   const [profile, setProfile] = useState(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [accountSheetOpen, setAccountSheetOpen] = useState(false);
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
+  const handleSignOut = async () => {
+    if (isSigningOut) return;
+    setIsSigningOut(true);
+    try {
+      if (typeof window !== 'undefined') {
+        sessionStorage.clear();
+      }
+      await signOut({ redirect: false });
+      router.push('/');
+      router.refresh();
+    } catch {
+      window.location.href = '/';
+    }
+  };
 
   useEffect(() => {
     if (session?.user) {
@@ -48,6 +67,16 @@ export default function SeekerDashboardLayout({ children }) {
           }
         })
         .catch(() => {});
+
+      // Notifications count
+      fetch('/api/notifications')
+        .then((r) => (r.ok ? r.json() : []))
+        .then((data) => {
+          if (Array.isArray(data)) {
+            setUnreadNotifications(data.filter((n) => !n.isRead).length);
+          }
+        })
+        .catch(() => {});
     }
   }, [session]);
 
@@ -66,17 +95,12 @@ export default function SeekerDashboardLayout({ children }) {
 
   return (
     <div className={styles.layoutWrapper}>
-      {/* Left Sidebar (260px) */}
-      <aside className={`${styles.sidebar} ${mobileMenuOpen ? styles.mobileOpen : ''}`}>
+      {/* ========================================================
+          DESKTOP SIDEBAR (>= 1024px only)
+          ======================================================== */}
+      <aside className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
           <Logo size="sm" />
-          <button
-            type="button"
-            className={styles.closeDrawerBtn}
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            <X size={20} />
-          </button>
         </div>
 
         <nav className={styles.navMenu}>
@@ -92,7 +116,6 @@ export default function SeekerDashboardLayout({ children }) {
                 key={item.href}
                 href={item.href}
                 className={`${styles.navItem} ${isActive ? styles.navItemActive : ''}`}
-                onClick={() => setMobileMenuOpen(false)}
               >
                 <Icon size={18} className={styles.navIcon} />
                 <span>{item.label}</span>
@@ -131,26 +154,22 @@ export default function SeekerDashboardLayout({ children }) {
           <button
             type="button"
             className={styles.logoutBtn}
-            onClick={() => signOut({ callbackUrl: '/' })}
+            onClick={handleSignOut}
+            disabled={isSigningOut}
           >
             <LogOut size={16} />
-            <span>Sign out</span>
+            <span>{isSigningOut ? 'Signing out...' : 'Sign out'}</span>
           </button>
         </div>
       </aside>
 
       {/* Main Workspace */}
       <div className={styles.mainContent}>
-        {/* Top Bar */}
+        {/* ========================================================
+            DESKTOP TOPBAR (>= 1024px only)
+            ======================================================== */}
         <header className={styles.topbar}>
           <div className={styles.topbarLeft}>
-            <button
-              type="button"
-              className={styles.mobileHamburger}
-              onClick={() => setMobileMenuOpen(true)}
-            >
-              <Menu size={22} />
-            </button>
             <h2 suppressHydrationWarning className={styles.greetingText}>{greeting}</h2>
           </div>
 
@@ -168,30 +187,37 @@ export default function SeekerDashboardLayout({ children }) {
           </div>
         </header>
 
+        {/* ========================================================
+            MOBILE TOPBAR (< 1024px only)
+            ======================================================== */}
+        <MobileTopBar
+          user={session?.user}
+          onOpenAccount={() => setAccountSheetOpen(true)}
+          unreadNotifications={unreadNotifications}
+        />
+
         {/* Page Content */}
         <main className={styles.pageBody}>{children}</main>
 
-        {/* Bottom Tab Bar for Mobile */}
-        <nav className={styles.mobileTabBar}>
-          {navItems.slice(0, 5).map((item) => {
-            const Icon = item.icon;
-            const isActive =
-              item.href === '/dashboard/seeker'
-                ? pathname === '/dashboard/seeker'
-                : pathname.startsWith(item.href);
+        {/* ========================================================
+            MOBILE FLOATING BOTTOM TAB BAR (< 1024px only)
+            ======================================================== */}
+        <MobileTabBar
+          role="seeker"
+          applicationsBadge={0}
+          isSheetOpen={accountSheetOpen}
+        />
 
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`${styles.tabBarItem} ${isActive ? styles.tabBarActive : ''}`}
-              >
-                <Icon size={20} />
-                <span className={styles.tabBarLabel}>{item.label.split(' ')[0]}</span>
-              </Link>
-            );
-          })}
-        </nav>
+        {/* ========================================================
+            MOBILE ACCOUNT SHEET (replaces side drawer)
+            ======================================================== */}
+        <AccountSheet
+          isOpen={accountSheetOpen}
+          onClose={() => setAccountSheetOpen(false)}
+          user={session?.user}
+          profile={profile}
+          strength={strength}
+        />
       </div>
     </div>
   );

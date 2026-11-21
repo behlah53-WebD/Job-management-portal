@@ -5,16 +5,42 @@
   background-color: var(--bg-page);
 }
 
-/* Compact sticky search header */
+/* ==========================================================================
+   DESKTOP STYLES (>= 1024px)
+   Protected 100% pixel-identical desktop experience.
+   ========================================================================== */
+.desktopOnlyNav {
+  display: block;
+}
+
+.mobileOnlyHeader {
+  display: none;
+}
+
+.desktopLayout {
+  display: block;
+}
+
+.mobileLayout {
+  display: none;
+}
+
+.desktopOnlyFooter {
+  display: block;
+  margin-top: auto;
+}
+
+/* Compact sticky search header (Desktop) */
 .searchHeader {
   position: sticky;
   top: 76px;
   z-index: 40;
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
-  padding: 14px 0;
+  padding: 16px 0 20px 0;
+  box-shadow: 0 4px 20px rgba(15, 92, 51, 0.05);
 }
 
 .compactSearch {
@@ -114,7 +140,7 @@
   color: var(--green-800);
 }
 
-/* 2-column layout */
+/* 2-column layout (Desktop) */
 .mainLayout {
   display: grid;
   grid-template-columns: 280px 1fr;
@@ -127,7 +153,7 @@
 /* Sidebar */
 .filterSidebar {
   position: sticky;
-  top: 160px;
+  top: 96px;
 }
 
 .filterCard {
@@ -139,6 +165,29 @@
   display: flex;
   flex-direction: column;
   gap: 22px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.filterCard::-webkit-scrollbar {
+  width: 5px;
+}
+
+.filterCard::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.filterCard::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+
+.filterCard::-webkit-scrollbar-thumb:hover {
+  background: var(--sage);
 }
 
 .filterCardHeader {
@@ -147,6 +196,80 @@
   justify-content: space-between;
   padding-bottom: 14px;
   border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: -24px;
+  margin-top: -24px;
+  padding-top: 24px;
+  background-color: var(--white);
+  z-index: 5;
+}
+
+/* Sidebar Search Inside Filter Card */
+.sidebarSearchForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.sidebarSearchInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0 10px;
+  min-height: 40px;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.sidebarSearchInputWrapper:focus-within {
+  border-color: var(--green-500);
+  background-color: var(--white);
+  box-shadow: 0 0 0 3px rgba(47, 179, 106, 0.12);
+}
+
+.sidebarFieldIcon {
+  color: var(--green-700);
+  flex-shrink: 0;
+}
+
+.sidebarSearchInput {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-main);
+}
+
+.sidebarSearchInput::placeholder {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.sidebarClearInputBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebarClearInputBtn:hover {
+  color: var(--green-900);
+  background-color: var(--mint-100);
 }
 
 .filterTitleRow {
@@ -171,10 +294,6 @@
   color: var(--green-600);
   font-weight: 600;
   cursor: pointer;
-}
-
-.drawerClose {
-  display: none;
 }
 
 .filterGroup {
@@ -252,7 +371,7 @@
   outline: none;
 }
 
-/* Results Area */
+/* Results Area (Desktop) */
 .resultsArea {
   display: flex;
   flex-direction: column;
@@ -355,49 +474,586 @@
   gap: 20px;
 }
 
-/* Mobile responsive */
-@media (max-width: 900px) {
-  .mainLayout {
-    grid-template-columns: 1fr;
+/* ==========================================================================
+   MOBILE & TABLET STYLES (< 1024px)
+   ========================================================================== */
+@media (max-width: 1023.98px) {
+  .desktopOnlyNav {
+    display: none !important;
   }
-  .compactSearch {
-    flex-wrap: wrap;
+
+  .mobileOnlyHeader {
+    display: block !important;
   }
-  .searchFieldWrapper {
+
+  .desktopLayout {
+    display: none !important;
+  }
+
+  .mobileLayout {
+    display: flex !important;
+    flex-direction: column;
     width: 100%;
-    flex: none;
+    min-width: 0;
+    max-width: 100%;
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px) + 24px);
+    overflow-x: clip;
   }
-  .fieldDivider {
+
+  /* 1. Mobile Search Card */
+  .mobileSearchSection {
+    padding: 14px 16px;
+    background-color: var(--white);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .mobileSearchCard {
+    background-color: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(11, 61, 36, 0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobileSearchRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 50px;
+    padding: 6px 14px;
+    position: relative;
+  }
+
+  .mobileFieldIcon {
+    color: var(--green-700);
+    flex-shrink: 0;
+  }
+
+  .mobileSearchInput {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 16px; /* iOS zoom prevention */
+    color: var(--text-main);
+  }
+
+  .mobileSearchInput::placeholder {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .mobileClearIconBtn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-soft);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .mobileHairline {
+    width: 100%;
+    height: 1px;
+    background-color: var(--border-subtle);
+  }
+
+  .mobileSearchSubmit {
+    min-height: 48px;
+    border-radius: 0 0 16px 16px !important;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  /* 2. Normal In-Flow Mobile Controls Bar (Non-sticky, flows naturally with page) */
+  .stickyControlsBar {
+    position: static;
+    background-color: transparent;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 52px;
+    padding: 8px 16px 12px 16px;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .mobileCountText {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+
+  .mobileCountNumber {
+    font-weight: 700;
+    color: var(--green-900);
+  }
+
+  .mobileControlsRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .mobilePillBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 38px;
+    padding: 0 12px;
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: all var(--transition-fast);
+  }
+
+  .mobilePillBtn:active {
+    transform: scale(0.97);
+  }
+
+  .mobilePillBtnActive {
+    background-color: var(--mint-100);
+    border-color: var(--green-400);
+    color: var(--green-800);
+  }
+
+  .mobileActiveFilterBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--green-600);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 700;
+    margin-left: 2px;
+  }
+
+  .mobileViewSegment {
+    display: flex;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background-color: var(--white);
+    overflow: hidden;
+    height: 38px;
+  }
+
+  .mobileSegmentBtn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .mobileSegmentActive {
+    background-color: var(--mint-100);
+    color: var(--green-700);
+    font-weight: 700;
+  }
+
+  /* 3. Horizontally Scrollable Applied Chips */
+  .mobileAppliedChipsContainer {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 10px 16px 4px 16px;
+  }
+
+  .mobileAppliedChipsContainer::-webkit-scrollbar {
     display: none;
   }
-  .mobileFilterToggle {
+
+  .mobileAppliedChipsTrack {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .mobileAppliedChip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 10px;
+    background-color: var(--mint-100);
+    border: 1px solid var(--green-300);
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green-800);
+  }
+
+  .mobileAppliedChip button {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--green-700);
+    cursor: pointer;
+    padding: 2px;
   }
-  .filterSidebar {
-    display: none;
+
+  .mobileResetAllBtn {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--danger);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    white-space: nowrap;
   }
-  .mobileFilterDrawerOpen {
-    display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    background: rgba(11, 61, 36, 0.4);
-    backdrop-filter: blur(4px);
-    overflow-y: auto;
-    padding: 20px;
-  }
-  .drawerClose {
+
+  /* 4. Results List */
+  .mobileResultsList {
+    padding: 12px 16px 24px 16px;
     display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
   }
-  .mobileApplyBottom {
-    position: sticky;
-    bottom: -24px;
-    margin: 12px -24px -24px -24px;
-    padding: 16px 24px;
-    background: var(--white);
-    border-top: 1px solid var(--border);
+
+  .mobileCardsStack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
   }
-  .jobsGrid {
+
+  .mobileListContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .mobileGridContainer {
+    display: grid;
     grid-template-columns: 1fr;
+    gap: 14px;
   }
+
+  @media (min-width: 600px) {
+    .mobileGridContainer {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* 5. Mobile Pagination */
+  .mobilePaginationRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0 8px 0;
+    gap: 12px;
+  }
+
+  .mobilePageBtn {
+    height: 44px;
+    padding: 0 18px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    background-color: var(--white);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--green-800);
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: all var(--transition-fast);
+  }
+
+  .mobilePageBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .mobilePageIndicator {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  /* Back to Top Floating Button */
+  .backToTopBtn {
+    position: fixed;
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px) + 16px);
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: var(--green-700);
+    color: var(--white);
+    border: none;
+    box-shadow: 0 4px 14px rgba(11, 61, 36, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    touch-action: manipulation;
+    z-index: 45;
+    transition: transform var(--transition-fast);
+  }
+
+  .backToTopBtn:active {
+    transform: scale(0.92);
+  }
+}
+
+/* ==========================================================================
+   BOTTOM SHEET FILTER & SORT INTERNALS
+   ========================================================================== */
+.sheetFilterBody {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 8px 0 20px 0;
+}
+
+.sheetFilterSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sheetSectionLabel {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--green-900);
+}
+
+.sheetPillsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sheetPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background-color: var(--white);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: all var(--transition-fast);
+}
+
+.sheetPillActive {
+  background-color: var(--mint-100);
+  border-color: var(--green-500);
+  color: var(--green-800);
+  font-weight: 700;
+}
+
+.sheetCheckIcon {
+  color: var(--green-600);
+}
+
+.sheetSelect {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background-color: var(--white);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  padding: 0 14px;
+  color: var(--text-main);
+  outline: none;
+}
+
+.sheetRadioList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sheetRadioRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 46px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--white);
+  cursor: pointer;
+  touch-action: manipulation;
+  text-align: left;
+}
+
+.sheetRadioRowActive {
+  background-color: var(--mint-100);
+  border-color: var(--green-400);
+}
+
+.sheetRadioCircle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--sage);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sheetRadioRowActive .sheetRadioCircle {
+  border-color: var(--green-600);
+}
+
+.sheetRadioDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--green-600);
+}
+
+.sheetRadioText {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.sheetSalaryPresets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sheetSalaryInputWrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background-color: var(--white);
+  padding: 0 14px;
+  height: 48px;
+  gap: 8px;
+}
+
+.sheetRupee {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--green-700);
+}
+
+.sheetSalaryInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--text-main);
+  background: transparent;
+}
+
+.sheetStickyFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.sheetClearBtn {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--danger);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+}
+
+.sheetShowRolesBtn {
+  flex: 1;
+  min-height: 50px;
+  border-radius: var(--radius-pill);
+}
+
+/* Sort BottomSheet Internals */
+.sheetSortBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 0 16px 0;
+}
+
+.sheetSortOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  padding: 0 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--white);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: all var(--transition-fast);
+}
+
+.sheetSortOptionActive {
+  background-color: var(--mint-100);
+  border-color: var(--green-400);
+}
+
+.sheetSortText {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.sheetSortOptionActive .sheetSortText {
+  color: var(--green-900);
+  font-weight: 700;
+}
+
+.sheetSortCheck {
+  color: var(--green-600);
 }

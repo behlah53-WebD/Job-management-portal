@@ -25,7 +25,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await Promise.resolve(params);
-  const job = await getJobById(resolvedParams.id);
+  let job = null;
+  try {
+    job = await getJobById(resolvedParams.id);
+  } catch {}
+
   if (!job) {
     return {
       title: 'Job Not Found — Verdant',
@@ -45,7 +49,10 @@ export async function generateMetadata({ params }) {
 
 export default async function JobDetailsPage({ params }) {
   const resolvedParams = await Promise.resolve(params);
-  const job = await getJobById(resolvedParams.id);
+  let job = null;
+  try {
+    job = await getJobById(resolvedParams.id);
+  } catch {}
 
   if (!job) {
     notFound();

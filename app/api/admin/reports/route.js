@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { getServerAuthSession } from '@/lib/auth';
 import dbConnect from '@/lib/dbConnect';
 import Report from '@/models/Report';
+import Job from '@/models/Job';
+import Company from '@/models/Company';
+import User from '@/models/User';
 
 export async function GET() {
   try {

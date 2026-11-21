@@ -3,6 +3,8 @@ import { getServerAuthSession } from '@/lib/auth';
 import dbConnect from '@/lib/dbConnect';
 import Application from '@/models/Application';
 import Job from '@/models/Job';
+import Company from '@/models/Company';
+import User from '@/models/User';
 import Notification from '@/models/Notification';
 import { sendPush } from '@/lib/pwa/push';
 import { applySchema } from '@/lib/validators';

@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { getServerAuthSession } from '@/lib/auth';
 import dbConnect from '@/lib/dbConnect';
 import SavedJob from '@/models/SavedJob';
+import Job from '@/models/Job';
+import Company from '@/models/Company';
 
 const CARD_JOB_SELECT =
   'title category jobType workMode location salaryMin salaryMax salaryCurrency salaryType experienceLevel createdAt company skills isFeatured';
