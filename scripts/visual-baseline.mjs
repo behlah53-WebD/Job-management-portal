@@ -295,7 +295,17 @@ async function run() {
 
         const filename = `${route.slug}_${width}.png`;
         const filepath = path.join(targetDir, filename);
-        await page.screenshot({ path: filepath, fullPage: true });
+        let screenshotSuccess = false;
+        for (let attempt = 0; attempt < 3; attempt++) {
+          try {
+            await page.screenshot({ path: filepath, fullPage: true });
+            screenshotSuccess = true;
+            break;
+          } catch (err) {
+            if (attempt === 2) throw err;
+            await page.waitForTimeout(500);
+          }
+        }
 
         if (mode === 'check') {
           totalComparisons++;
