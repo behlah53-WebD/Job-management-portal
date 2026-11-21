@@ -62,7 +62,7 @@ function ensureDir(dir) {
 }
 
 async function prepareContextForRole(browser, role) {
-  const context = await browser.newContext();
+  const context = await browser.newContext({ reducedMotion: 'reduce' });
   if (role === 'public') return context;
 
   const creds = DEMO_CREDENTIALS[role];
@@ -197,7 +197,7 @@ async function run() {
   const browser = await chromium.launch(launchOptions);
 
   const contexts = {
-    public: await browser.newContext(),
+    public: await browser.newContext({ reducedMotion: 'reduce' }),
     seeker: null,
     employer: null,
     admin: null,
@@ -235,6 +235,23 @@ async function run() {
         }
         window.Date = MockDate;
 
+        const origMatchMedia = window.matchMedia;
+        window.matchMedia = function(query) {
+          if (query && query.includes('prefers-reduced-motion')) {
+            return {
+              matches: true,
+              media: query,
+              onchange: null,
+              addListener: () => {},
+              removeListener: () => {},
+              addEventListener: () => {},
+              removeEventListener: () => {},
+              dispatchEvent: () => false,
+            };
+          }
+          return origMatchMedia ? origMatchMedia.call(window, query) : { matches: false, media: query };
+        };
+
         const style = document.createElement('style');
         style.textContent = `
           *, *::before, *::after {
@@ -254,9 +271,15 @@ async function run() {
       // Navigate once per route with domcontentloaded + networkidle
       await page.setViewportSize({ width: 1280, height: 900 });
       try {
-        await page.goto(`${BASE_URL}${route.path}`, { waitUntil: 'domcontentloaded', timeout: 30000 });
-        await page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => {});
-        await page.waitForTimeout(1500);
+        await page.goto(`${BASE_URL}${route.path}`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+        await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {});
+        try {
+          const skeletons = page.locator('[class*="skeleton"], [class*="Skeleton"]');
+          if (await skeletons.count() > 0) {
+            await skeletons.first().waitFor({ state: 'detached', timeout: 8000 }).catch(() => {});
+          }
+        } catch {}
+        await page.waitForTimeout(1200);
       } catch (e) {
         console.warn(`Warning loading ${route.path}: ${e.message}`);
       }
