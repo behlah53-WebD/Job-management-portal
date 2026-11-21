@@ -1,28 +1,45 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { Search, Bell } from 'lucide-react';
+import { Search, Bell, ArrowLeft, X } from 'lucide-react';
 import { getInitials, getGreeting } from '@/lib/utils';
+import NotificationsSheet from './NotificationsSheet';
 import styles from './MobileTopBar.module.css';
 
 /**
- * Mobile Top App Bar (56px + safe area)
+ * Mobile Top App Bar
  * Left: 40px avatar button (initials) -> opens AccountSheet
  * Center: Serif Page Title (never wraps, cross-fades on scroll)
- * Right: 40px search button + 40px notification bell
+ * Right: 40px search button (expands into search input) + 40px notification bell (opens NotificationsSheet)
  */
 export default function MobileTopBar({
   user,
   onOpenAccount,
   title: customTitle,
-  unreadNotifications = 0,
+  unreadNotifications: propUnreadNotifications,
   onOpenNotifications,
+  hasSearch = true,
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
+
+  // Search state
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef(null);
+
+  // Notifications state
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(propUnreadNotifications ?? 0);
+
+  useEffect(() => {
+    if (propUnreadNotifications !== undefined) {
+      setUnreadCount(propUnreadNotifications);
+    }
+  }, [propUnreadNotifications]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,6 +48,61 @@ export default function MobileTopBar({
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Fetch notifications on mount or when opening sheet
+  const fetchNotifications = async () => {
+    try {
+      const res = await fetch('/api/notifications');
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setNotifications(data);
+          setUnreadCount(data.filter((n) => !n.isRead).length);
+        }
+      }
+    } catch {}
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  // Focus search input when search opens
+  useEffect(() => {
+    if (isSearchOpen) {
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 50);
+    }
+  }, [isSearchOpen]);
+
+  const handleSearchSubmit = (e) => {
+    e?.preventDefault();
+    const q = searchQuery.trim();
+    setIsSearchOpen(false);
+    if (q) {
+      router.push(`/jobs?q=${encodeURIComponent(q)}`);
+    } else {
+      router.push('/jobs');
+    }
+  };
+
+  const handleBellClick = () => {
+    if (onOpenNotifications) {
+      onOpenNotifications();
+    } else {
+      fetchNotifications();
+      setNotificationsOpen(true);
+    }
+  };
+
+  const handleMarkAllRead = async () => {
+    try {
+      await fetch('/api/notifications/read-all', { method: 'POST' });
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+      setUnreadCount(0);
+    } catch {}
+  };
 
   // Determine current page title
   const getPageTitle = () => {
@@ -70,54 +142,102 @@ export default function MobileTopBar({
 
   return (
     <header className={`${styles.bar} ${isScrolled ? styles.barScrolled : ''}`}>
-      <div className={styles.barInner}>
-        {/* Left: 40px Avatar Button */}
-        <button
-          type="button"
-          className={styles.avatarBtn}
-          onClick={onOpenAccount}
-          aria-label="Open account menu"
-        >
-          <span className={styles.avatarInitials}>
-            {getInitials(user?.name || 'Verdant')}
-          </span>
-        </button>
-
-        {/* Center: Serif Page Title */}
-        <div className={styles.titleContainer}>
-          <h1
-            className={`${styles.pageTitle} ${
-              isScrolled ? styles.titleCompact : ''
-            }`}
-          >
-            {pageTitle}
-          </h1>
-        </div>
-
-        {/* Right: Search & Bell */}
-        <div className={styles.actionsRight}>
+      {isSearchOpen ? (
+        /* Expanded Search Mode */
+        <div className={styles.searchBarRow}>
           <button
             type="button"
-            className={styles.iconBtn}
-            onClick={() => router.push('/jobs')}
-            aria-label="Search jobs"
+            className={styles.searchCloseBtn}
+            onClick={() => setIsSearchOpen(false)}
+            aria-label="Back"
           >
-            <Search size={19} />
+            <ArrowLeft size={20} />
           </button>
 
-          <button
-            type="button"
-            className={styles.iconBtn}
-            onClick={onOpenNotifications || (() => router.push('/dashboard/seeker'))}
-            aria-label="Notifications"
-          >
-            <Bell size={19} />
-            {unreadNotifications > 0 && (
-              <span className={styles.notifBadge} />
+          <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
+            <Search size={17} className={styles.searchFormIcon} />
+            <input
+              ref={searchInputRef}
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search jobs, skills, companies..."
+              className={styles.searchInput}
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className={styles.searchClearBtn}
+                aria-label="Clear"
+              >
+                <X size={14} />
+              </button>
             )}
-          </button>
+            <button type="submit" className={styles.searchSubmitBtn}>
+              Search
+            </button>
+          </form>
         </div>
-      </div>
+      ) : (
+        /* Default Top Bar Mode */
+        <div className={styles.barInner}>
+          {/* Left: 40px Avatar Button */}
+          <button
+            type="button"
+            className={styles.avatarBtn}
+            onClick={onOpenAccount}
+            aria-label="Open account menu"
+          >
+            <span className={styles.avatarInitials}>
+              {getInitials(user?.name || 'Verdant')}
+            </span>
+          </button>
+
+          {/* Center: Serif Page Title */}
+          <div className={styles.titleContainer}>
+            <h1
+              className={`${styles.pageTitle} ${
+                isScrolled ? styles.titleCompact : ''
+              }`}
+            >
+              {pageTitle}
+            </h1>
+          </div>
+
+          {/* Right: Search & Bell */}
+          <div className={styles.actionsRight}>
+            {hasSearch && (
+              <button
+                type="button"
+                className={styles.iconBtn}
+                onClick={() => setIsSearchOpen(true)}
+                aria-label="Search jobs"
+              >
+                <Search size={19} />
+              </button>
+            )}
+
+            <button
+              type="button"
+              className={styles.iconBtn}
+              onClick={handleBellClick}
+              aria-label="Notifications"
+            >
+              <Bell size={19} />
+              {unreadCount > 0 && <span className={styles.notifBadge} />}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Notifications Bottom Sheet */}
+      <NotificationsSheet
+        isOpen={notificationsOpen}
+        onClose={() => setNotificationsOpen(false)}
+        notifications={notifications}
+        onMarkAllRead={handleMarkAllRead}
+      />
     </header>
   );
 }

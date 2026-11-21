@@ -5,18 +5,20 @@
 @media (max-width: 1023.98px) {
   .bar {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     position: sticky;
     top: 0;
     left: 0;
     right: 0;
     width: 100%;
     z-index: 50;
-    background-color: rgba(255, 255, 255, 0.88);
+    background-color: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(220, 235, 225, 0.8);
-    padding-top: max(8px, env(safe-area-inset-top, 0px));
-    height: calc(56px + env(safe-area-inset-top, 0px));
+    padding-top: max(10px, env(safe-area-inset-top, 0px));
+    padding-bottom: 12px;
     box-sizing: border-box;
     transition: background-color 200ms ease, box-shadow 200ms ease;
   }
@@ -29,7 +31,7 @@
   }
 
   .barScrolled {
-    background-color: rgba(255, 255, 255, 0.96);
+    background-color: rgba(255, 255, 255, 0.98);
     box-shadow: 0 2px 10px rgba(11, 61, 36, 0.05);
   }
 
@@ -40,7 +42,8 @@
     width: 100%;
     padding: 0 16px;
     gap: 12px;
-    height: 56px;
+    min-height: 40px;
+    box-sizing: border-box;
   }
 
   .avatarBtn {
@@ -48,7 +51,7 @@
     height: 40px;
     border-radius: 50%;
     background: linear-gradient(135deg, #E3F4E9 0%, #CBEBD6 100%);
-    border: 1.5px solid var(--border);
+    border: 1.5px solid var(--border, #DCEBE1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -68,7 +71,7 @@
     font-family: var(--font-sans);
     font-size: 13.5px;
     font-weight: 700;
-    color: var(--green-800);
+    color: var(--green-800, #14532D);
   }
 
   .titleContainer {
@@ -83,9 +86,9 @@
 
   .pageTitle {
     font-family: var(--font-serif);
-    font-size: 18px;
+    font-size: 17.5px;
     font-weight: 700;
-    color: var(--green-900);
+    color: var(--green-900, #0B3D24);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -113,9 +116,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--white);
-    border: 1px solid var(--border);
-    color: var(--text-main);
+    background-color: var(--white, #FFFFFF);
+    border: 1px solid var(--border, #DCEBE1);
+    color: var(--text-main, #142E1F);
     cursor: pointer;
     position: relative;
     touch-action: manipulation;
@@ -126,7 +129,7 @@
 
   .iconBtn:active {
     transform: scale(0.93);
-    background-color: var(--mint-100);
+    background-color: var(--mint-100, #E8F5E9);
   }
 
   .notifBadge {
@@ -136,7 +139,126 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background-color: var(--green-600);
-    border: 2px solid var(--white);
+    background-color: var(--green-600, #1E9A56);
+    border: 2px solid var(--white, #FFFFFF);
+  }
+
+  /* Interactive Search Bar Mode */
+  .searchBarRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 0 12px;
+    box-sizing: border-box;
+    animation: searchSlideIn 180ms ease forwards;
+  }
+
+  @keyframes searchSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .searchCloseBtn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--text-main, #142E1F);
+    cursor: pointer;
+    flex-shrink: 0;
+    touch-action: manipulation;
+    transition: background-color 120ms ease;
+  }
+
+  .searchCloseBtn:active {
+    background-color: var(--bg-soft, #F3F8F5);
+  }
+
+  .searchForm {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--bg-soft, #F3F8F5);
+    border: 1.5px solid var(--border, #DCEBE1);
+    border-radius: 999px;
+    padding: 0 6px 0 12px;
+    height: 40px;
+    box-sizing: border-box;
+    transition: border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+  }
+
+  .searchForm:focus-within {
+    border-color: var(--green-600, #1E9A56);
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(30, 154, 86, 0.12);
+  }
+
+  .searchFormIcon {
+    color: var(--sage, #6B8E7B);
+    flex-shrink: 0;
+  }
+
+  .searchInput {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--text-main, #142E1F);
+    outline: none;
+    padding: 0;
+  }
+
+  .searchInput::placeholder {
+    color: var(--text-muted, #7E9689);
+  }
+
+  .searchClearBtn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.08);
+    border: none;
+    color: var(--text-muted, #5A7163);
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 0;
+  }
+
+  .searchSubmitBtn {
+    height: 30px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--green-600, #1E9A56) 0%, var(--green-700, #167A44) 100%);
+    color: #FFFFFF;
+    border: none;
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+    touch-action: manipulation;
+    transition: transform 120ms ease;
+  }
+
+  .searchSubmitBtn:active {
+    transform: scale(0.96);
   }
 }

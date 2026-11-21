@@ -324,7 +324,7 @@ function JobsContent() {
           <MobileTopBar
             title="Find Jobs"
             onOpenAccount={() => setAccountSheetOpen(true)}
-            hasSearch={false}
+            hasSearch={true}
           />
         ) : (
           <Navbar />

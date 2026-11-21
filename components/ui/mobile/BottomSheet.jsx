@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import styles from './BottomSheet.module.css';
@@ -16,6 +17,11 @@ export default function BottomSheet({
   className = '',
 }) {
   const sheetRef = useRef(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Close on Escape key & manage body scroll
   useEffect(() => {
@@ -35,7 +41,7 @@ export default function BottomSheet({
     };
   }, [isOpen, onClose]);
 
-  return (
+  const content = (
     <AnimatePresence>
       {isOpen && (
         <div className={styles.overlayRoot}>
@@ -101,4 +107,7 @@ export default function BottomSheet({
       )}
     </AnimatePresence>
   );
+
+  if (!mounted || typeof document === 'undefined') return null;
+  return createPortal(content, document.body);
 }

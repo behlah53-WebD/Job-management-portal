@@ -1,0 +1,141 @@
+.container {
+  padding: 4px 0 16px;
+}
+
+.topActionRow {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 4px 12px;
+}
+
+.markAllBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background-color: var(--mint-100, #E8F5E9);
+  color: var(--green-700, #1B5E20);
+  border: 1px solid rgba(27, 94, 32, 0.15);
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: all 120ms ease;
+}
+
+.markAllBtn:active {
+  transform: scale(0.96);
+  background-color: #D7ECD9;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.itemLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background-color: #FFFFFF;
+  border: 1px solid var(--border-subtle, #E8ECE9);
+  transition: all 150ms ease;
+  touch-action: manipulation;
+}
+
+.item:active {
+  background-color: var(--bg-soft, #F8FAF8);
+  transform: scale(0.99);
+}
+
+.unreadItem {
+  background-color: #F4FAF6;
+  border-color: #C8E6D3;
+}
+
+.itemIconBox {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background-color: var(--bg-soft, #F3F8F5);
+  color: var(--green-700, #1B5E20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.itemBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.message {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-main, #142E1F);
+  margin: 0 0 4px 0;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.time {
+  font-size: 12px;
+  color: var(--text-muted, #5A7163);
+}
+
+.unreadDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--green-600, #1E9A56);
+  flex-shrink: 0;
+  margin-top: 6px;
+  box-shadow: 0 0 0 3px rgba(30, 154, 86, 0.18);
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 36px 16px;
+}
+
+.emptyIconCircle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--mint-100, #E8F5E9);
+  color: var(--green-700, #1B5E20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.emptyTitle {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--green-900, #0B3D24);
+  margin: 0 0 8px 0;
+}
+
+.emptySub {
+  font-size: 13.5px;
+  color: var(--text-muted, #5A7163);
+  line-height: 1.5;
+  max-width: 290px;
+  margin: 0 auto;
+}
