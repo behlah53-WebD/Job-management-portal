@@ -35,7 +35,7 @@ export default function AdminSettingsPage() {
       if (!res.ok) throw new Error('Failed to update setting');
       toast.success(
         val
-          ? 'Strict Moderation Enabled: all new jobs require admin approval.'
+          ? 'Strict Moderation Enabled: all new jobs require admin approval'
           : 'Instant Publishing Enabled: new employer jobs go live immediately.'
       );
     } catch (err) {
