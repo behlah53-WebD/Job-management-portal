@@ -38,3 +38,8 @@ public/sw.js.map
 public/swe-worker-*.js
 public/workbox-*.js
 public/sw-*.js
+
+# Visual testing
+visual/current
+visual/diff
+
