@@ -21,44 +21,50 @@ export default function InstallPrompt() {
 
   return (
     <>
-      {/* Non-intrusive Banner / Card */}
+      {/* Elegant install prompt — anchored bottom-right */}
       <aside
         aria-label="Install Verdant App"
-        className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-6 sm:max-w-md z-[9990] bg-white border border-[#DCEBE1] rounded-2xl p-4 shadow-xl shadow-green-950/10 flex items-center justify-between gap-3 animate-in fade-in slide-in-from-bottom-3 duration-300"
+        className="fixed bottom-6 right-6 z-[9990] w-full max-w-xs relative overflow-hidden rounded-[22px] border border-green-100/70 bg-white/80 backdrop-blur-xl backdrop-saturate-150 shadow-[0_20px_40px_-10px_rgba(11,61,36,0.14)] shadow-green-950/10 animate-in slide-in-from-bottom-4 fade-in duration-500 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-12px_rgba(11,61,36,0.18)] transition-all duration-300 flex items-center justify-between gap-4 p-6"
       >
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-[#1E9A56] p-2 flex items-center justify-center text-white shrink-0 shadow-sm">
-            <Image
-              src="/icons/icon-96x96.png"
-              alt="Verdant Logo"
-              width={36}
-              height={36}
-              className="rounded-lg object-contain"
-            />
+        <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-[#2FB36A] via-[#1E9A56] to-[#0F5C33]" />
+
+        <div className="flex items-center gap-4">
+          <div className="relative shrink-0">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#5CC689]/40 to-[#1E9A56]/20 blur opacity-80" />
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#2FB36A] to-[#1E9A56] flex items-center justify-center shadow-[0_8px_16px_rgba(30,154,86,0.35)]">
+              <Image
+                src="/icons/icon-96x96.png"
+                alt="Verdant Logo"
+                width={40}
+                height={40}
+                className="rounded-xl object-contain relative z-10"
+              />
+            </div>
           </div>
-          <div>
-            <h4 className="font-serif text-sm font-bold text-[#0B3D24]">Install Verdant</h4>
-            <p className="text-xs text-[#5E7A6B] line-clamp-1">
-              Add to Home screen for 1-tap access & job alerts.
+          <div className="leading-tight">
+            <h4 className="font-serif text-base font-bold text-[#0B3D24] tracking-tight">
+              Install Verdant
+            </h4>
+            <p className="text-xs text-[#5E7A6B] mt-[2px]">
+              Add to Home screen for 1-tap access &amp; job alerts.
             </p>
           </div>
-        </div>
-
-        <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={handleInstallClick}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1E9A56] hover:bg-[#167A44] text-white text-xs font-semibold transition-all shadow-sm active:scale-95"
-          >
-            <Download size={14} />
-            <span>Install</span>
-          </button>
-          <button
-            onClick={dismissPrompt}
-            aria-label="Dismiss install prompt"
-            className="p-1.5 rounded-lg text-[#5E7A6B] hover:text-[#12372A] hover:bg-[#EEF7F1] transition-colors"
-          >
-            <X size={16} />
-          </button>
+          <div className="ml-auto flex items-center gap-2 shrink-0">
+            <button
+              onClick={handleInstallClick}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-br from-[#1E9A56] to-[#167A44] text-white text-xs font-bold shadow-[0_6px_16px_rgba(30,154,86,0.30)] hover:from-[#2FB36A] hover:to-[#1E9A56] hover:shadow-[0_8px_20px_rgba(30,154,86,0.40)] active:scale-95 transition-all duration-200"
+            >
+              <Download size={13} />
+              <span>Install</span>
+            </button>
+            <button
+              onClick={dismissPrompt}
+              aria-label="Dismiss install prompt"
+              className="p-2 rounded-xl text-[#5E7A6B] hover:text-[#12372A] hover:bg-[#EEF7F1] transition-colors duration-200"
+            >
+              <X size={15} />
+            </button>
+          </div>
         </div>
       </aside>
 
