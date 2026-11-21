@@ -22,6 +22,17 @@ export default withAuth(
     const token = req.nextauth?.token;
     const role = token?.role;
 
+    // Direct /dashboard route redirection based on session token role
+    if (pathname === '/dashboard') {
+      if (role === 'admin') {
+        return NextResponse.redirect(new URL('/dashboard/admin', req.url));
+      }
+      if (role === 'employer') {
+        return NextResponse.redirect(new URL('/dashboard/employer', req.url));
+      }
+      return NextResponse.redirect(new URL('/dashboard/seeker', req.url));
+    }
+
     // Route protections based on role
     if (pathname.startsWith('/dashboard/admin')) {
       if (role !== 'admin') {
@@ -51,7 +62,7 @@ export default withAuth(
       authorized: ({ token, req }) => {
         const { pathname } = req.nextUrl;
         // Dashboard routes require token
-        if (pathname.startsWith('/dashboard')) {
+        if (pathname === '/dashboard' || pathname.startsWith('/dashboard/')) {
           return !!token;
         }
         return true;
@@ -64,5 +75,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ['/dashboard/:path*'],
+  matcher: ['/dashboard', '/dashboard/:path*'],
 };

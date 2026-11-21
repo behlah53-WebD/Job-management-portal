@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -68,6 +68,10 @@ function JobsContent() {
   // Apply modal
   const [selectedJobForApply, setSelectedJobForApply] = useState(null);
 
+  // Cancellation and debounce refs
+  const abortControllerRef = useRef(null);
+  const debounceTimerRef = useRef(null);
+
   // Load recent searches from localStorage
   useEffect(() => {
     try {
@@ -108,6 +112,12 @@ function JobsContent() {
 
   // Fetch jobs
   const fetchJobs = useCallback(async () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -125,16 +135,34 @@ function JobsContent() {
       selectedModes.forEach((m) => params.append('workMode', m));
       selectedExp.forEach((e) => params.append('experience', e));
 
-      const res = await fetch(`/api/jobs?${params.toString()}`);
+      const res = await fetch(`/api/jobs?${params.toString()}`, { signal: controller.signal });
       const data = await res.json();
 
       setJobs(data.jobs || []);
       setTotal(data.total || 0);
       setTotalPages(data.totalPages || 1);
+
+      syncToUrl({
+        q: keyword,
+        location,
+        category: selectedCategory,
+        datePosted,
+        salaryMin,
+        salaryMax,
+        sort,
+        page,
+        jobType: selectedTypes,
+        workMode: selectedModes,
+        experience: selectedExp,
+      });
     } catch (err) {
-      console.error('Fetch jobs error:', err);
+      if (err.name !== 'AbortError') {
+        console.error('Fetch jobs error:', err);
+      }
     } finally {
-      setLoading(false);
+      if (!controller.signal.aborted) {
+        setLoading(false);
+      }
     }
   }, [
     keyword,
@@ -148,29 +176,20 @@ function JobsContent() {
     selectedTypes,
     selectedModes,
     selectedExp,
+    syncToUrl,
   ]);
 
   useEffect(() => {
     fetchJobs();
-    syncToUrl({
-      q: keyword,
-      location,
-      category: selectedCategory,
-      datePosted,
-      salaryMin,
-      salaryMax,
-      sort,
-      page,
-      jobType: selectedTypes,
-      workMode: selectedModes,
-      experience: selectedExp,
-    });
-  }, [fetchJobs, syncToUrl]);
+  }, [fetchJobs]);
 
   // Debounced keyword search
   const handleKeywordChange = (val) => {
     setKeyword(val);
-    setPage(1);
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    debounceTimerRef.current = setTimeout(() => {
+      setPage(1);
+    }, 300);
   };
 
   const saveRecentSearch = (term) => {

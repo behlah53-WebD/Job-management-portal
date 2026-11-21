@@ -1,12 +1,40 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { Sprout, ArrowRight, Github, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { Sprout, ArrowRight, Github, Twitter, Linkedin, Instagram, Loader2 } from 'lucide-react';
 import Logo from '@/components/ui/Logo';
+import toast from 'react-hot-toast';
 import styles from './Footer.module.css';
 
 export default function Footer() {
+  const [email, setEmail] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!email || !email.includes('@')) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to subscribe');
+      toast.success(data.message || 'Subscribed with care 🌱');
+      setEmail('');
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <footer className={styles.footer}>
       <div className={`container ${styles.footerContainer}`}>
@@ -71,21 +99,25 @@ export default function Footer() {
               <p className={styles.newsletterText}>
                 Receive weekly curated roles and career growth essays.
               </p>
-              <form className={styles.newsletterForm} onSubmit={(e) => e.preventDefault()}>
+              <form className={styles.newsletterForm} onSubmit={handleSubscribe}>
                 <input
                   suppressHydrationWarning
                   type="email"
                   placeholder="your.email@work.com"
                   className={styles.newsletterInput}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={submitting}
                   required
                 />
                 <button
                   suppressHydrationWarning
                   type="submit"
                   className={styles.newsletterBtn}
+                  disabled={submitting}
                   aria-label="Subscribe"
                 >
-                  <ArrowRight size={18} />
+                  {submitting ? <Loader2 size={16} className="animate-spin" /> : <ArrowRight size={18} />}
                 </button>
               </form>
             </div>

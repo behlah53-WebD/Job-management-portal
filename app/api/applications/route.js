@@ -29,7 +29,7 @@ export async function GET(req) {
       if (jobId) {
         filter.job = jobId;
       } else {
-        const employerJobs = await Job.find({ postedBy: session.user.id }).select('_id');
+        const employerJobs = await Job.find({ postedBy: session.user.id }).select('_id').lean();
         const jobIds = employerJobs.map((j) => j._id);
         filter.job = { $in: jobIds };
       }
@@ -42,9 +42,11 @@ export async function GET(req) {
     }
 
     const applications = await Application.find(filter)
+      .select('job applicant resumeUrl coverLetter status employerNote statusHistory appliedAt createdAt')
       .populate({
         path: 'job',
-        populate: { path: 'company' },
+        select: 'title category location workMode jobType status company postedBy',
+        populate: { path: 'company', select: 'name logo isVerified location' },
       })
       .populate('applicant', 'name email avatar phone location')
       .sort({ appliedAt: -1 })

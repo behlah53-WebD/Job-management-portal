@@ -210,12 +210,12 @@ export default function Navbar() {
           ) : (
             <div className={styles.authButtons}>
               <Link href="/login">
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="md">
                   Log in
                 </Button>
               </Link>
               <Link href="/register">
-                <Button variant="primary" size="sm">
+                <Button variant="primary" size="md">
                   Sign up
                 </Button>
               </Link>

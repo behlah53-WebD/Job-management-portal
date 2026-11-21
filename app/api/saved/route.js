@@ -3,6 +3,9 @@ import { getServerAuthSession } from '@/lib/auth';
 import dbConnect from '@/lib/dbConnect';
 import SavedJob from '@/models/SavedJob';
 
+const CARD_JOB_SELECT =
+  'title category jobType workMode location salaryMin salaryMax salaryCurrency salaryType experienceLevel createdAt company skills isFeatured';
+
 export async function GET() {
   try {
     const session = await getServerAuthSession();
@@ -12,10 +15,13 @@ export async function GET() {
 
     await dbConnect();
     const saved = await SavedJob.find({ user: session.user.id })
+      .select('job createdAt')
       .populate({
         path: 'job',
-        populate: { path: 'company' },
+        select: CARD_JOB_SELECT,
+        populate: { path: 'company', select: 'name logo location isVerified' },
       })
+      .sort({ createdAt: -1 })
       .lean();
 
     return NextResponse.json(saved.map((s) => s.job).filter(Boolean));

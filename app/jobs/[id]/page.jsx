@@ -9,7 +9,19 @@ import { getJobById, getJobs } from '@/lib/dataService';
 import { getInitials, formatSalary, timeAgo } from '@/lib/utils';
 import styles from './jobDetails.module.css';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 120;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  try {
+    const { jobs } = await getJobs({ limit: 30, status: 'Active' });
+    return (jobs || []).map((j) => ({
+      id: j._id.toString(),
+    }));
+  } catch {
+    return [];
+  }
+}
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await Promise.resolve(params);

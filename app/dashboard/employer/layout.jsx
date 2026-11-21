@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import {
-  Sprout,
   LayoutDashboard,
   PlusCircle,
   Briefcase,
@@ -28,9 +28,22 @@ export default function EmployerDashboardLayout({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    try {
+      const cached = sessionStorage.getItem('employer_company');
+      if (cached) {
+        setCompany(JSON.parse(cached));
+        return;
+      }
+    } catch {}
+
     fetch('/api/companies?mine=true')
       .then((r) => r.json())
-      .then((data) => setCompany(data))
+      .then((data) => {
+        setCompany(data);
+        try {
+          sessionStorage.setItem('employer_company', JSON.stringify(data));
+        } catch {}
+      })
       .catch(() => {});
   }, []);
 
@@ -65,7 +78,13 @@ export default function EmployerDashboardLayout({ children }) {
         <div className={styles.employerBrandCard}>
           <div className={styles.brandIconCircle}>
             {company?.logo ? (
-              <img src={company.logo} alt="" className={styles.brandLogoImg} />
+              <Image
+                src={company.logo}
+                alt={company?.name || 'Company logo'}
+                width={44}
+                height={44}
+                className={styles.brandLogoImg}
+              />
             ) : (
               getInitials(company?.name || 'Company')
             )}

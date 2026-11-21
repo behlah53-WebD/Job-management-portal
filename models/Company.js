@@ -52,5 +52,8 @@ const CompanySchema = new mongoose.Schema(
 
 // Index owner for employer dashboard lookups
 CompanySchema.index({ owner: 1 });
+CompanySchema.index({ name: 1 });
+CompanySchema.index({ isVerified: 1, createdAt: -1 });
+CompanySchema.index({ createdAt: -1 });
 
 export default mongoose.models.Company || mongoose.model('Company', CompanySchema);

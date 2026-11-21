@@ -17,22 +17,19 @@ export async function GET() {
 
     await dbConnect();
 
-    // Generate real monthly growth data for the last 6 months
+    // Generate real monthly growth data for the last 6 months in parallel
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const now = process.env.VISUAL_TEST === 'true' ? new Date('2026-11-21T00:00:00.000Z') : new Date();
-    const growth = [];
+    
+    const monthConfigs = [];
     for (let i = 5; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const nextD = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
-      const monthName = months[d.getMonth()];
-      const [candidatesCount, jobsCount] = await Promise.all([
-        User.countDocuments({ role: 'jobseeker', createdAt: { $lt: nextD } }),
-        Job.countDocuments({ createdAt: { $lt: nextD } }),
-      ]);
-      growth.push({ month: monthName, candidates: candidatesCount, jobs: jobsCount });
+      monthConfigs.push({ month: months[d.getMonth()], nextD });
     }
 
     const [
+      growth,
       totalUsers,
       totalEmployers,
       totalJobs,
@@ -41,13 +38,22 @@ export async function GET() {
       pendingReports,
       approvalSetting,
     ] = await Promise.all([
+      Promise.all(
+        monthConfigs.map(async ({ month, nextD }) => {
+          const [candidatesCount, jobsCount] = await Promise.all([
+            User.countDocuments({ role: 'jobseeker', createdAt: { $lt: nextD } }),
+            Job.countDocuments({ createdAt: { $lt: nextD } }),
+          ]);
+          return { month, candidates: candidatesCount, jobs: jobsCount };
+        })
+      ),
       User.countDocuments({ role: 'jobseeker' }),
       User.countDocuments({ role: 'employer' }),
       Job.countDocuments(),
       Application.countDocuments(),
       Job.countDocuments({ status: 'Pending' }),
       Report.countDocuments({ status: 'Pending' }),
-      PlatformSetting.findOne({ key: 'requireJobApproval' }),
+      PlatformSetting.findOne({ key: 'requireJobApproval' }).lean(),
     ]);
 
     return NextResponse.json({

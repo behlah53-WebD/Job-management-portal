@@ -35,7 +35,7 @@ const ICON_MAP = {
   HeartHandshake,
 };
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export default async function HomePage() {
   const [{ jobs: featuredJobs }, categories, companies, stats] = await Promise.all([

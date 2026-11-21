@@ -203,9 +203,9 @@ async function seed() {
   await Category.insertMany(categoriesData);
 
   console.log('Hashing passwords...');
-  const adminPassword = await bcrypt.hash('Admin@123', 10);
-  const employerPassword = await bcrypt.hash('Employer@123', 10);
-  const seekerPassword = await bcrypt.hash('Seeker@123', 10);
+  const adminPassword = await bcrypt.hash('Admin@123', 12);
+  const employerPassword = await bcrypt.hash('Employer@123', 12);
+  const seekerPassword = await bcrypt.hash('Seeker@123', 12);
 
   console.log('Creating Admin...');
   const admin = await User.create({

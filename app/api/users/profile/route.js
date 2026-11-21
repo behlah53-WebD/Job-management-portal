@@ -4,6 +4,8 @@ import { getServerAuthSession } from '@/lib/auth';
 import dbConnect from '@/lib/dbConnect';
 import User from '@/models/User';
 import JobSeekerProfile from '@/models/JobSeekerProfile';
+import { profileUpdateSchema } from '@/lib/validators';
+import { sanitizeNoSql } from '@/lib/ratelimit';
 
 export async function GET() {
   try {
@@ -13,7 +15,7 @@ export async function GET() {
     }
 
     await dbConnect();
-    const user = await User.findById(session.user.id).lean();
+    const user = await User.findById(session.user.id).select('-password').lean();
     let profile = await JobSeekerProfile.findOne({ user: session.user.id }).lean();
 
     if (!profile) {
@@ -38,7 +40,8 @@ export async function PUT(req) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await req.json();
+    const rawBody = await req.json();
+    const body = sanitizeNoSql(rawBody);
     const { name, phone, location, avatar, currentPassword, newPassword, ...profileData } = body;
 
     await dbConnect();
@@ -48,6 +51,9 @@ export async function PUT(req) {
       if (!currentPassword) {
         return NextResponse.json({ error: 'Please enter your current password' }, { status: 400 });
       }
+      if (typeof newPassword !== 'string' || newPassword.length < 6) {
+        return NextResponse.json({ error: 'New password must be at least 6 characters' }, { status: 400 });
+      }
       const existingUser = await User.findById(session.user.id).select('+password');
       if (!existingUser) {
         return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -56,22 +62,28 @@ export async function PUT(req) {
       if (!isMatch) {
         return NextResponse.json({ error: 'Current password is incorrect' }, { status: 400 });
       }
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      const hashedPassword = await bcrypt.hash(newPassword, 12);
       await User.findByIdAndUpdate(session.user.id, { password: hashedPassword });
     }
 
     // Update User fields
-    await User.findByIdAndUpdate(session.user.id, {
-      ...(name && { name }),
-      ...(phone !== undefined && { phone }),
-      ...(location !== undefined && { location }),
-      ...(avatar && { avatar }),
-    });
+    const sanitizedUserFields = {};
+    if (name && typeof name === 'string') sanitizedUserFields.name = name.trim().slice(0, 60);
+    if (phone !== undefined && typeof phone === 'string') sanitizedUserFields.phone = phone.trim().slice(0, 30);
+    if (location !== undefined && typeof location === 'string') sanitizedUserFields.location = location.trim().slice(0, 100);
+    if (avatar && typeof avatar === 'string') sanitizedUserFields.avatar = avatar.trim();
 
-    // Update or upsert Profile
+    if (Object.keys(sanitizedUserFields).length > 0) {
+      await User.findByIdAndUpdate(session.user.id, sanitizedUserFields);
+    }
+
+    // Validate and update profile fields
+    const profileValidation = profileUpdateSchema.safeParse(profileData);
+    const validProfileData = profileValidation.success ? profileValidation.data : {};
+
     const updatedProfile = await JobSeekerProfile.findOneAndUpdate(
       { user: session.user.id },
-      { ...profileData },
+      { ...validProfileData },
       { new: true, upsert: true }
     );
 

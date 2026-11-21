@@ -15,6 +15,8 @@ export const metadata = {
   description: 'Explore conscious employers and flourishing studios hiring on Verdant.',
 };
 
+export const revalidate = 180;
+
 export default async function CompaniesPage() {
   let companies = [];
   try {

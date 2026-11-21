@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getServerAuthSession } from '@/lib/auth';
 import dbConnect from '@/lib/dbConnect';
 import Company from '@/models/Company';
+import { companyUpdateSchema } from '@/lib/validators';
 
 export async function GET(req) {
   try {
@@ -18,8 +20,14 @@ export async function GET(req) {
       return NextResponse.json(company);
     }
 
-    const companies = await Company.find().sort({ createdAt: -1 }).lean();
-    return NextResponse.json(companies);
+    const companies = await Company.find()
+      .select('name logo website industry size about location isVerified createdAt')
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const res = NextResponse.json(companies);
+    res.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+    return res;
   } catch (error) {
     console.error('Companies GET error:', error);
     return NextResponse.json({ error: 'Failed to fetch companies' }, { status: 500 });
@@ -34,25 +42,39 @@ export async function PUT(req) {
     }
 
     const body = await req.json();
+    const validation = companyUpdateSchema.partial().safeParse(body);
+    if (!validation.success) {
+      const errorMsg = validation.error.errors[0]?.message || 'Invalid company details';
+      return NextResponse.json({ error: errorMsg }, { status: 400 });
+    }
 
     await dbConnect();
 
     // If admin is modifying a specific company by companyId
     if (session.user.role === 'admin' && body.companyId) {
-      const { companyId, ...fields } = body;
-      const updated = await Company.findByIdAndUpdate(companyId, fields, { new: true });
+      const updated = await Company.findByIdAndUpdate(body.companyId, validation.data, { new: true });
       if (!updated) {
         return NextResponse.json({ error: 'Company not found' }, { status: 404 });
       }
+      try {
+        revalidatePath('/companies');
+        revalidatePath('/');
+      } catch {}
       return NextResponse.json({ success: true, company: updated });
     }
 
     // Otherwise, employer updating their own company
     const updated = await Company.findOneAndUpdate(
       { owner: session.user.id },
-      { ...body },
+      { ...validation.data },
       { new: true, upsert: true }
     );
+
+    try {
+      revalidatePath('/companies');
+      revalidatePath('/');
+    } catch {}
+
     return NextResponse.json({ success: true, company: updated });
   } catch (error) {
     console.error('Company PUT error:', error);

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getServerAuthSession } from '@/lib/auth';
 import dbConnect from '@/lib/dbConnect';
 import Job from '@/models/Job';
@@ -51,7 +52,11 @@ export async function GET(req) {
       postedBy: postedByFilter,
     });
 
-    return NextResponse.json(result);
+    const response = NextResponse.json(result);
+    if (mine !== 'true') {
+      response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
+    }
+    return response;
   } catch (error) {
     console.error('Jobs GET error:', error);
     return NextResponse.json({ error: 'Failed to fetch jobs' }, { status: 500 });
@@ -112,6 +117,12 @@ export async function POST(req) {
       status: finalStatus,
       views: 0,
     });
+
+    try {
+      revalidatePath('/');
+      revalidatePath('/jobs');
+      revalidatePath('/dashboard/employer/my-jobs');
+    } catch {}
 
     return NextResponse.json(
       {

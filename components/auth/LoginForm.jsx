@@ -61,9 +61,14 @@ export default function LoginForm() {
   const emailInputRef = useRef(null);
   const submitButtonRef = useRef(null);
 
-  // Restore remembered email on mount
+  // Prefetch dashboard routes and restore remembered email on mount
   useEffect(() => {
     try {
+      router.prefetch('/dashboard');
+      router.prefetch('/dashboard/seeker');
+      router.prefetch('/dashboard/employer');
+      router.prefetch('/dashboard/admin');
+
       const savedEmail = localStorage.getItem('verdant_remember_email');
       if (savedEmail) {
         setEmail(savedEmail);
@@ -73,7 +78,7 @@ export default function LoginForm() {
         }
       }
     } catch {}
-  }, []);
+  }, [router]);
 
   // Validate email on blur
   const handleEmailBlur = () => {
@@ -175,24 +180,10 @@ export default function LoginForm() {
       setStatus('success');
       toast.success('Welcome back to Verdant! 🌿');
 
-      // Controlled redirect after ~600ms
-      setTimeout(async () => {
-        if (callbackUrl) {
-          router.push(callbackUrl);
-        } else {
-          try {
-            const sessionRes = await fetch('/api/auth/session');
-            const sessionData = await sessionRes.json();
-            const role = sessionData?.user?.role;
-            if (role === 'admin') router.push('/dashboard/admin');
-            else if (role === 'employer') router.push('/dashboard/employer');
-            else router.push('/dashboard/seeker');
-          } catch {
-            router.push('/dashboard/seeker');
-          }
-        }
-        router.refresh();
-      }, 650);
+      // Immediate redirect: no artificial delay and no extra /api/auth/session fetch waterfall
+      const target = callbackUrl || '/dashboard';
+      router.push(target);
+      router.refresh();
     } catch (err) {
       const friendlyMessage = mapAuthError(err.message);
       setAuthError(friendlyMessage);

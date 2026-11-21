@@ -57,12 +57,12 @@ export default function JobDetailsClient({ job, similarJobs = [] }) {
       .then((r) => (r.ok ? r.json() : []))
       .then((saved) => {
         if (Array.isArray(saved)) {
-          const match = saved.some((s) => s._id?.toString() === job._id?.toString());
+          const match = saved.some((s) => s._id?.toString() === job?._id?.toString());
           setIsSaved(match);
         }
       })
       .catch(() => {});
-  }, [job._id]);
+  }, [job]);
 
   const handleShare = async () => {
     if (typeof window === 'undefined') return;

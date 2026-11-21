@@ -13,9 +13,6 @@ import {
   User,
   Settings,
   LogOut,
-  Bell,
-  Search,
-  ChevronDown,
   Menu,
   X,
   TreePine,
@@ -32,10 +29,23 @@ export default function SeekerDashboardLayout({ children }) {
 
   useEffect(() => {
     if (session?.user) {
+      try {
+        const cached = sessionStorage.getItem(`seeker_profile_${session.user.id}`);
+        if (cached) {
+          setProfile(JSON.parse(cached));
+          return;
+        }
+      } catch {}
+
       fetch('/api/users/profile')
         .then((r) => (r.ok ? r.json() : null))
         .then((data) => {
-          if (data?.profile) setProfile(data.profile);
+          if (data?.profile) {
+            setProfile(data.profile);
+            try {
+              sessionStorage.setItem(`seeker_profile_${session.user.id}`, JSON.stringify(data.profile));
+            } catch {}
+          }
         })
         .catch(() => {});
     }

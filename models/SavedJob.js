@@ -19,5 +19,6 @@ const SavedJobSchema = new mongoose.Schema(
 );
 
 SavedJobSchema.index({ user: 1, job: 1 }, { unique: true });
+SavedJobSchema.index({ user: 1, createdAt: -1 });
 
 export default mongoose.models.SavedJob || mongoose.model('SavedJob', SavedJobSchema);
