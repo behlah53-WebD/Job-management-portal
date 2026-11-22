@@ -24,12 +24,13 @@ export default function AccountSheet({
   isOpen = false,
   onClose,
   user,
+  company,
   profile,
   strength = 75,
 }) {
   const router = useRouter();
   const [isSigningOut, setIsSigningOut] = useState(false);
-  const role = user?.role || 'jobseeker';
+  const role = user?.role || (company ? 'employer' : 'jobseeker');
 
   const handleSignOut = async () => {
     if (isSigningOut) return;
@@ -65,6 +66,28 @@ export default function AccountSheet({
             </span>
           </div>
         </div>
+
+        {/* Company Card (for Employers) */}
+        {(role === 'employer' || company) && (
+          <div className={styles.employerBrandCard}>
+            <div className={styles.employerBrandLogo}>
+              {company?.logo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={company.logo}
+                  alt={company?.name || 'Company'}
+                  className={styles.employerLogoImg}
+                />
+              ) : (
+                <span>{getInitials(company?.name || 'Acme Flora Labs')}</span>
+              )}
+            </div>
+            <div className={styles.employerBrandMeta}>
+              <h3 className={styles.employerBrandName}>{company?.name || 'Acme Flora Labs'}</h3>
+              <span className={styles.employerVerifiedChip}>Verified Employer</span>
+            </div>
+          </div>
+        )}
 
         {/* Profile Strength Card (for Job Seekers) */}
         {role === 'jobseeker' && (
@@ -178,7 +201,7 @@ export default function AccountSheet({
             <div className={styles.menuIconBox}>
               <Briefcase size={18} />
             </div>
-            <span className={styles.menuLabel}>Explore Public Jobs</span>
+            <span className={styles.menuLabel}>View Platform</span>
             <ExternalLink size={15} className={styles.menuChevron} />
           </Link>
 

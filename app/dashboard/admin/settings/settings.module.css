@@ -1,0 +1,149 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  color: var(--green-900);
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.settingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  gap: 16px;
+}
+
+.settingRowLast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.textGroup {
+  flex: 1;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  color: var(--green-900);
+}
+
+.rowDesc {
+  font-size: 13px;
+  color: var(--text-muted);
+  max-width: 520px;
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.toggleLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 10px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.checkboxInput {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--green-600);
+  cursor: pointer;
+}
+
+.toggleStatusText {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+.actionBtn {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* =========================================================================
+   MOBILE LAYOUT (< 1024px)
+   Eliminates horizontal squishing & vertical text wrapping completely.
+   ========================================================================= */
+@media (max-width: 1023.98px) {
+  .title {
+    font-size: 24px !important;
+  }
+
+  .card {
+    padding: 18px 16px !important;
+    border-radius: 18px !important;
+    gap: 20px !important;
+  }
+
+  .settingRow {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+    padding-bottom: 18px !important;
+  }
+
+  .settingRowLast {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+  }
+
+  .textGroup {
+    width: 100% !important;
+  }
+
+  .toggleLabel {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 12px 14px !important;
+    background-color: var(--bg-soft) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 14px !important;
+    box-sizing: border-box !important;
+    min-height: 48px !important;
+    touch-action: manipulation !important;
+  }
+
+  .toggleStatusText {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: var(--green-900) !important;
+    white-space: nowrap !important;
+  }
+
+  .actionBtn {
+    width: 100% !important;
+    height: 46px !important;
+    justify-content: center !important;
+    border-radius: 14px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+  }
+}

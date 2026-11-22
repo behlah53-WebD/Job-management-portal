@@ -1,0 +1,416 @@
+/* ==========================================================================
+   DESKTOP (>= 1024px) / MOBILE (< 1024px) ISOLATION
+   Guarantees 100% desktop pixel identity.
+   ========================================================================== */
+.desktopView {
+  display: block;
+}
+
+.mobileView {
+  display: none;
+}
+
+@media (max-width: 1023.98px) {
+  .desktopView {
+    display: none !important;
+  }
+
+  .mobileView {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 96px;
+  }
+
+  /* 1. Mobile Title Block */
+  .mobileHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 4px;
+  }
+
+  .mobileTitle {
+    font-family: var(--font-serif);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--green-900);
+    line-height: 1.2;
+  }
+
+  .mobileSubtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  /* 2. Grouped Cards in iOS Style */
+  .settingsCard {
+    background: #FFFFFF;
+    border: 1px solid rgba(16, 64, 40, 0.08);
+    border-radius: 20px;
+    box-shadow: 0 1px 2px rgba(16, 64, 40, 0.04), 0 6px 20px rgba(16, 64, 40, 0.04);
+    overflow: hidden;
+  }
+
+  .cardHeaderRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px 12px 18px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .cardTitleGroup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cardIconCircle {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: #E8F5E9;
+    color: #0F5C33;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .cardTitle {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--green-900);
+  }
+
+  .cardActionBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0F5C33;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background-color: #E8F5E9;
+    touch-action: manipulation;
+  }
+
+  /* iOS Rows */
+  .rowsList {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .settingRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 64px;
+    padding: 14px 18px;
+    gap: 16px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .settingRow:last-child {
+    border-bottom: none;
+  }
+
+  .rowTextGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .rowLabel {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-main);
+  }
+
+  .rowDesc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* 48px Hit-area Switch Toggle */
+  .switchHitArea {
+    width: 52px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    touch-action: manipulation;
+    flex-shrink: 0;
+  }
+
+  .switchTrack {
+    width: 48px;
+    height: 28px;
+    border-radius: 999px;
+    background-color: #CBD5E1;
+    position: relative;
+    transition: background-color 0.2s ease;
+  }
+
+  .switchTrackActive {
+    background-color: #0F5C33;
+  }
+
+  .switchThumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .switchThumbActive {
+    transform: translateX(20px);
+  }
+
+  /* Teammate Rows */
+  .teammateRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-subtle);
+    gap: 12px;
+  }
+
+  .teammateRow:last-child {
+    border-bottom: none;
+  }
+
+  .teammateLeft {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .teammateAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: #E8F5E9;
+    color: #0F5C33;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .teammateInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .teammateNameRow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .teammateName {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .teammateRoleBadge {
+    display: inline-flex;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    background-color: var(--bg-soft);
+    color: var(--text-muted);
+  }
+
+  .teammateRoleBadgeAdmin {
+    background-color: #E8F5E9;
+    color: #0F5C33;
+  }
+
+  .teammateEmail {
+    font-size: 12px;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Danger Zone */
+  .dangerCard {
+    background: #FFFBFB;
+    border: 1px solid rgba(220, 38, 38, 0.2);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(220, 38, 38, 0.04);
+  }
+
+  .dangerRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px;
+    gap: 14px;
+  }
+
+  .dangerTitleGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .dangerTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #DC2626;
+  }
+
+  .dangerDesc {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .dangerBtn {
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    background: #FFFFFF;
+    color: #DC2626;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    touch-action: manipulation;
+    flex-shrink: 0;
+  }
+
+  .dangerBtn:active {
+    background: #FEE2E2;
+  }
+
+  /* Sheet form content */
+  .sheetForm {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 4px 0 20px 0;
+  }
+
+  .sheetFieldGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sheetFieldLabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+  }
+
+  .sheetInput {
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-size: 16px;
+    color: var(--text-main);
+    background: #FFFFFF;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .sheetSelect {
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-size: 16px;
+    color: var(--text-main);
+    background: #FFFFFF;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .confirmSheetContent {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 10px 0 20px 0;
+  }
+
+  .confirmWarningBox {
+    background: #FEE2E2;
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .confirmWarningText {
+    font-size: 13px;
+    color: #991B1B;
+    line-height: 1.5;
+  }
+
+  .confirmActionsRow {
+    display: flex;
+    gap: 12px;
+  }
+
+  .confirmCancelBtn {
+    flex: 1;
+    height: 48px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .confirmDeleteBtn {
+    flex: 1.4;
+    height: 48px;
+    border-radius: 14px;
+    background-color: #DC2626 !important;
+    border-color: #DC2626 !important;
+    color: #FFFFFF !important;
+    font-size: 14px;
+    font-weight: 700;
+  }
+}

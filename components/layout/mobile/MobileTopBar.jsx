@@ -1,29 +1,39 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Search, Bell, ArrowLeft, X } from 'lucide-react';
+import { Search, Bell, ArrowLeft, X, Plus } from 'lucide-react';
 import { getInitials, getGreeting } from '@/lib/utils';
 import NotificationsSheet from './NotificationsSheet';
 import styles from './MobileTopBar.module.css';
 
 /**
  * Mobile Top App Bar
- * Left: 40px avatar button (initials) -> opens AccountSheet
+ * Left: 40px avatar or company logo button -> opens AccountSheet
  * Center: Serif Page Title (never wraps, cross-fades on scroll)
- * Right: 40px search button (expands into search input) + 40px notification bell (opens NotificationsSheet)
+ * Right:
+ *   - Seekers: search icon + notification bell
+ *   - Employers: notification bell + circular "+" post-job button
  */
 export default function MobileTopBar({
+  role = 'seeker',
+  company = null,
   user,
   onOpenAccount,
   title: customTitle,
   unreadNotifications: propUnreadNotifications,
   onOpenNotifications,
   hasSearch = true,
+  hasPostJobBtn = false,
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const isEmployer = role === 'employer' || pathname.startsWith('/dashboard/employer');
+  const showSearch = isEmployer ? false : hasSearch;
+  const showPostJob = isEmployer ? true : hasPostJobBtn;
 
   // Search state
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -182,16 +192,25 @@ export default function MobileTopBar({
       ) : (
         /* Default Top Bar Mode */
         <div className={styles.barInner}>
-          {/* Left: 40px Avatar Button */}
+          {/* Left: 40px Avatar or Company Logo Button */}
           <button
             type="button"
             className={styles.avatarBtn}
             onClick={onOpenAccount}
-            aria-label="Open account menu"
+            aria-label={isEmployer ? 'Open company and account menu' : 'Open account menu'}
           >
-            <span className={styles.avatarInitials}>
-              {getInitials(user?.name || 'Verdant')}
-            </span>
+            {isEmployer && company?.logo ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={company.logo}
+                alt={company?.name || 'Company'}
+                className={styles.companyLogoThumb}
+              />
+            ) : (
+              <span className={styles.avatarInitials}>
+                {getInitials(isEmployer ? company?.name || user?.name || 'Flora' : user?.name || 'Verdant')}
+              </span>
+            )}
           </button>
 
           {/* Center: Serif Page Title */}
@@ -205,9 +224,9 @@ export default function MobileTopBar({
             </h1>
           </div>
 
-          {/* Right: Search & Bell */}
+          {/* Right: Actions */}
           <div className={styles.actionsRight}>
-            {hasSearch && (
+            {showSearch && (
               <button
                 type="button"
                 className={styles.iconBtn}
@@ -227,6 +246,16 @@ export default function MobileTopBar({
               <Bell size={19} />
               {unreadCount > 0 && <span className={styles.notifBadge} />}
             </button>
+
+            {showPostJob && (
+              <Link
+                href="/dashboard/employer/post-job"
+                className={styles.postJobCircleBtn}
+                aria-label="Post a Job"
+              >
+                <Plus size={20} />
+              </Link>
+            )}
           </div>
         </div>
       )}

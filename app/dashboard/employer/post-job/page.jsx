@@ -1,8 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Stepper from '@/components/ui/Stepper';
+import SproutStepper from '@/components/ui/mobile/SproutStepper';
+import StickyActionBar from '@/components/ui/mobile/StickyActionBar';
+import BottomSheet from '@/components/ui/mobile/BottomSheet';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
@@ -20,6 +24,11 @@ import {
   ArrowLeft,
   Check,
   Sparkles,
+  ChevronDown,
+  ChevronUp,
+  MapPin,
+  Leaf,
+  ExternalLink,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import styles from './postJob.module.css';
@@ -44,6 +53,12 @@ export default function PostJobWizard() {
   const [currentStep, setCurrentStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [categories, setCategories] = useState(CATEGORIES);
+  const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
+  const [collapsiblePreviewOpen, setCollapsiblePreviewOpen] = useState(false);
+  const [successSheetOpen, setSuccessSheetOpen] = useState(false);
+  const [createdJobId, setCreatedJobId] = useState(null);
+  const [showLeafBurst, setShowLeafBurst] = useState(false);
+  const [draftSaved, setDraftSaved] = useState(false);
 
   useEffect(() => {
     fetch('/api/categories')
@@ -75,6 +90,32 @@ export default function PostJobWizard() {
     openings: 1,
     deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
   });
+
+  // Restore draft from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('verdant_employer_job_draft');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.title || parsed.description) {
+          setFormData((prev) => ({ ...prev, ...parsed }));
+          setDraftSaved(true);
+        }
+      }
+    } catch {}
+  }, []);
+
+  // Auto-save draft on changes
+  useEffect(() => {
+    try {
+      if (formData.title || formData.description) {
+        localStorage.setItem('verdant_employer_job_draft', JSON.stringify(formData));
+        setDraftSaved(true);
+        const timer = setTimeout(() => setDraftSaved(false), 2000);
+        return () => clearTimeout(timer);
+      }
+    } catch {}
+  }, [formData]);
 
   // Temporary inputs for lists
   const [newResp, setNewResp] = useState('');
@@ -164,10 +205,12 @@ export default function PostJobWizard() {
       }
     }
     setCurrentStep((prev) => Math.min(prev + 1, 4));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handlePrev = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handlePublish = async (status = 'Active') => {
@@ -185,8 +228,21 @@ export default function PostJobWizard() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to post job');
 
-      toast.success(data.message || 'Job posted successfully! 🌿');
-      router.push('/dashboard/employer/my-jobs');
+      // Trigger leaf-burst animation
+      setShowLeafBurst(true);
+      try {
+        localStorage.removeItem('verdant_employer_job_draft');
+      } catch {}
+
+      setCreatedJobId(data.job?._id || data._id || 'new');
+      toast.success(data.message || 'Job published successfully! 🌿');
+
+      // Show confirmation sheet on mobile or redirect
+      if (window.innerWidth < 1024) {
+        setSuccessSheetOpen(true);
+      } else {
+        router.push('/dashboard/employer/my-jobs');
+      }
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -206,19 +262,20 @@ export default function PostJobWizard() {
     category: formData.category,
     jobType: formData.jobType,
     workMode: formData.workMode,
-    location: formData.location,
+    location: formData.location || 'Remote',
     salaryMin: Number(formData.salaryMin),
     salaryMax: Number(formData.salaryMax),
     salaryCurrency: formData.salaryCurrency,
     salaryType: formData.salaryType,
     experienceLevel: formData.experienceLevel,
-    skills: formData.skills,
+    skills: formData.skills.length > 0 ? formData.skills : ['React', 'Next.js', 'Node.js'],
     createdAt: new Date().toISOString(),
     isFeatured: true,
   };
 
   return (
     <div className={styles.container}>
+      {/* Header */}
       <div className={styles.header}>
         <div>
           <h1 className={styles.title}>Post a New Opportunity</h1>
@@ -226,12 +283,47 @@ export default function PostJobWizard() {
             Create an intentional, dignified job listing in 4 calm steps.
           </p>
         </div>
+        {draftSaved && (
+          <span className={styles.draftBadge}>
+            <Check size={13} />
+            <span>Draft saved</span>
+          </span>
+        )}
       </div>
 
-      <Stepper steps={steps} currentStep={currentStep} />
+      {/* Desktop Stepper (>= 1024px) */}
+      <div className={styles.desktopStepperWrapper}>
+        <Stepper steps={steps} currentStep={currentStep} />
+      </div>
+
+      {/* Mobile Sprout Stepper (< 1024px) */}
+      <div className={styles.mobileStepperWrapper}>
+        <SproutStepper steps={steps} currentStep={currentStep} />
+      </div>
+
+      {/* Mobile Collapsible Live Preview Card */}
+      <div className={styles.mobileCollapsiblePreview}>
+        <button
+          type="button"
+          className={styles.collapsibleTrigger}
+          onClick={() => setCollapsiblePreviewOpen(!collapsiblePreviewOpen)}
+        >
+          <div className={styles.triggerLeft}>
+            <Eye size={17} className={styles.triggerIcon} />
+            <span className={styles.triggerTitle}>Live Card Preview</span>
+          </div>
+          {collapsiblePreviewOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+        </button>
+
+        {collapsiblePreviewOpen && (
+          <div className={styles.collapsibleContent}>
+            <JobCard job={previewJob} />
+          </div>
+        )}
+      </div>
 
       <div className={styles.wizardLayout}>
-        {/* Left Form Card (60%) */}
+        {/* Form Card */}
         <Card padding="large" className={styles.formCard}>
           {/* STEP 1: BASICS */}
           {currentStep === 1 && (
@@ -243,9 +335,10 @@ export default function PostJobWizard() {
                 placeholder="e.g. Lead Frontend Architect"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                helperText="Use clear industry-standard titles without buzzwords (no 'Ninjas' or 'Rockstars')."
+                helperText="Use clear industry-standard titles without buzzwords."
               />
 
+              {/* Desktop Selects / Mobile Options */}
               <div className={styles.formGridTwo}>
                 <Select
                   label="Craft / Category"
@@ -254,30 +347,89 @@ export default function PostJobWizard() {
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                 />
-                <Select
-                  label="Employment Type"
-                  required
-                  options={JOB_TYPES}
-                  value={formData.jobType}
-                  onChange={(e) => setFormData({ ...formData, jobType: e.target.value })}
-                />
+
+                {/* Employment Type */}
+                <div className={styles.mobileFieldWrap}>
+                  <div className={styles.desktopSelectOnly}>
+                    <Select
+                      label="Employment Type"
+                      required
+                      options={JOB_TYPES}
+                      value={formData.jobType}
+                      onChange={(e) => setFormData({ ...formData, jobType: e.target.value })}
+                    />
+                  </div>
+                  <div className={styles.mobileChipGroupWrap}>
+                    <label className={styles.mobileFieldLabel}>
+                      Employment Type <span className={styles.required}>*</span>
+                    </label>
+                    <div className={styles.chipSegmentRow}>
+                      {JOB_TYPES.map((type) => (
+                        <button
+                          key={type}
+                          type="button"
+                          className={`${styles.segmentChip} ${formData.jobType === type ? styles.segmentChipActive : ''}`}
+                          onClick={() => setFormData({ ...formData, jobType: type })}
+                        >
+                          {type}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
 
+              {/* Work Mode & Location */}
               <div className={styles.formGridTwo}>
-                <Select
-                  label="Work Mode"
-                  required
-                  options={WORK_MODES}
-                  value={formData.workMode}
-                  onChange={(e) => setFormData({ ...formData, workMode: e.target.value })}
-                />
-                <Input
-                  label="Location"
-                  required
-                  placeholder="e.g. Remote, Bengaluru, or Hybrid"
-                  value={formData.location}
-                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                />
+                <div className={styles.mobileFieldWrap}>
+                  <div className={styles.desktopSelectOnly}>
+                    <Select
+                      label="Work Mode"
+                      required
+                      options={WORK_MODES}
+                      value={formData.workMode}
+                      onChange={(e) => setFormData({ ...formData, workMode: e.target.value })}
+                    />
+                  </div>
+                  <div className={styles.mobileChipGroupWrap}>
+                    <label className={styles.mobileFieldLabel}>
+                      Work Mode <span className={styles.required}>*</span>
+                    </label>
+                    <div className={styles.chipSegmentRow}>
+                      {WORK_MODES.map((mode) => (
+                        <button
+                          key={mode}
+                          type="button"
+                          className={`${styles.segmentChip} ${formData.workMode === mode ? styles.segmentChipActive : ''}`}
+                          onClick={() => setFormData({ ...formData, workMode: mode })}
+                        >
+                          {mode}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className={styles.locationFieldWrap}>
+                  <div className={styles.locationLabelRow}>
+                    <label className={styles.label}>
+                      Location <span className={styles.required}>*</span>
+                    </label>
+                    <button
+                      type="button"
+                      className={styles.quickRemoteChip}
+                      onClick={() => setFormData({ ...formData, location: 'Remote', workMode: 'Remote' })}
+                    >
+                      <MapPin size={12} />
+                      <span>Remote</span>
+                    </button>
+                  </div>
+                  <Input
+                    placeholder="e.g. Remote, Bengaluru, or Hybrid"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -323,6 +475,7 @@ export default function PostJobWizard() {
                         type="button"
                         onClick={() => handleRemoveResponsibility(i)}
                         className={styles.removeIconBtn}
+                        aria-label="Remove"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -354,6 +507,7 @@ export default function PostJobWizard() {
                         type="button"
                         onClick={() => handleRemoveRequirement(i)}
                         className={styles.removeIconBtn}
+                        aria-label="Remove"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -420,7 +574,7 @@ export default function PostJobWizard() {
                   placeholder="e.g. 1800000"
                   value={formData.salaryMin}
                   onChange={(e) => setFormData({ ...formData, salaryMin: e.target.value })}
-                  helperText="₹18 LPA"
+                  helperText="e.g. ₹18 LPA"
                 />
                 <Input
                   label="Maximum (INR)"
@@ -429,7 +583,7 @@ export default function PostJobWizard() {
                   placeholder="e.g. 2800000"
                   value={formData.salaryMax}
                   onChange={(e) => setFormData({ ...formData, salaryMax: e.target.value })}
-                  helperText="₹28 LPA"
+                  helperText="e.g. ₹28 LPA"
                 />
               </div>
 
@@ -495,7 +649,7 @@ export default function PostJobWizard() {
                 </div>
               </div>
 
-              <div className={styles.launchButtons}>
+              <div className={styles.desktopLaunchButtons}>
                 <Button
                   variant="primary"
                   size="lg"
@@ -516,8 +670,8 @@ export default function PostJobWizard() {
             </div>
           )}
 
-          {/* Step Navigation Footer */}
-          <div className={styles.stepFooter}>
+          {/* Desktop Step Navigation Footer (>= 1024px) */}
+          <div className={styles.stepFooterDesktop}>
             {currentStep > 1 && (
               <Button variant="ghost" size="md" icon={ArrowLeft} onClick={handlePrev}>
                 Back
@@ -533,7 +687,7 @@ export default function PostJobWizard() {
           </div>
         </Card>
 
-        {/* Right Live Preview Card (40%) */}
+        {/* Desktop Live Preview Card (40%) */}
         <div className={styles.previewSidebar}>
           <div className={styles.previewSticky}>
             <div className={styles.previewHeader}>
@@ -547,6 +701,122 @@ export default function PostJobWizard() {
           </div>
         </div>
       </div>
+
+      {/* =========================================================================
+          MOBILE STICKY ACTION BAR (< 1024px)
+         ========================================================================= */}
+      <StickyActionBar>
+        {currentStep > 1 && (
+          <button
+            type="button"
+            className={styles.mobileBackBtn}
+            onClick={handlePrev}
+          >
+            <ArrowLeft size={18} />
+            <span>Back</span>
+          </button>
+        )}
+
+        <button
+          type="button"
+          className={styles.mobilePreviewBtn}
+          onClick={() => setMobilePreviewOpen(true)}
+          aria-label="Preview job card"
+        >
+          <Eye size={18} />
+        </button>
+
+        {currentStep < 4 ? (
+          <button
+            type="button"
+            className={styles.mobileContinueBtn}
+            onClick={handleNext}
+          >
+            <span>Continue</span>
+            <ArrowRight size={18} />
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={`${styles.mobilePublishBtn} ${showLeafBurst ? styles.leafBurstAnim : ''}`}
+            onClick={() => handlePublish('Active')}
+            disabled={submitting}
+          >
+            <Leaf size={18} />
+            <span>{submitting ? 'Publishing...' : 'Publish Job'}</span>
+          </button>
+        )}
+      </StickyActionBar>
+
+      {/* Mobile Live Preview Bottom Sheet */}
+      <BottomSheet
+        isOpen={mobilePreviewOpen}
+        onClose={() => setMobilePreviewOpen(false)}
+        title="Live Job Card Preview"
+      >
+        <div className={styles.mobileSheetPreviewContent}>
+          <JobCard job={previewJob} />
+          <p className={styles.sheetPreviewHint}>
+            Candidates will see this clean, dignified card in search feeds.
+          </p>
+        </div>
+      </BottomSheet>
+
+      {/* Mobile Success / Launch Confirmation Sheet */}
+      <BottomSheet
+        isOpen={successSheetOpen}
+        onClose={() => router.push('/dashboard/employer/my-jobs')}
+        title="Listing Published!"
+      >
+        <div className={styles.successSheetBody}>
+          <div className={styles.successIconCircle}>
+            <Leaf size={32} />
+          </div>
+          <h3 className={styles.successSheetTitle}>{formData.title} is Live!</h3>
+          <p className={styles.successSheetDesc}>
+            Your opportunity is now visible to thousands of mission-driven candidates.
+          </p>
+
+          <div className={styles.successSheetActions}>
+            <Link
+              href={`/jobs/${createdJobId}`}
+              className={styles.sheetViewJobBtn}
+            >
+              <span>View Live Job</span>
+              <ExternalLink size={16} />
+            </Link>
+
+            <button
+              type="button"
+              className={styles.sheetPostAnotherBtn}
+              onClick={() => {
+                setSuccessSheetOpen(false);
+                setCurrentStep(1);
+                setFormData({
+                  title: '',
+                  category: 'Software Engineering',
+                  jobType: 'Full-time',
+                  workMode: 'Remote',
+                  location: '',
+                  description: '',
+                  responsibilities: [],
+                  requirements: [],
+                  skills: [],
+                  salaryMin: '',
+                  salaryMax: '',
+                  salaryCurrency: 'INR',
+                  salaryType: 'yearly',
+                  experienceLevel: '3-5',
+                  openings: 1,
+                  deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                });
+              }}
+            >
+              Post Another Opportunity
+            </button>
+          </div>
+        </div>
+      </BottomSheet>
     </div>
   );
 }

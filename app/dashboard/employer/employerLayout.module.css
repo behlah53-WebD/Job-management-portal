@@ -289,8 +289,16 @@
 }
 
 @media (max-width: 1023.98px) {
+  /* Single-column shell on mobile: stack the mobile top bar and main workspace.
+     .layoutWrapper is display: flex (row) at base for the desktop sidebar; on
+     mobile it must become a column so the top bar is full-width and mainContent
+     is not pushed off-screen by a shrink-to-fit row sibling. */
+  .layoutWrapper {
+    flex-direction: column !important;
+  }
   .mobileTopBarWrapper {
     display: block !important;
+    width: 100% !important;
   }
   .sidebar {
     display: none !important;
@@ -304,13 +312,24 @@
     min-width: 0 !important;
     max-width: 100% !important;
     overflow-x: clip !important;
-    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px) + 24px) !important;
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 16px) !important;
   }
   .pageBody {
-    padding: 16px 14px !important;
+    padding-top: calc(64px + env(safe-area-inset-top, 0px) + 16px) !important; /* clears fixed mobile top bar with clean spacing */
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px) + 24px) !important; /* clears floating bottom nav */
+    padding-left: 16px !important;
+    padding-right: 16px !important;
     width: 100% !important;
     min-width: 0 !important;
     max-width: 100% !important;
+    box-sizing: border-box !important;
     overflow-x: clip !important;
+  }
+}
+
+@media (min-width: 412px) and (max-width: 1023.98px) {
+  .pageBody {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
   }
 }

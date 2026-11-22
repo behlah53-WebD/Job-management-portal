@@ -4,6 +4,9 @@
   gap: 32px;
 }
 
+/* =========================================================================
+   DESKTOP STYLES (>= 1024px) - PIXEL IDENTICAL
+   ========================================================================= */
 .statsRow {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -42,6 +45,16 @@
   margin-top: 2px;
 }
 
+.rangeSelectorWrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mobileRangeTabs {
+  display: none;
+}
+
 .legendPills {
   display: flex;
   gap: 12px;
@@ -61,6 +74,10 @@
   margin-left: -10px;
 }
 
+.desktopChartHeight {
+  height: 260px;
+}
+
 .totalBadge {
   background-color: var(--mint-100);
   color: var(--green-700);
@@ -74,6 +91,36 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.donutCenterInfo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.donutTotalNum {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--green-900);
+  line-height: 1;
+}
+
+.donutTotalLabel {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-top: 2px;
 }
 
 .donutLegend {
@@ -102,8 +149,8 @@
   font-weight: 500;
 }
 
-/* Latest applicants */
-.latestCard {
+/* Desktop Latest Applicants Card */
+.latestCardDesktop {
   display: flex;
   flex-direction: column;
 }
@@ -174,23 +221,368 @@
   gap: 16px;
 }
 
-@media (max-width: 1024px) {
-  .statsRow {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .chartsGrid {
-    grid-template-columns: 1fr;
+/* =========================================================================
+   MOBILE-ONLY STYLES (< 1024px)
+   ========================================================================= */
+.mobileHeroSection,
+.mobileApplicantsSection {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .mobileHeroSection,
+  .mobileApplicantsSection {
+    display: none !important;
   }
 }
 
-@media (max-width: 640px) {
-  .statsRow {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+@media (max-width: 1023.98px) {
+  .container {
+    gap: 24px !important;
   }
-  .applicantRow {
+
+  .statsRow {
+    display: none !important;
+  }
+
+  .latestCardDesktop {
+    display: none !important;
+  }
+
+  .mobileHeroSection {
+    display: flex !important;
     flex-direction: column;
-    align-items: flex-start;
+    gap: 18px;
+  }
+
+  /* 1. Greeting Block */
+  .mobileGreetingBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .mobileOverline {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green-600);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .mobileNameSerif {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    line-height: 1.15;
+    font-weight: 700;
+    color: var(--green-900);
+    margin: 0;
+  }
+
+  .mobileSupportiveLine {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  /* 2. Quick Actions Row */
+  .mobileQuickActions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .quickActionPrimary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 48px;
+    border-radius: 16px;
+    background: var(--gradient-primary);
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(30, 154, 86, 0.22);
+    touch-action: manipulation;
+    transition: transform 120ms ease;
+  }
+
+  .quickActionPrimary:active {
+    transform: scale(0.97);
+  }
+
+  .quickActionTonal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 48px;
+    border-radius: 16px;
+    background-color: var(--mint-100);
+    color: var(--green-800);
+    border: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    touch-action: manipulation;
+    transition: transform 120ms ease;
+  }
+
+  .quickActionTonal:active {
+    transform: scale(0.97);
+  }
+
+  /* 3. 2x2 Stats Grid (all cards in front, no side scrolling) */
+  .mobileStatsScroll {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    overflow-x: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .mobileStatsScroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobileStatCard {
+    width: 100% !important;
+    min-width: 0 !important;
+    flex-shrink: 1 !important;
+    padding: 14px 12px;
+    border-radius: 20px;
+    background-color: var(--white);
+    border: 1px solid rgba(16, 64, 40, 0.08);
+    box-shadow: 0 1px 2px rgba(16, 64, 40, 0.04), 0 8px 24px rgba(16, 64, 40, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-sizing: border-box;
+  }
+
+  .mobileStatChip {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2px;
+  }
+
+  .chipGreen {
+    background-color: var(--mint-100);
+    color: var(--green-700);
+  }
+
+  .chipLime {
+    background-color: #F1FCE9;
+    color: var(--lime-dark, #4D7C0F);
+  }
+
+  .chipSage {
+    background-color: #EDF4F0;
+    color: var(--sage, #5E7A6B);
+  }
+
+  .chipGold {
+    background-color: #FEF8E7;
+    color: #B45309;
+  }
+
+  .mobileStatNumber {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--green-900);
+    line-height: 1.1;
+  }
+
+  .mobileStatLabel {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mobileStatDelta {
+    display: inline-flex;
+    align-self: flex-start;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--green-700);
+    background-color: var(--mint-100);
+    padding: 2px 7px;
+    border-radius: 999px;
+    margin-top: 2px;
+  }
+
+  /* Charts on Mobile */
+  .chartsGrid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .desktopChartHeight {
+    height: 180px !important;
+  }
+
+  .mobileRangeTabs {
+    display: block !important;
+  }
+
+  .legendPills {
+    display: none !important;
+  }
+
+  .donutLegend {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 12px;
+    max-width: 260px;
+    margin: 12px auto 0 auto;
+  }
+
+  /* 6. Latest Applicants Section (Mobile DataCards) */
+  .mobileApplicantsSection {
+    display: flex !important;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .mobileSectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mobileSectionTitle {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--green-900);
+    margin: 0;
+  }
+
+  .mobileSectionSub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 2px 0 0 0;
+  }
+
+  .openKanbanBtn {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green-600);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background-color: var(--mint-100);
+  }
+
+  .mobileDataCardStack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .applicantDataCard {
+    padding: 14px !important;
+    gap: 10px !important;
+  }
+
+  .dataCardTop {
+    display: flex;
+    align-items: center;
     gap: 12px;
+    min-width: 0;
+  }
+
+  .dataCardAvatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #E3F4E9 0%, #CBEBD6 100%);
+    border: 1.5px solid var(--border);
+    color: var(--green-800);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .dataCardInfo {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .dataCardName {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--green-900);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dataCardRole {
+    font-size: 13px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dataCardBadge {
+    flex-shrink: 0;
+  }
+
+  .dataCardFooter {
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 8px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .dataCardReviewLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green-600);
+    text-decoration: none;
+    min-height: 36px;
+    padding: 0 4px;
+  }
+
+  .viewAllAppsBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    border-radius: 14px;
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    color: var(--green-700);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(16, 64, 40, 0.04);
   }
 }

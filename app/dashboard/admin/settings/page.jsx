@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
-import { Sliders, Shield, Bell, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import styles from './settings.module.css';
 
 export default function AdminSettingsPage() {
   const [requireApproval, setRequireApproval] = useState(false);
@@ -46,51 +46,52 @@ export default function AdminSettingsPage() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div className={styles.container}>
       <div>
-        <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '28px', color: 'var(--green-900)' }}>
+        <h1 className={styles.title}>
           Platform Settings & Security
         </h1>
-        <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>
+        <p className={styles.subtitle}>
           Control platform-wide moderation rules, cron schedules, and currency defaults.
         </p>
       </div>
 
-      <Card padding="large" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '20px', borderBottom: '1px solid var(--border-subtle)' }}>
-          <div>
-            <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', color: 'var(--green-900)' }}>
+      <Card padding="large" className={styles.card}>
+        <div className={styles.settingRow}>
+          <div className={styles.textGroup}>
+            <h4 className={styles.rowTitle}>
               Require Admin Approval for New Jobs
             </h4>
-            <p style={{ fontSize: '13px', color: 'var(--text-muted)', maxWidth: '520px', marginTop: '4px' }}>
+            <p className={styles.rowDesc}>
               When enabled, employer postings will be placed in 'Pending' status until approved in the moderation queue.
             </p>
           </div>
-          <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '10px' }}>
+          <label className={styles.toggleLabel}>
+            <span className={styles.toggleStatusText}>
+              {requireApproval ? 'Enabled' : 'Disabled'}
+            </span>
             <input
               type="checkbox"
               checked={requireApproval}
               onChange={(e) => handleToggle(e.target.checked)}
-              style={{ width: '20px', height: '20px', accentColor: 'var(--green-600)', cursor: 'pointer' }}
+              className={styles.checkboxInput}
             />
-            <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-main)' }}>
-              {requireApproval ? 'Enabled' : 'Disabled'}
-            </span>
           </label>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div>
-            <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', color: 'var(--green-900)' }}>
+        <div className={styles.settingRowLast}>
+          <div className={styles.textGroup}>
+            <h4 className={styles.rowTitle}>
               Scheduled Job Expiry Cron
             </h4>
-            <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>
+            <p className={styles.rowDesc}>
               Endpoint: <code>/api/cron/expire-jobs</code> (Protected by CRON_SECRET).
             </p>
           </div>
           <Button
             variant="secondary"
             size="sm"
+            className={styles.actionBtn}
             onClick={async () => {
               try {
                 const res = await fetch('/api/cron/expire-jobs');

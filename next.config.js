@@ -13,6 +13,8 @@ const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   experimental: {
+    cpus: 1,
+    workerThreads: false,
     optimizePackageImports: ['lucide-react', 'date-fns', '@dnd-kit/core', '@dnd-kit/sortable'],
   },
   images: {

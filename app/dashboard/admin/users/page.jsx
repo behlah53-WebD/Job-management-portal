@@ -15,9 +15,12 @@ import {
   Trash2,
   Mail,
   Shield,
+  MapPin,
+  Clock,
 } from 'lucide-react';
 import { timeAgo, getInitials } from '@/lib/utils';
 import toast from 'react-hot-toast';
+import styles from './users.module.css';
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState([]);
@@ -93,13 +96,12 @@ export default function AdminUsersPage() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <div className={styles.container}>
+      {/* Header */}
+      <div className={styles.headerRow}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '28px', color: 'var(--green-900)' }}>
-            User Management
-          </h1>
-          <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>
+          <h1 className={styles.title}>User Management</h1>
+          <p className={styles.subtitle}>
             Inspect all registered job seekers, employers, and administrator accounts.
           </p>
         </div>
@@ -108,12 +110,10 @@ export default function AdminUsersPage() {
         </Button>
       </div>
 
+      {/* Filter Card */}
       <Card padding="normal">
-        <form
-          onSubmit={handleSearchSubmit}
-          style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}
-        >
-          <div style={{ flex: 1, minWidth: '240px' }}>
+        <form onSubmit={handleSearchSubmit} className={styles.filterForm}>
+          <div className={styles.searchWrapper}>
             <Input
               placeholder="Search by candidate or employer name, email..."
               icon={Search}
@@ -121,7 +121,7 @@ export default function AdminUsersPage() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div style={{ width: '180px' }}>
+          <div className={styles.roleSelectWrapper}>
             <Select
               options={[
                 { value: 'all', label: 'All Roles' },
@@ -139,36 +139,19 @@ export default function AdminUsersPage() {
         </form>
       </Card>
 
-      <div
-        style={{
-          backgroundColor: 'var(--white)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-card)',
-          overflowX: 'auto',
-          boxShadow: 'var(--shadow-sm)',
-        }}
-      >
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-          <thead style={{ backgroundColor: 'var(--bg-soft)', borderBottom: '1px solid var(--border)' }}>
+      {/* =========================================================================
+          DESKTOP TABLE (>= 1024px) - 100% UNTOUCHED ORIGINAL
+         ========================================================================= */}
+      <div className={styles.desktopTableCard}>
+        <table className={styles.desktopTable}>
+          <thead>
             <tr>
-              <th style={{ padding: '16px 20px', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--green-900)' }}>
-                User
-              </th>
-              <th style={{ padding: '16px 20px', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--green-900)' }}>
-                Role
-              </th>
-              <th style={{ padding: '16px 20px', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--green-900)' }}>
-                Location
-              </th>
-              <th style={{ padding: '16px 20px', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--green-900)' }}>
-                Status
-              </th>
-              <th style={{ padding: '16px 20px', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--green-900)' }}>
-                Joined
-              </th>
-              <th style={{ padding: '16px 20px', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--green-900)', textAlign: 'right' }}>
-                Actions
-              </th>
+              <th className={styles.desktopTh}>User</th>
+              <th className={styles.desktopTh}>Role</th>
+              <th className={styles.desktopTh}>Location</th>
+              <th className={styles.desktopTh}>Status</th>
+              <th className={styles.desktopTh}>Joined</th>
+              <th className={styles.desktopThRight}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -186,8 +169,8 @@ export default function AdminUsersPage() {
               </tr>
             ) : (
               users.map((u) => (
-                <tr key={u._id} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                  <td style={{ padding: '16px 20px' }}>
+                <tr key={u._id} className={styles.desktopTr}>
+                  <td className={styles.desktopTd}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                       <div
                         style={{
@@ -239,10 +222,10 @@ export default function AdminUsersPage() {
                           cursor: 'pointer',
                           color: u.isBlocked ? 'var(--green-600)' : 'var(--danger)',
                         }}
-                        title={u.isBlocked ? 'Unblock user' : 'Block user'}
                         onClick={() => handleToggleBlock(u._id, u.isBlocked)}
+                        title={u.isBlocked ? 'Unblock user' : 'Block user'}
                       >
-                        {u.isBlocked ? <CheckCircle size={16} /> : <Ban size={16} />}
+                        {u.isBlocked ? <CheckCircle size={15} /> : <Ban size={15} />}
                       </button>
                       <button
                         type="button"
@@ -254,10 +237,10 @@ export default function AdminUsersPage() {
                           cursor: 'pointer',
                           color: 'var(--danger)',
                         }}
-                        title="Delete user"
                         onClick={() => handleDelete(u._id)}
+                        title="Delete user"
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={15} />
                       </button>
                     </div>
                   </td>
@@ -266,6 +249,82 @@ export default function AdminUsersPage() {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* =========================================================================
+          MOBILE USER CARDS (< 1024px) - NO HORIZONTAL SCROLLING
+         ========================================================================= */}
+      <div className={styles.mobileCardsStack}>
+        {loading ? (
+          <div className={styles.mobileEmptyState}>Loading users...</div>
+        ) : users.length === 0 ? (
+          <div className={styles.mobileEmptyState}>No users found matching query.</div>
+        ) : (
+          users.map((u) => (
+            <div key={u._id} className={styles.mobileUserCard}>
+              {/* Card Header: Avatar + Name + Email + Status */}
+              <div className={styles.mobileCardHeader}>
+                <div className={styles.mobileUserInfo}>
+                  <div className={styles.mobileAvatar}>
+                    {getInitials(u.name)}
+                  </div>
+                  <div className={styles.mobileNameGroup}>
+                    <span className={styles.mobileUserName}>{u.name}</span>
+                    <span className={styles.mobileUserEmail}>{u.email}</span>
+                  </div>
+                </div>
+                <Badge variant={u.isBlocked ? 'rejected' : 'active'}>
+                  {u.isBlocked ? 'Blocked' : 'Active'}
+                </Badge>
+              </div>
+
+              {/* Meta Row: Role + Location + Joined */}
+              <div className={styles.mobileMetaRow}>
+                <span className={styles.mobileRoleChip}>{u.role}</span>
+                <span className={styles.mobileMetaItem}>
+                  <MapPin size={12} />
+                  <span>{u.location || 'India'}</span>
+                </span>
+                <span className={styles.mobileMetaItem}>
+                  <Clock size={12} />
+                  <span>{timeAgo(u.createdAt)}</span>
+                </span>
+              </div>
+
+              {/* Actions Row */}
+              <div className={styles.mobileActionsRow}>
+                <button
+                  type="button"
+                  className={`${styles.mobileBlockBtn} ${
+                    u.isBlocked ? styles.mobileBlockBtnSuccess : styles.mobileBlockBtnDanger
+                  }`}
+                  onClick={() => handleToggleBlock(u._id, u.isBlocked)}
+                >
+                  {u.isBlocked ? (
+                    <>
+                      <CheckCircle size={15} />
+                      <span>Unblock</span>
+                    </>
+                  ) : (
+                    <>
+                      <Ban size={15} />
+                      <span>Block</span>
+                    </>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  className={styles.mobileDeleteBtn}
+                  onClick={() => handleDelete(u._id)}
+                  title="Delete user"
+                  aria-label="Delete user"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

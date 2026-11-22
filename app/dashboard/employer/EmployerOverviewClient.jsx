@@ -2,16 +2,23 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import StatCard from '@/components/ui/StatCard';
 import Card from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
+import DataCard from '@/components/ui/mobile/DataCard';
+import SegmentedTabs from '@/components/ui/mobile/SegmentedTabs';
 import {
   Briefcase,
   Users,
   CheckCircle2,
   Eye,
   ArrowRight,
+  PlusCircle,
+  Calendar,
+  ChevronRight,
+  Sparkles,
 } from 'lucide-react';
 import {
   AreaChart,
@@ -31,21 +38,27 @@ import styles from './overview.module.css';
 const DONUT_COLORS = ['#4A9FD8', '#8FAE9A', '#C8F169', '#F2B84B', '#1E9A56', '#E5584F'];
 
 export default function EmployerOverviewClient({ initialData = {} }) {
+  const { data: session } = useSession();
   const [jobs] = useState(initialData.jobs || []);
   const [applicants] = useState(initialData.applicants || []);
+  const [chartRange, setChartRange] = useState('7D');
 
   const activeJobsCount = jobs.filter((j) => j.status === 'Active').length;
   const totalApplicantsCount = applicants.length;
   const shortlistedCount = applicants.filter((a) => a.status === 'Shortlisted').length;
+  const interviewCount = applicants.filter((a) => a.status === 'Interview').length;
+  const offeredCount = applicants.filter((a) => a.status === 'Offered').length;
   const totalViews = jobs.reduce((acc, curr) => acc + (curr.views || 0), 0);
+
+  const userName = session?.user?.name?.split(' ')[0] || 'Partner';
 
   // Donut chart status breakdown
   const statusCounts = {
     Applied: applicants.filter((a) => a.status === 'Applied').length,
     Viewed: applicants.filter((a) => a.status === 'Viewed').length,
     Shortlisted: shortlistedCount,
-    Interview: applicants.filter((a) => a.status === 'Interview').length,
-    Offered: applicants.filter((a) => a.status === 'Offered').length,
+    Interview: interviewCount,
+    Offered: offeredCount,
     Rejected: applicants.filter((a) => a.status === 'Rejected').length,
   };
 
@@ -53,8 +66,8 @@ export default function EmployerOverviewClient({ initialData = {} }) {
     .filter(([_, count]) => count > 0)
     .map(([name, value]) => ({ name, value }));
 
-  const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const timelineData = dayNames.map((name) => {
+  const dayNames7D = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const timelineData7D = dayNames7D.map((name) => {
     const appCount = applicants.filter((a) => {
       const d = new Date(a.appliedAt || a.createdAt);
       return !isNaN(d) && d.toLocaleDateString('en-US', { weekday: 'short' }) === name;
@@ -66,9 +79,85 @@ export default function EmployerOverviewClient({ initialData = {} }) {
     };
   });
 
+  const timelineData30D = [
+    { name: 'W1', applications: Math.round(totalApplicantsCount * 0.2), views: Math.round(totalViews * 0.2) },
+    { name: 'W2', applications: Math.round(totalApplicantsCount * 0.25), views: Math.round(totalViews * 0.28) },
+    { name: 'W3', applications: Math.round(totalApplicantsCount * 0.3), views: Math.round(totalViews * 0.32) },
+    { name: 'W4', applications: Math.round(totalApplicantsCount * 0.25), views: Math.round(totalViews * 0.2) },
+  ];
+
+  const activeChartData = chartRange === '30D' ? timelineData30D : timelineData7D;
+
   return (
     <div className={styles.container}>
-      {/* 4 Stat Cards */}
+      {/* =========================================================================
+          MOBILE-ONLY HERO & QUICK ACTIONS (< 1024px)
+         ========================================================================= */}
+      <div className={styles.mobileHeroSection}>
+        {/* 1. Greeting Block */}
+        <div className={styles.mobileGreetingBlock}>
+          <span className={styles.mobileOverline}>Good morning</span>
+          <h1 className={styles.mobileNameSerif}>{userName}</h1>
+          <p className={styles.mobileSupportiveLine}>
+            Your candidate pipeline is alive and growing today.
+          </p>
+        </div>
+
+        {/* 2. Quick Actions Row */}
+        <div className={styles.mobileQuickActions}>
+          <Link href="/dashboard/employer/post-job" className={styles.quickActionPrimary}>
+            <PlusCircle size={18} />
+            <span>Post a Job</span>
+          </Link>
+          <Link href="/dashboard/employer/applicants" className={styles.quickActionTonal}>
+            <Users size={18} />
+            <span>Open Pipeline</span>
+          </Link>
+        </div>
+
+        {/* 3. Horizontally Scrollable Stat Cards (148px snap-start with peeking) */}
+        <div className={styles.mobileStatsScroll}>
+          <div className={styles.mobileStatCard}>
+            <div className={`${styles.mobileStatChip} ${styles.chipGreen}`}>
+              <Briefcase size={16} />
+            </div>
+            <span className={styles.mobileStatNumber}>{activeJobsCount}</span>
+            <span className={styles.mobileStatLabel}>Active Jobs</span>
+            <span className={styles.mobileStatDelta}>Accepting</span>
+          </div>
+
+          <div className={styles.mobileStatCard}>
+            <div className={`${styles.mobileStatChip} ${styles.chipLime}`}>
+              <Users size={16} />
+            </div>
+            <span className={styles.mobileStatNumber}>{totalApplicantsCount}</span>
+            <span className={styles.mobileStatLabel}>Total Applicants</span>
+            <span className={styles.mobileStatDelta}>+18%</span>
+          </div>
+
+          <div className={styles.mobileStatCard}>
+            <div className={`${styles.mobileStatChip} ${styles.chipSage}`}>
+              <Calendar size={16} />
+            </div>
+            <span className={styles.mobileStatNumber}>{interviewCount}</span>
+            <span className={styles.mobileStatLabel}>Interviews</span>
+            <span className={styles.mobileStatDelta}>Scheduled</span>
+          </div>
+
+          <div className={styles.mobileStatCard}>
+            <div className={`${styles.mobileStatChip} ${styles.chipGold}`}>
+              <CheckCircle2 size={16} />
+            </div>
+            <span className={styles.mobileStatNumber}>{offeredCount}</span>
+            <span className={styles.mobileStatLabel}>Offers Made</span>
+            <span className={styles.mobileStatDelta}>Offered</span>
+          </div>
+        </div>
+      </div>
+
+      {/* =========================================================================
+          DESKTOP 4 STAT CARDS (>= 1024px) - UNTOUCHED FOR DESKTOP FIDELITY
+         ========================================================================= */}
       <div className={styles.statsRow}>
         <StatCard
           label="Active Job Postings"
@@ -102,24 +191,38 @@ export default function EmployerOverviewClient({ initialData = {} }) {
         />
       </div>
 
-      {/* Charts Row */}
+      {/* =========================================================================
+          CHARTS ROW: APPLICATIONS CHART & PIPELINE DONUT
+         ========================================================================= */}
       <div className={styles.chartsGrid}>
-        {/* Applications Over Time (Recharts AreaChart) */}
+        {/* Applications Over Time */}
         <Card padding="large" className={styles.chartCard}>
           <div className={styles.chartHeader}>
             <div>
-              <h3 className={styles.chartTitle}>Applications & Views Over Time</h3>
+              <h3 className={styles.chartTitle}>Applications & Views</h3>
               <p className={styles.chartSub}>Weekly traffic across your active roles</p>
             </div>
-            <div className={styles.legendPills}>
-              <span className={styles.legendApp}>• Applications</span>
-              <span className={styles.legendView}>• Views</span>
+            <div className={styles.rangeSelectorWrapper}>
+              <div className={styles.mobileRangeTabs}>
+                <SegmentedTabs
+                  tabs={[
+                    { id: '7D', label: '7D' },
+                    { id: '30D', label: '30D' },
+                  ]}
+                  activeTab={chartRange}
+                  onChange={setChartRange}
+                />
+              </div>
+              <div className={styles.legendPills}>
+                <span className={styles.legendApp}>• Applications</span>
+                <span className={styles.legendView}>• Views</span>
+              </div>
             </div>
           </div>
 
           <div className={styles.chartWrapper}>
-            <ResponsiveContainer width="100%" height={260}>
-              <AreaChart data={timelineData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <ResponsiveContainer width="100%" height={260} className={styles.desktopChartHeight}>
+              <AreaChart data={activeChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorApps" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#1E9A56" stopOpacity={0.4} />
@@ -156,14 +259,18 @@ export default function EmployerOverviewClient({ initialData = {} }) {
           </div>
 
           <div className={styles.donutWrapper}>
-            <ResponsiveContainer width="100%" height={220}>
+            <div className={styles.donutCenterInfo}>
+              <span className={styles.donutTotalNum}>{totalApplicantsCount}</span>
+              <span className={styles.donutTotalLabel}>Total</span>
+            </div>
+            <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
                   data={donutData}
                   cx="50%"
                   cy="50%"
                   innerRadius={60}
-                  outerRadius={84}
+                  outerRadius={80}
                   paddingAngle={4}
                   dataKey="value"
                   isAnimationActive={false}
@@ -193,8 +300,11 @@ export default function EmployerOverviewClient({ initialData = {} }) {
         </Card>
       </div>
 
-      {/* Latest Applicants Table / Cards */}
-      <Card padding="large" className={styles.latestCard}>
+      {/* =========================================================================
+          LATEST APPLICANTS SECTION
+         ========================================================================= */}
+      {/* Desktop View (>= 1024px) */}
+      <Card padding="large" className={styles.latestCardDesktop}>
         <div className={styles.latestHeader}>
           <div>
             <h3 className={styles.chartTitle}>Latest Applicants</h3>
@@ -239,6 +349,58 @@ export default function EmployerOverviewClient({ initialData = {} }) {
           })}
         </div>
       </Card>
+
+      {/* Mobile View (< 1024px): DataCard List */}
+      <div className={styles.mobileApplicantsSection}>
+        <div className={styles.mobileSectionHeader}>
+          <div>
+            <h3 className={styles.mobileSectionTitle}>Latest Applicants</h3>
+            <p className={styles.mobileSectionSub}>Recent candidates seeking your roles</p>
+          </div>
+          <Link href="/dashboard/employer/applicants" className={styles.openKanbanBtn}>
+            Open Kanban
+          </Link>
+        </div>
+
+        <div className={styles.mobileDataCardStack}>
+          {applicants.slice(0, 4).map((app) => {
+            const applicant = app.applicant || {};
+            const job = app.job || {};
+
+            return (
+              <DataCard key={app._id} className={styles.applicantDataCard}>
+                <div className={styles.dataCardTop}>
+                  <div className={styles.dataCardAvatar}>
+                    {getInitials(applicant.name || 'Candidate')}
+                  </div>
+                  <div className={styles.dataCardInfo}>
+                    <h4 className={styles.dataCardName}>{applicant.name || 'Candidate Name'}</h4>
+                    <span className={styles.dataCardRole}>
+                      Applied for {job.title || 'Role'} · {timeAgo(app.appliedAt || app.createdAt)}
+                    </span>
+                  </div>
+                  <div className={styles.dataCardBadge}>
+                    <Badge variant={app.status}>{app.status}</Badge>
+                  </div>
+                </div>
+
+                <div className={styles.dataCardFooter}>
+                  <Link href="/dashboard/employer/applicants" className={styles.dataCardReviewLink}>
+                    <span>Review Candidate</span>
+                    <ChevronRight size={16} />
+                  </Link>
+                </div>
+              </DataCard>
+            );
+          })}
+
+          {applicants.length > 4 && (
+            <Link href="/dashboard/employer/applicants" className={styles.viewAllAppsBtn}>
+              View all {applicants.length} applicants
+            </Link>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

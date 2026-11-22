@@ -89,8 +89,375 @@
   box-shadow: var(--focus-ring);
 }
 
-@media (max-width: 768px) {
-  .formGrid {
-    grid-template-columns: 1fr;
+/* ==========================================================================
+   DESKTOP (>= 1024px) / MOBILE (< 1024px) ISOLATION
+   Guarantees 100% desktop pixel identity.
+   ========================================================================== */
+.desktopView {
+  display: block;
+}
+
+.mobileView {
+  display: none;
+}
+
+@media (max-width: 1023.98px) {
+  .desktopView {
+    display: none !important;
+  }
+
+  .mobileView {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 96px; /* Room for StickyActionBar */
+  }
+
+  /* 1. Mobile Header Brand Card */
+  .mobileHeaderCard {
+    background: #FFFFFF;
+    border: 1px solid rgba(16, 64, 40, 0.08);
+    border-radius: 22px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 1px 2px rgba(16, 64, 40, 0.04), 0 8px 24px rgba(16, 64, 40, 0.05);
+  }
+
+  .mobileAvatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    background: #E8F5E9;
+    color: #0F5C33;
+    font-family: var(--font-serif);
+    font-size: 26px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 1px solid rgba(15, 92, 51, 0.12);
+  }
+
+  .mobileAvatarImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .mobileBrandMeta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .mobileBrandNameRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .mobileBrandName {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--green-900);
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobileBrandSubline {
+    font-size: 13px;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* 2. Grouped Collapsible Section Cards */
+  .mobileSectionCard {
+    background: #FFFFFF;
+    border: 1px solid rgba(16, 64, 40, 0.08);
+    border-radius: 20px;
+    box-shadow: 0 1px 2px rgba(16, 64, 40, 0.04), 0 6px 20px rgba(16, 64, 40, 0.04);
+    overflow: hidden;
+  }
+
+  .mobileSectionHeaderBtn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .mobileSectionTitleRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mobileSectionIconWrapper {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: #E8F5E9;
+    color: #0F5C33;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .mobileSectionTitle {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--green-900);
+  }
+
+  .mobileSectionChevron {
+    color: var(--text-muted);
+    transition: transform 0.2s ease;
+  }
+
+  .mobileSectionChevronRotated {
+    transform: rotate(180deg);
+  }
+
+  .mobileSectionBody {
+    padding: 0 18px 20px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 18px;
+  }
+
+  /* Field components on mobile */
+  .mobileFieldGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mobileFieldLabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+  }
+
+  .mobileFieldRequired {
+    color: #DC2626;
+    margin-left: 3px;
+  }
+
+  .mobileInput {
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-family: var(--font-sans);
+    font-size: 16px; /* iOS zoom prevention */
+    color: var(--text-main);
+    background-color: var(--white);
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .mobileInput:focus {
+    border-color: var(--green-500);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+  }
+
+  .mobileInputWithIconWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .mobileFieldIcon {
+    position: absolute;
+    left: 16px;
+    color: var(--sage);
+    pointer-events: none;
+  }
+
+  .mobileInputWithIcon {
+    width: 100%;
+    height: 52px;
+    padding: 0 16px 0 46px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    color: var(--text-main);
+    background-color: var(--white);
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .mobileInputWithIcon:focus {
+    border-color: var(--green-500);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+  }
+
+  .mobileSelect {
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    color: var(--text-main);
+    background-color: var(--white);
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .mobileSelect:focus {
+    border-color: var(--green-500);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+  }
+
+  /* Segmented chips for Company Size */
+  .mobileChipGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .mobileChipBtn {
+    min-height: 42px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background-color: var(--white);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: all var(--transition-fast);
+  }
+
+  .mobileChipBtn:active {
+    transform: scale(0.96);
+  }
+
+  .mobileChipBtnActive {
+    background-color: #0F5C33;
+    border-color: #0F5C33;
+    color: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(15, 92, 51, 0.2);
+  }
+
+  /* Logo preview row */
+  .mobileLogoRow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .mobileLogoThumb {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background-color: #E8F5E9;
+    color: #0F5C33;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .mobileLogoThumbImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .mobileFieldHelper {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* Textarea with character counter */
+  .mobileTextareaWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .mobileTextarea {
+    width: 100%;
+    min-height: 130px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-main);
+    background-color: var(--white);
+    outline: none;
+    resize: vertical;
+    box-sizing: border-box;
+  }
+
+  .mobileTextarea:focus {
+    border-color: var(--green-500);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+  }
+
+  .mobileCharCounter {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: right;
+  }
+
+  /* Sticky Action Bar Buttons */
+  .stickyActionBtns {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .discardBtn {
+    flex: 1;
+    height: 48px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .saveBtn {
+    flex: 1.6;
+    height: 48px;
+    border-radius: 16px;
+    font-size: 15px;
+    font-weight: 700;
   }
 }

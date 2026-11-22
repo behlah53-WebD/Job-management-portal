@@ -1,0 +1,121 @@
+<USER_REQUEST>
+You are a senior mobile product designer and front-end engineer (Next.js App Router, React, Tailwind CSS or the CSS system already used in this project, Framer Motion). My job portal "Verdant" (Next.js + MongoDB, white and green theme, serif display headings, clean sans body text) has an EMPLOYER side (dashboard, post a job, my jobs, applicants Kanban, company profile, settings) plus a public jobs page with filters. These screens are built for desktop and must be redesigned for MOBILE and TABLET so they are beautiful, unique, very professional and feel like a premium native app.
+
+ABSOLUTE RULES
+1. DO NOT CHANGE THE DESKTOP UI (1024px and above must stay pixel-identical to today). Every new or changed style must apply only below the desktop breakpoint (Tailwind: base/`sm:`/`md:` classes, restoring the existing desktop values behind `lg:`; plain CSS: `@media (max-width: 1023.98px)`). When a component needs a different mobile layout, render a separate mobile variant (hidden at `lg:`) or use mobile-only classes. Take before/after desktop screenshots to prove nothing changed.
+2. Do not change business logic, API calls, auth, routes, database code, validation rules or copy. Visual layout, spacing, components and interactions only.
+3. Keep the brand: existing greens, existing fonts (serif for headings, sans for body), logo, tone. Reuse existing color tokens; you may add tints/shades of the existing greens, but no new hues.
+4. Work phase by phase. After each phase run `npm run build` and `npm run lint`, fix errors, and check at 360, 390, 412, 430px widths and 768px for tablet.
+
+STEP 0: AUDIT FIRST
+Open every employer screen at 360px and 390px width, and list what breaks. Expected problem areas based on the desktop layout, which you must confirm and fix:
+A. The fixed left sidebar (logo, company card "Acme Flora Labs / Verified Employer", nav: Overview, Post a Job, My Jobs, Applicants (Kanban), Company Profile, Settings, "Post New Role" button, Sign out) takes up the screen on mobile or pushes content sideways.
+B. The top bar ("Good morning, Aarav" + "View Platform" link + "+ Post a Job" button) is too wide for a phone.
+C. Overview: a line chart (applications per weekday) and a donut chart (Applied / Interview / Offered / Rejected) sit side by side; "Latest Applicants" rows have name, role, time, status chip and a "Review Candidate" link in one row.
+D. Post a Job: a 4-step wizard stepper (Basics, Details, Compensation, Preview & Launch) with labels, a two-column form, and a "Live job card preview" panel on the right.
+E. My Job Postings: a 6-column table (Job title, Status, Views, Posted, Deadline, Actions with four icon buttons).
+F. Applicants: a 5-column Kanban (Applied, Shortlisted, Interview, Offered, Rejected) with drag-and-drop and a Kanban/List toggle.
+G. Company Profile: two-column form (Organization Name, Primary Industry, Company Size, Headquarters Location, Website URL, Logo Image URL, About textarea) with a "Save Changes" button in the header.
+H. Settings: "Hiring Preferences & Team" with an Email Alerts checkbox card.
+I. Jobs page (public, also used by employers): top pill nav (Dashboard, Post a Job, Applicants, Companies, bell, avatar), a left "Filter Roles" sidebar (Search keyword, Location, Work mode chips, Employment type checkboxes, Craft & Discipline select, Experience), results header ("30 opportunities found", sort select, list/grid toggle) and job cards.
+Fix every horizontal overflow at the root cause (fixed widths, `min-width`, non-wrapping flex children, missing `min-w-0`, wide tables and grids). Nothing may ever scroll the page sideways.
+
+DESIGN DIRECTION: "GROWTH"
+- Surfaces: soft off-white / very light green page background with faint mesh-gradient glows in the corners (very low opacity). Cards are white with a 1px green-tinted border and layered soft shadow (for example `0 1px 2px rgba(16,64,40,.04), 0 8px 24px rgba(16,64,40,.06)`). Radius 20-24px on cards, 16px on inputs and buttons, 999px on chips and pills.
+- Signature elements (use consistently): (1) a circular "growth ring" progress component; (2) a "sprout stepper" for multi-step flows and pipeline stages (small dots joined by a thin line, completed = filled green, current = soft pulsing halo with a leaf icon, upcoming = outlined); (3) a bottom navigation bar with a gliding "petal" pill indicator (Framer Motion `layoutId` spring); (4) a leaf micro-animation on positive actions (publish job, save changes, shortlist) using a small scale pop and a tiny leaf burst.
+- Type scale on mobile: page title serif 26-28px/1.15, section title 18-20px, card title 16-17px/1.25, body 15px/1.55, meta 13px, chips 12-13px, bottom-nav labels 11px. Never below 12px.
+- Spacing: 4px grid. Page side padding 16px (20px from 412px up). Card gap 12-16px, section gap 28-36px. Respect `env(safe-area-inset-*)`.
+- Touch: every tap target at least 44x44px; primary buttons 48-52px tall and full width in forms and sheets. Pressed state on all tappable elements (scale 0.97 + darker tint, 120ms).
+- Icons: one consistent line-icon set already in the project, 20-22px, stroke 1.75.
+
+PHASE 1: FOUNDATIONS (MOBILE ONLY)
+- `viewport-fit=cover`, `theme-color` matching the page, `100dvh` instead of `100vh`, `overflow-x: clip` on `html, body` as a last safety net after fixing real causes.
+- Inputs 16px minimum font size (prevents iOS zoom), proper `inputMode`, `autoComplete`, `enterKeyHint`; remove tap flash; `touch-action: manipulation`; `overscroll-behavior: contain` on sheets.
+- Build reusable mobile-only primitives and use them everywhere: `MobileAppBar`, `BottomNav`, `BottomSheet`, `SegmentedTabs` (horizontal scroll, snap, edge fade, selected tab scrolls into view), `StatCard`, `ProgressRing`, `SproutStepper`, `DataCard` (replaces table rows), `EmptyState`, `Skeleton` variants, `StickyActionBar`.
+
+PHASE 2: EMPLOYER APP SHELL (MOBILE)
+Hide the desktop sidebar below `lg` and replace it with:
+- Top app bar (56px + safe area, white at 80% opacity with a light blur and a solid fallback, hairline bottom border): left = 40px company logo button that opens the account sheet; center = current page title in serif, one line with ellipsis ("Overview" shows "Good morning, Aarav" at 18px; other pages show their own title such as "Post a Job", "My Jobs", "Pipeline", "Company", "Settings"); right = 40px notification bell with a small green badge and a 40px "+" circular button for "Post a Job". "View Platform" moves into the account sheet.
+- Floating bottom navigation: inset 12px from the sides and 8px above the safe area, 64px tall, radius 24px, white 90% with blur, soft shadow, hairline border. 5 items: Home (Overview), Jobs (My Jobs), a raised center "+" button (Post a Job, 56px circle, brand green gradient, leaf pop on press), Pipeline (Applicants), Company. Labels 11px, never truncated. Active item in brand green with the gliding petal indicator; badge on Pipeline for new applicants. Hide on scroll down and show on scroll up; hide when the keyboard or a sheet is open. Add bottom padding to every page equal to the bar height + safe area + 16px.
+- Account sheet (bottom sheet with drag handle): company card (logo, "Acme Flora Labs", "Verified Employer" chip), links for Settings, View Platform, Help, and a red-tinted Sign out row.
+
+PHASE 3: SCREEN-BY-SCREEN LAYOUTS
+
+3.1 Overview
+1) Greeting block: overline "Good morning" 13px muted green, name in serif 28px, one supportive line.
+2) Quick actions row: two full-width-half buttons "Post a Job" (primary) and "Open Pipeline" (tonal).
+3) Stats: horizontally scrollable row of stat cards (148px wide, snap-start, next card peeking): active jobs, total applicants, interviews, offers. Each has an icon chip, serif number 28px, label 13px, delta chip.
+4) Applications chart card: full width, title + a `SegmentedTabs` range switch (7D / 30D), line chart height 180px with simplified axes (3 y ticks, weekday initials), touch tooltip on tap.
+5) Pipeline breakdown card: donut (160px) centered with the total in the middle, and the legend below as a 2x2 grid of colored dots with counts (never beside the donut).
+6) Latest Applicants: section title with "Open Kanban" text button. Each applicant is a tappable `DataCard`: avatar initials 44px, name (15px semibold), "Applied for {role} · {time}" muted in one line with ellipsis, status chip top-right; a chevron or "Review" ghost button at the far right (44px target). Show 4 rows, then "View all applicants".
+
+3.2 Post a Job (4-step wizard)
+1) Header: title "Post a New Opportunity" (serif 26px, 2 lines max), one-line subtitle.
+2) `SproutStepper` as a compact horizontal progress: 4 dots on a line, with ONLY the current step label shown ("Step 1 of 4 · Basics") below, not four labels. A thin progress bar under it.
+3) Form is one column. Each field has the label above (13px, semibold), 52px input, helper text under it (13px muted), inline validation with an error icon. Selects open as bottom-sheet radio lists on mobile; "Work Mode" and "Employment Type" become segmented chip groups when there are 5 options or fewer. Location input gets a "Remote" quick chip.
+4) "Live job card preview": move it from the right column into a collapsible card at the top of the form ("Preview" with an eye icon, collapsed by default) and also as a "Preview" button in the sticky bar that opens a full-height bottom sheet showing the card exactly as candidates will see it.
+5) Sticky action bar at the bottom (above the safe area and above the bottom nav hidden state): "Back" ghost button + "Continue" primary button (52px, full width ratio 1:2). On the last step the button reads "Publish job" and shows a leaf-burst animation on success, followed by a confirmation sheet with "View job" and "Post another".
+6) Save draft automatically and show "Saved" with a small check in the app bar.
+
+3.3 My Job Postings
+1) Title row: "My Job Postings" (serif) with a full-width-on-mobile "Post a Job" button under the subtitle.
+2) A search field (48px) and a `SegmentedTabs` filter: All, Active, Closed, Draft with counts.
+3) Replace the 6-column table with `DataCard` list items: row 1 job title (serif 17px, 2 lines max) + status chip; row 2 meta chips in one scrollable line (category, type, work mode); row 3 three small stat blocks with icons (Views, Posted, Deadline); row 4 action bar with four 44px icon buttons (view applicants, duplicate, preview/open, delete) separated evenly; delete asks for confirmation in a bottom sheet. Swipe left on a card reveals Edit and Close actions (always keep visible button alternatives).
+4) Empty state: sprout illustration, "No jobs yet", primary "Post a Job" button.
+
+3.4 Applicants (Pipeline)
+1) Title "Candidate Pipeline", subtitle 2 lines max, and the Kanban/List toggle as a 2-segment control on the right of the title row.
+2) Stage selector: sticky `SegmentedTabs` directly under the app bar with Applied, Shortlisted, Interview, Offered, Rejected and counts; selected tab is a filled green pill; the horizontal strip scrolls and the active tab auto-centers.
+3) Content shows ONE stage at a time as a vertical list of applicant cards, with swipe left/right on the list to move between stages (with a slide animation). Each card: avatar initials 44px, candidate name (15px semibold), applied role (13px muted), a 2-line clamped cover-note quote in a soft-green box, time ago, and a kebab (44px) button.
+4) Moving a candidate: tap the card's "Move to" button or the kebab to open a bottom sheet listing the stages (current one checked), plus "Reject" in red. Keep the existing drag-and-drop on desktop only. Optimistic update with undo toast above the bottom nav.
+5) Tap a card to open a full-height candidate sheet: header with avatar and name, status chip, resume button, full cover note, timeline of status changes, and a sticky bottom bar with "Shortlist" / "Schedule interview" / "Reject" actions.
+6) List view on mobile: compact rows (avatar, name, role, stage chip) with the same actions.
+7) Empty column: sprout icon with "No candidates in this stage yet".
+
+3.5 Company Profile
+1) Header card: logo 72px, company name (serif 22px), "Verified Employer" chip, and a "Save changes" button that moves into a sticky bottom bar which appears only when the form has unsaved changes (with a Discard ghost button).
+2) Form is grouped into collapsible cards: Basics (Organization Name, Primary Industry select as bottom sheet, Company Size select as chip group, Headquarters Location), Online presence (Website URL with globe icon, Logo Image URL with a live thumbnail preview and helper text), About (textarea with auto-grow, character counter, min 140px).
+3) All inputs full width, 52px, one column.
+
+3.6 Settings
+- Grouped list in rounded cards (iOS style): "Email alerts" group with 56px rows, label + description on the left, a 48px-hit-area switch on the right (the checkbox becomes a switch visually on mobile only); a "Team" group with member rows (avatar, name, role chip, kebab) and an "Invite teammate" button; destructive actions in a separate red-tinted group with confirmation sheets.
+
+3.7 Jobs page (public, also reached by employers)
+1) Navigation: use the app shell above when logged in; use the public floating pill nav when logged out (logo + wordmark left, search icon and menu button right). Remove the desktop-style pill with Dashboard / Post a Job / Applicants / Companies links on mobile; those links live in the menu sheet.
+2) Search card: keyword input and location input as two 52px rows divided by a hairline inside one rounded card, then a full-width 52px green "Search" button.
+3) Filters: the "Filter Roles" sidebar becomes a bottom sheet (80% height, drag handle, grouped accordions: Work mode, Employment type, Craft & Discipline, Experience, Salary, Location; selected options as green pills; sticky footer with "Clear all" and "Show 30 jobs" with live count). Active filters show as removable chips in a horizontal row above the results.
+4) Sticky controls bar under the app bar on scroll (56px): "30 jobs" on one line, Sort button (opens a bottom-sheet radio list), Filters button with a count badge, and the list/grid segmented toggle.
+5) Job card (list view): 20px radius, 16px padding; row 1 logo 48px + serif title (17px, max 2 lines) + company with verified tick, bookmark 44px at the top right; row 2 "New" and other chips; row 3 attribute chips in one horizontal scroll row; divider; row 4 location + posted time on the left, salary bold green 16px and a 44px-tall "Apply now" button on the right. Grid view: 2 columns at 390px and above, forced list below that.
+6) Infinite scroll with skeleton footer, "Back to top" button after two screens, pull-to-refresh.
+
+PHASE 4: MOTION AND POLISH
+- Page transitions 180-240ms (fade + 8px slide), list stagger 40ms, sheets spring (stiffness 300, damping 30), easing `cubic-bezier(0.22, 1, 0.36, 1)`. Animate only `transform` and `opacity` where possible.
+- Skeletons that match each real layout (no layout jumps, no full-screen spinners). Optimistic UI for status moves, saves and publishes, with toasts that sit above the bottom nav.
+- Charts: lazy-load the chart library, use responsive containers, reduce tick density on mobile, and make tooltips tap-based.
+- Respect `prefers-reduced-motion` (disable pulsing, leaf bursts, big movements; keep simple fades).
+- Add `manifest.webmanifest` (name Verdant, standalone, brand colors, 192/512 and maskable icons) and Apple meta tags for installability. Never cache private API data in a service worker.
+- Accessibility: AA contrast, visible `:focus-visible`, labels and `aria-*` on icon-only buttons, `aria-current="page"` on the active nav item, focus trap in sheets, logical heading order, switch controls with proper roles.
+- Performance: avoid heavy backdrop blur on large areas (solid fallback with `@supports`), `next/image` with correct `sizes`, lazy-load below-the-fold sections, keep CLS under 0.1, target Lighthouse mobile Performance 90+.
+
+PHASE 5: VERIFICATION (DO NOT SKIP)
+1. Test every screen above at 320, 360, 390, 412, 430, 768 (portrait) and 667x375 landscape. No horizontal scroll, no clipped text, no overlap, nothing hidden behind the app bar, bottom nav or sticky action bar.
+2. Test with the keyboard open on every form, system text size at 130-200%, very long job titles and company names, empty states, 100+ items, and slow 3G.
+3. Add Playwright tests with mobile device presets for: each bottom-nav tab, the post-job wizard end to end, search + filter + status tabs on My Jobs, moving an applicant between stages, saving company profile, toggling a setting, opening and applying filters on the jobs page, signing out from the account sheet.
+4. DESKTOP REGRESSION: screenshot every employer page and the jobs page at 1280px and 1536px before and after your changes; they must be identical. If any difference appears, rescope that change to mobile only.
+5. Run build, lint and type-check with zero errors.
+
+DELIVERABLES
+- A short audit of what was broken on mobile and the root causes you found (especially any horizontal overflow).
+- The list of new and changed files with one line each.
+- Before/after mobile screenshots of Overview, Post a Job (each step), My Jobs, Pipeline, candidate sheet, Company Profile, Settings, Jobs page with the filters sheet, and the account sheet.
+- Confirmation that desktop is unchanged, with the screenshot comparison result.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-11-22T03:03:40+05:30.
+
+The user's current state is as follows:
+Active Document: d:\Job portal auspify\.env.local (LANGUAGE_UNSPECIFIED)
+Cursor is on line: 12
+Other open documents:
+- d:\Job portal auspify\scripts\reproduce-signout.mjs (LANGUAGE_UNSPECIFIED)
+</ADDITIONAL_METADATA>

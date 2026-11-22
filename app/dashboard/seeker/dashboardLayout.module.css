@@ -316,7 +316,10 @@
     padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 24px);
   }
   .pageBody {
-    padding: 20px 16px;
+    padding-top: calc(64px + env(safe-area-inset-top, 0px) + 16px) !important; /* clears fixed mobile app bar with comfortable spacing */
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px) + 24px) !important; /* clears floating bottom nav */
+    padding-left: 16px !important;
+    padding-right: 16px !important;
     width: 100%;
     max-width: 100%;
     min-width: 0;
@@ -329,6 +332,7 @@
 
 @media (min-width: 412px) and (max-width: 1023.98px) {
   .pageBody {
-    padding: 24px 20px;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
   }
 }

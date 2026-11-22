@@ -29,7 +29,20 @@
   color: var(--text-muted);
 }
 
-.tableWrapper {
+/* =========================================================================
+   DESKTOP 6-COLUMN TABLE (>= 1024px) - PIXEL IDENTICAL
+   ========================================================================= */
+.desktopPostBtn {
+  display: block;
+}
+
+.mobilePostCtaWrapper,
+.mobileFilterStrip,
+.mobileCardsStack {
+  display: none;
+}
+
+.desktopTableWrapper {
   background-color: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
@@ -153,4 +166,338 @@
   background-color: var(--danger-bg);
   color: var(--danger);
   border-color: var(--danger);
+}
+
+/* =========================================================================
+   MOBILE-ONLY STYLES (< 1024px)
+   ========================================================================= */
+@media (max-width: 1023.98px) {
+  .container {
+    gap: 16px !important;
+  }
+
+  .title {
+    font-size: 24px !important;
+  }
+
+  .desktopPostBtn {
+    display: none !important;
+  }
+
+  .desktopTableWrapper {
+    display: none !important;
+  }
+
+  /* 1. Mobile Post a Job CTA */
+  .mobilePostCtaWrapper {
+    display: block !important;
+    width: 100%;
+  }
+
+  .mobilePostCtaBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 48px;
+    border-radius: 16px;
+    background: var(--gradient-primary);
+    color: var(--white);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(30, 154, 86, 0.22);
+    touch-action: manipulation;
+    transition: transform 120ms ease;
+  }
+
+  .mobilePostCtaBtn:active {
+    transform: scale(0.98);
+  }
+
+  /* 2. Search & Segmented Tabs */
+  .mobileFilterStrip {
+    display: flex !important;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mobileSearchInputBox {
+    position: relative;
+    width: 100%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 0 14px;
+    box-sizing: border-box;
+    box-shadow: 0 1px 3px rgba(16, 64, 40, 0.04);
+  }
+
+  .searchIcon {
+    color: var(--sage);
+    flex-shrink: 0;
+  }
+
+  .mobileSearchInput {
+    flex: 1;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    color: var(--text-main);
+    padding-left: 10px;
+  }
+
+  /* 3. Mobile Cards Stack */
+  .mobileCardsStack {
+    display: flex !important;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .jobDataCard {
+    padding: 16px !important;
+    gap: 12px !important;
+  }
+
+  .cardHeaderRow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .cardTitleLink {
+    text-decoration: none;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .cardJobTitle {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    line-height: 1.25;
+    font-weight: 700;
+    color: var(--green-900);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .cardChipsRow {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+
+  .cardChipsRow::-webkit-scrollbar {
+    display: none;
+  }
+
+  .metaChip {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green-800);
+    background-color: var(--mint-100);
+    padding: 4px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .cardStatsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 10px 12px;
+    background-color: var(--bg-soft);
+    border-radius: 14px;
+  }
+
+  .statBlock {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .statIcon {
+    color: var(--sage);
+    flex-shrink: 0;
+  }
+
+  .statBlockMeta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .statBlockVal {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--green-900);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .statBlockLabel {
+    font-size: 10.5px;
+    color: var(--text-muted);
+  }
+
+  .cardActionsRow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .mobileActionBtn {
+    height: 44px;
+    border-radius: 12px;
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: all 120ms ease;
+  }
+
+  .mobileActionBtn:active {
+    transform: scale(0.94);
+    background-color: var(--mint-100);
+  }
+
+  .mobileDeleteBtn {
+    color: var(--danger);
+  }
+
+  .mobileDeleteBtn:active {
+    background-color: #FDF1F0;
+  }
+
+  /* Empty state within filter */
+  .emptyFilterBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 36px 16px;
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    gap: 8px;
+  }
+
+  .emptySproutIcon {
+    color: var(--green-600);
+    margin-bottom: 4px;
+  }
+
+  .emptyFilterTitle {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--green-900);
+    margin: 0;
+  }
+
+  .emptyFilterSub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .clearSearchBtn {
+    margin-top: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green-600);
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Delete Confirmation Sheet */
+  .deleteSheetBody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    padding: 12px 8px;
+  }
+
+  .deleteIconCircle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #FDF1F0;
+    color: var(--danger);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .deleteSheetTitle {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--green-900);
+    margin: 0;
+  }
+
+  .deleteSheetDesc {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .deleteSheetActions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .confirmDeleteBtn {
+    height: 50px;
+    border-radius: 16px;
+    background-color: var(--danger);
+    color: var(--white);
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .cancelDeleteBtn {
+    height: 48px;
+    border-radius: 16px;
+    background-color: var(--bg-soft);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
 }

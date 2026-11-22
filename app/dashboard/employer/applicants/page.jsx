@@ -40,6 +40,10 @@ import {
   ChevronRight,
   ArrowRight,
   Check,
+  MoreVertical,
+  Sprout,
+  XCircle,
+  Sparkles,
 } from 'lucide-react';
 import { timeAgo, getInitials } from '@/lib/utils';
 import toast from 'react-hot-toast';
@@ -151,6 +155,7 @@ export default function EmployerApplicantsPage() {
   // Mobile specific state
   const [mobileActiveStage, setMobileActiveStage] = useState('Applied');
   const [moveApplicantTarget, setMoveApplicantTarget] = useState(null);
+  const [mobileDetailApplicant, setMobileDetailApplicant] = useState(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -227,6 +232,34 @@ export default function EmployerApplicantsPage() {
   };
 
   const handleUpdateStatus = async (appId, newStatus) => {
+    // Optimistic UI update
+    setApplicants((prev) =>
+      prev.map((a) =>
+        a._id === appId
+          ? { ...a, status: newStatus, employerNote: drawerNote || a.employerNote }
+          : a
+      )
+    );
+
+    if (selectedApplicant && selectedApplicant._id === appId) {
+      setSelectedApplicant((prev) => ({
+        ...prev,
+        status: newStatus,
+        employerNote: drawerNote || prev.employerNote,
+      }));
+    }
+
+    if (mobileDetailApplicant && mobileDetailApplicant._id === appId) {
+      setMobileDetailApplicant((prev) => ({
+        ...prev,
+        status: newStatus,
+        employerNote: drawerNote || prev.employerNote,
+      }));
+    }
+
+    setMoveApplicantTarget(null);
+    toast.success(`Moved to ${newStatus} 🌱`);
+
     try {
       const res = await fetch('/api/applications', {
         method: 'PATCH',
@@ -239,50 +272,42 @@ export default function EmployerApplicantsPage() {
       });
 
       if (!res.ok) throw new Error('Status update failed');
-      setApplicants((prev) =>
-        prev.map((a) =>
-          a._id === appId
-            ? { ...a, status: newStatus, employerNote: drawerNote }
-            : a
-        )
-      );
-      if (selectedApplicant) {
-        setSelectedApplicant({
-          ...selectedApplicant,
-          status: newStatus,
-          employerNote: drawerNote,
-        });
-      }
-      setMoveApplicantTarget(null);
-      toast.success(`Updated to ${newStatus} 🌱`);
     } catch (err) {
       toast.error(err.message);
+      fetchApplicants();
     }
   };
 
   const handleSaveNote = async () => {
-    if (!selectedApplicant) return;
+    const target = selectedApplicant || mobileDetailApplicant;
+    if (!target) return;
     try {
       const res = await fetch('/api/applications', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          applicationId: selectedApplicant._id,
-          status: selectedApplicant.status,
+          applicationId: target._id,
+          status: target.status,
           employerNote: drawerNote,
         }),
       });
       if (!res.ok) throw new Error('Failed to save note');
-      setSelectedApplicant({ ...selectedApplicant, employerNote: drawerNote });
-      toast.success('Hiring notes saved');
+      if (selectedApplicant) setSelectedApplicant({ ...selectedApplicant, employerNote: drawerNote });
+      if (mobileDetailApplicant) setMobileDetailApplicant({ ...mobileDetailApplicant, employerNote: drawerNote });
+      toast.success('Hiring notes saved 🌱');
     } catch (err) {
       toast.error(err.message);
     }
   };
 
   const openDrawer = (app) => {
-    setSelectedApplicant(app);
-    setDrawerNote(app.employerNote || '');
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setMobileDetailApplicant(app);
+      setDrawerNote(app.employerNote || '');
+    } else {
+      setSelectedApplicant(app);
+      setDrawerNote(app.employerNote || '');
+    }
   };
 
   // Mobile tabs configuration
@@ -312,17 +337,19 @@ export default function EmployerApplicantsPage() {
             type="button"
             className={`${styles.viewBtn} ${viewMode === 'kanban' ? styles.viewActive : ''}`}
             onClick={() => setViewMode('kanban')}
+            aria-label="Kanban view"
           >
             <LayoutGrid size={17} />
-            <span>Kanban</span>
+            <span className={styles.toggleLabel}>Kanban</span>
           </button>
           <button
             type="button"
             className={`${styles.viewBtn} ${viewMode === 'list' ? styles.viewActive : ''}`}
             onClick={() => setViewMode('list')}
+            aria-label="List view"
           >
             <List size={17} />
-            <span>List</span>
+            <span className={styles.toggleLabel}>List</span>
           </button>
         </div>
       </div>
@@ -337,7 +364,7 @@ export default function EmployerApplicantsPage() {
       ) : (
         <>
           {/* =========================================================================
-              DESKTOP KANBAN / LIST (>= 1024px)
+              DESKTOP KANBAN / LIST (>= 1024px) - 100% UNTOUCHED
              ========================================================================= */}
           <div className={styles.desktopKanbanContainer}>
             {viewMode === 'kanban' ? (
@@ -420,7 +447,7 @@ export default function EmployerApplicantsPage() {
               MOBILE STAGE SELECTOR & CARDS (< 1024px)
              ========================================================================= */}
           <div className={styles.mobilePipelineContainer}>
-            {/* Sticky Stage Tabs */}
+            {/* Sticky Stage Tabs directly under app bar */}
             <div className={styles.mobileTabsWrapper}>
               <SegmentedTabs
                 tabs={mobileTabs}
@@ -429,21 +456,56 @@ export default function EmployerApplicantsPage() {
               />
             </div>
 
-            {/* Mobile Applicants List */}
+            {/* Mobile Applicants Stack (shows ONE stage at a time) */}
             <div className={styles.mobileApplicantsStack}>
               {mobileFilteredApplicants.length === 0 ? (
                 <div className={styles.mobileEmptyState}>
-                  <p className={styles.mobileEmptyText}>
-                    No candidates in {mobileActiveStage} stage 🌱
+                  <Sprout size={36} className={styles.mobileEmptySprout} />
+                  <p className={styles.mobileEmptyTitle}>
+                    No candidates in {mobileActiveStage} stage yet 🌱
+                  </p>
+                  <p className={styles.mobileEmptySub}>
+                    Candidates will appear here as they progress through your pipeline.
                   </p>
                 </div>
+              ) : viewMode === 'list' ? (
+                /* Mobile Compact List View */
+                <div className={styles.mobileCompactListStack}>
+                  {mobileFilteredApplicants.map((app) => {
+                    const user = app.applicant || {};
+                    const job = app.job || {};
+
+                    return (
+                      <div
+                        key={app._id}
+                        className={styles.compactListRow}
+                        onClick={() => openDrawer(app)}
+                      >
+                        <div className={styles.compactRowAvatar}>
+                          {getInitials(user.name || 'Candidate')}
+                        </div>
+                        <div className={styles.compactRowMeta}>
+                          <h4 className={styles.compactRowName}>{user.name || 'Candidate'}</h4>
+                          <span className={styles.compactRowRole}>{job.title || 'Role'}</span>
+                        </div>
+                        <Badge variant={app.status}>{app.status}</Badge>
+                        <ChevronRight size={18} className={styles.compactChevron} />
+                      </div>
+                    );
+                  })}
+                </div>
               ) : (
+                /* Mobile Kanban Card View */
                 mobileFilteredApplicants.map((app) => {
                   const user = app.applicant || {};
                   const job = app.job || {};
 
                   return (
-                    <div key={app._id} className={styles.mobileAppCard}>
+                    <div
+                      key={app._id}
+                      className={styles.mobileAppCard}
+                      onClick={() => openDrawer(app)}
+                    >
                       <div className={styles.mobileCardTop}>
                         <div className={styles.mobileAvatar}>
                           {getInitials(user.name || 'Candidate')}
@@ -459,28 +521,29 @@ export default function EmployerApplicantsPage() {
                       </div>
 
                       {app.coverLetter && (
-                        <p className={styles.mobileCoverSnippet}>
-                          "{app.coverLetter.slice(0, 90)}..."
-                        </p>
+                        <div className={styles.coverLetterBox}>
+                          <p className={styles.mobileCoverSnippet}>
+                            "{app.coverLetter.slice(0, 110)}..."
+                          </p>
+                        </div>
                       )}
 
-                      <div className={styles.mobileCardActions}>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => setMoveApplicantTarget(app)}
+                      <div className={styles.mobileCardActions} onClick={(e) => e.stopPropagation()}>
+                        <button
+                          type="button"
                           className={styles.mobileMoveBtn}
+                          onClick={() => setMoveApplicantTarget(app)}
                         >
-                          Move Stage...
-                        </Button>
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          onClick={() => openDrawer(app)}
+                          <span>Move to...</span>
+                        </button>
+                        <button
+                          type="button"
                           className={styles.mobileReviewBtn}
+                          onClick={() => openDrawer(app)}
                         >
-                          Review Candidate
-                        </Button>
+                          <span>Review</span>
+                          <ChevronRight size={15} />
+                        </button>
                       </div>
                     </div>
                   );
@@ -493,26 +556,26 @@ export default function EmployerApplicantsPage() {
 
       {/* Move Stage BottomSheet (Mobile) */}
       <BottomSheet
-        isOpen={!!moveApplicantTarget}
+        isOpen={Boolean(moveApplicantTarget)}
         onClose={() => setMoveApplicantTarget(null)}
         title="Move Candidate Stage"
       >
         {moveApplicantTarget && (
           <div className={styles.moveSheetBody}>
             <p className={styles.moveCandidateName}>
-              Advance {moveApplicantTarget.applicant?.name} for{' '}
-              {moveApplicantTarget.job?.title}:
+              Move <strong>{moveApplicantTarget.applicant?.name}</strong> for {moveApplicantTarget.job?.title}:
             </p>
             <div className={styles.stageOptionsList}>
               {COLUMNS.map((stage) => {
                 const isCurrent = moveApplicantTarget.status === stage;
+                const isReject = stage === 'Rejected';
                 return (
                   <button
                     key={stage}
                     type="button"
                     className={`${styles.stageOptionBtn} ${
                       isCurrent ? styles.stageOptionCurrent : ''
-                    }`}
+                    } ${isReject ? styles.stageOptionReject : ''}`}
                     onClick={() => handleUpdateStatus(moveApplicantTarget._id, stage)}
                   >
                     <span>{stage}</span>
@@ -525,9 +588,109 @@ export default function EmployerApplicantsPage() {
         )}
       </BottomSheet>
 
-      {/* APPLICANT REVIEW DRAWER (Shared) */}
+      {/* Mobile Candidate Detail Full Bottom Sheet */}
+      <BottomSheet
+        isOpen={Boolean(mobileDetailApplicant)}
+        onClose={() => setMobileDetailApplicant(null)}
+        title="Candidate Profile"
+      >
+        {mobileDetailApplicant && (
+          <div className={styles.mobileDetailSheetBody}>
+            {/* Header info */}
+            <div className={styles.detailHeaderBox}>
+              <div className={styles.detailAvatar}>
+                {getInitials(mobileDetailApplicant.applicant?.name)}
+              </div>
+              <div className={styles.detailMeta}>
+                <h3 className={styles.detailName}>{mobileDetailApplicant.applicant?.name}</h3>
+                <span className={styles.detailRole}>{mobileDetailApplicant.job?.title}</span>
+                <div className={styles.detailContactRow}>
+                  <span className={styles.detailContactItem}>
+                    <Mail size={13} /> {mobileDetailApplicant.applicant?.email}
+                  </span>
+                  {mobileDetailApplicant.applicant?.phone && (
+                    <span className={styles.detailContactItem}>
+                      <Phone size={13} /> {mobileDetailApplicant.applicant?.phone}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Resume button */}
+            {mobileDetailApplicant.resumeUrl && (
+              <a
+                href={mobileDetailApplicant.resumeUrl}
+                target="_blank"
+                rel="noreferrer"
+                className={styles.detailResumeBtn}
+              >
+                <FileText size={18} />
+                <span>View Candidate Resume (PDF)</span>
+                <ExternalLink size={15} className={styles.detailExtIcon} />
+              </a>
+            )}
+
+            {/* Full Cover Note */}
+            {mobileDetailApplicant.coverLetter && (
+              <div className={styles.detailSection}>
+                <label className={styles.detailSectionLabel}>Cover Note & Pitch</label>
+                <div className={styles.detailCoverBox}>
+                  <p className={styles.detailCoverText}>"{mobileDetailApplicant.coverLetter}"</p>
+                </div>
+              </div>
+            )}
+
+            {/* Internal Notes */}
+            <div className={styles.detailSection}>
+              <label className={styles.detailSectionLabel}>Team Hiring Notes</label>
+              <textarea
+                rows={3}
+                className={styles.detailNoteTextarea}
+                placeholder="Add evaluation takeaways or interview notes..."
+                value={drawerNote}
+                onChange={(e) => setDrawerNote(e.target.value)}
+              />
+              <button
+                type="button"
+                className={styles.saveNoteBtn}
+                onClick={handleSaveNote}
+              >
+                Save Notes
+              </button>
+            </div>
+
+            {/* Action Bar: Shortlist / Schedule / Reject */}
+            <div className={styles.detailActionsSticky}>
+              <button
+                type="button"
+                className={styles.actionShortlistBtn}
+                onClick={() => handleUpdateStatus(mobileDetailApplicant._id, 'Shortlisted')}
+              >
+                Shortlist
+              </button>
+              <button
+                type="button"
+                className={styles.actionInterviewBtn}
+                onClick={() => handleUpdateStatus(mobileDetailApplicant._id, 'Interview')}
+              >
+                Schedule Interview
+              </button>
+              <button
+                type="button"
+                className={styles.actionRejectBtn}
+                onClick={() => handleUpdateStatus(mobileDetailApplicant._id, 'Rejected')}
+              >
+                Reject
+              </button>
+            </div>
+          </div>
+        )}
+      </BottomSheet>
+
+      {/* APPLICANT REVIEW DRAWER (Desktop >= 1024px) */}
       <Drawer
-        isOpen={!!selectedApplicant}
+        isOpen={Boolean(selectedApplicant)}
         onClose={() => setSelectedApplicant(null)}
         title="Candidate Profile"
         subtitle={selectedApplicant?.job?.title}

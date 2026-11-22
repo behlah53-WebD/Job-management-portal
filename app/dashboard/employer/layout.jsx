@@ -1,5 +1,21 @@
 'use client';
 
+/* ============================================================================
+   EMPLOYER DASHBOARD SHELL — MOBILE LAYOUT GUARDRAILS
+   ----------------------------------------------------------------------------
+   Desktop sidebar offset (applies at >= 1024px / "lg" only):
+     - .sidebar            width: 260px (fixed sidebar, employerLayout.module.css:8)
+     - .mainContent        margin-left: 260px (employerLayout.module.css:209)
+   These must ONLY be overridden inside @media (max-width: 1023.98px)
+   (i.e. the "lg"-and-above boundary). They must NEVER be applied at base size
+   or with an unprefixed class, otherwise mobile reserves the sidebar width and
+   squeezes page content into a narrow right-hand column.
+   Below 1024px the shell is a single column: .layoutWrapper switches to
+   flex-direction: column, .sidebar is display: none, .mainContent is width: 100%
+   with margin-left: 0, and the mobile app bar/bottom nav are position: fixed
+   and out of the horizontal flow.
+   ============================================================================ */
+
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -22,9 +38,11 @@ import Logo from '@/components/ui/Logo';
 import MobileTopBar from '@/components/layout/mobile/MobileTopBar';
 import MobileTabBar from '@/components/layout/mobile/MobileTabBar';
 import AccountSheet from '@/components/layout/mobile/AccountSheet';
+import useMobileLayoutCheck from '@/hooks/useMobileLayoutCheck';
 import styles from './employerLayout.module.css';
 
 export default function EmployerDashboardLayout({ children }) {
+  useMobileLayoutCheck();
   const pathname = usePathname();
   const router = useRouter();
   const { data: session } = useSession();
@@ -32,6 +50,7 @@ export default function EmployerDashboardLayout({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [accountSheetOpen, setAccountSheetOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [pipelineCount, setPipelineCount] = useState(0);
 
   const handleSignOut = async () => {
     if (isSigningOut) return;
@@ -68,13 +87,23 @@ export default function EmployerDashboardLayout({ children }) {
         } catch {}
       })
       .catch(() => {});
+
+    // Fetch active applicants count for pipeline badge
+    fetch('/api/applications')
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setPipelineCount(data.length);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const userName = session?.user?.name?.split(' ')[0] || 'Partner';
   const greeting = getGreeting(userName);
 
   const getPageTitle = () => {
-    if (pathname === '/dashboard/employer') return `Good day, ${userName}`;
+    if (pathname === '/dashboard/employer') return `Good morning, ${userName}`;
     if (pathname.includes('/post-job')) return 'Post a Job';
     if (pathname.includes('/my-jobs')) return 'My Jobs';
     if (pathname.includes('/applicants')) return 'Pipeline';
@@ -97,8 +126,13 @@ export default function EmployerDashboardLayout({ children }) {
       {/* Mobile Top Bar (< 1024px) */}
       <div className={styles.mobileTopBarWrapper}>
         <MobileTopBar
+          role="employer"
+          company={company}
+          user={session?.user}
           title={getPageTitle()}
           onOpenAccount={() => setAccountSheetOpen(true)}
+          hasSearch={false}
+          hasPostJobBtn={true}
         />
       </div>
 
@@ -207,13 +241,14 @@ export default function EmployerDashboardLayout({ children }) {
         <main className={styles.pageBody}>{children}</main>
 
         {/* Floating Mobile Tab Bar (< 1024px) */}
-        <MobileTabBar role="employer" />
+        <MobileTabBar role="employer" applicationsBadge={pipelineCount} />
 
         {/* Mobile Account Sheet (< 1024px) */}
         <AccountSheet
           isOpen={accountSheetOpen}
           onClose={() => setAccountSheetOpen(false)}
           user={session?.user}
+          company={company}
         />
       </div>
     </div>

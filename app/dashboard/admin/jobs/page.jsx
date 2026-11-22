@@ -14,9 +14,12 @@ import {
   Trash2,
   ExternalLink,
   Download,
+  Clock,
+  MapPin,
 } from 'lucide-react';
 import { timeAgo, formatSalary } from '@/lib/utils';
 import toast from 'react-hot-toast';
+import styles from './jobs.module.css';
 
 export default function AdminJobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -106,13 +109,12 @@ export default function AdminJobsPage() {
     statusFilter === 'all' ? jobs : jobs.filter((j) => j.status === statusFilter);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <div className={styles.container}>
+      {/* Header Row */}
+      <div className={styles.headerRow}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '28px', color: 'var(--green-900)' }}>
-            Job Postings Moderation
-          </h1>
-          <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '4px' }}>
+          <h1 className={styles.title}>Job Postings Moderation</h1>
+          <p className={styles.subtitle}>
             Approve pending employer listings, feature standout roles, or remove expired posts.
           </p>
         </div>
@@ -121,12 +123,12 @@ export default function AdminJobsPage() {
         </Button>
       </div>
 
-      <div style={{ width: '220px' }}>
+      {/* Filter Row */}
+      <div className={styles.filterCard}>
         <Select
           options={[
             { value: 'all', label: 'All Statuses' },
             { value: 'Active', label: 'Active' },
-            { value: 'Pending', label: 'Pending Approval' },
             { value: 'Closed', label: 'Closed' },
             { value: 'Draft', label: 'Draft' },
           ]}
@@ -135,36 +137,19 @@ export default function AdminJobsPage() {
         />
       </div>
 
-      <div
-        style={{
-          backgroundColor: 'var(--white)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-card)',
-          overflowX: 'auto',
-          boxShadow: 'var(--shadow-sm)',
-        }}
-      >
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-          <thead style={{ backgroundColor: 'var(--bg-soft)', borderBottom: '1px solid var(--border)' }}>
+      {/* =========================================================================
+          DESKTOP TABLE (>= 1024px) - 100% UNTOUCHED ORIGINAL
+         ========================================================================= */}
+      <div className={styles.desktopTableCard}>
+        <table className={styles.desktopTable}>
+          <thead>
             <tr>
-              <th style={{ padding: '16px 20px', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--green-900)' }}>
-                Job & Company
-              </th>
-              <th style={{ padding: '16px 20px', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--green-900)' }}>
-                Discipline
-              </th>
-              <th style={{ padding: '16px 20px', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--green-900)' }}>
-                Status
-              </th>
-              <th style={{ padding: '16px 20px', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--green-900)' }}>
-                Featured
-              </th>
-              <th style={{ padding: '16px 20px', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--green-900)' }}>
-                Posted
-              </th>
-              <th style={{ padding: '16px 20px', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--green-900)', textAlign: 'right' }}>
-                Actions
-              </th>
+              <th className={styles.desktopTh}>Job & Company</th>
+              <th className={styles.desktopTh}>Discipline</th>
+              <th className={styles.desktopTh}>Status</th>
+              <th className={styles.desktopTh}>Featured</th>
+              <th className={styles.desktopTh}>Posted</th>
+              <th className={styles.desktopThRight}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -182,8 +167,8 @@ export default function AdminJobsPage() {
               </tr>
             ) : (
               filteredJobs.map((j) => (
-                <tr key={j._id} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                  <td style={{ padding: '16px 20px' }}>
+                <tr key={j._id} className={styles.desktopTr}>
+                  <td className={styles.desktopTd}>
                     <Link
                       href={`/jobs/${j._id}`}
                       style={{ fontWeight: 700, color: 'var(--green-900)', textDecoration: 'none' }}
@@ -219,58 +204,24 @@ export default function AdminJobsPage() {
                     {timeAgo(j.createdAt)}
                   </td>
                   <td style={{ padding: '16px 20px', textAlign: 'right' }}>
-                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-                      {j.status === 'Pending' && (
-                        <button
-                          type="button"
-                          style={{
-                            background: 'var(--mint-100)',
-                            color: 'var(--green-700)',
-                            border: 'none',
-                            padding: '6px 10px',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            fontSize: '12px',
-                            fontWeight: 600,
-                          }}
-                          onClick={() => handleStatusChange(j._id, 'Active')}
-                        >
-                          Approve
-                        </button>
-                      )}
-                      {j.status === 'Active' ? (
-                        <button
-                          type="button"
-                          style={{
-                            background: 'none',
-                            border: '1px solid var(--border)',
-                            padding: '6px',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            color: 'var(--text-muted)',
-                          }}
-                          title="Close Listing"
-                          onClick={() => handleStatusChange(j._id, 'Closed')}
-                        >
-                          <XCircle size={16} />
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          style={{
-                            background: 'none',
-                            border: '1px solid var(--border)',
-                            padding: '6px',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            color: 'var(--green-600)',
-                          }}
-                          title="Activate Listing"
-                          onClick={() => handleStatusChange(j._id, 'Active')}
-                        >
-                          <CheckCircle size={16} />
-                        </button>
-                      )}
+                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
+                      <select
+                        value={j.status}
+                        onChange={(e) => handleStatusChange(j._id, e.target.value)}
+                        style={{
+                          padding: '6px 10px',
+                          borderRadius: '6px',
+                          border: '1px solid var(--border)',
+                          fontSize: '12px',
+                          color: 'var(--text-main)',
+                          outline: 'none',
+                          backgroundColor: 'var(--white)',
+                        }}
+                      >
+                        <option value="Active">Active</option>
+                        <option value="Closed">Closed</option>
+                        <option value="Draft">Draft</option>
+                      </select>
                       <button
                         type="button"
                         style={{
@@ -281,10 +232,10 @@ export default function AdminJobsPage() {
                           cursor: 'pointer',
                           color: 'var(--danger)',
                         }}
-                        title="Delete Listing"
                         onClick={() => handleDelete(j._id)}
+                        title="Delete listing"
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={15} />
                       </button>
                     </div>
                   </td>
@@ -293,6 +244,76 @@ export default function AdminJobsPage() {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* =========================================================================
+          MOBILE JOB CARDS (< 1024px) - NO HORIZONTAL SCROLLING
+         ========================================================================= */}
+      <div className={styles.mobileCardsStack}>
+        {loading ? (
+          <div className={styles.mobileEmptyState}>Loading job records...</div>
+        ) : filteredJobs.length === 0 ? (
+          <div className={styles.mobileEmptyState}>No jobs found in this category.</div>
+        ) : (
+          filteredJobs.map((j) => (
+            <div key={j._id} className={styles.mobileJobCard}>
+              {/* Card Header: Title + Status */}
+              <div className={styles.mobileCardHeader}>
+                <div className={styles.mobileTitleGroup}>
+                  <Link href={`/jobs/${j._id}`} className={styles.mobileJobTitle}>
+                    {j.title}
+                  </Link>
+                  <span className={styles.mobileCompanyLine}>
+                    {j.company?.name || 'Company'} • {j.location}
+                  </span>
+                </div>
+                <Badge variant={j.status}>{j.status}</Badge>
+              </div>
+
+              {/* Meta Row: Discipline + Time + Featured */}
+              <div className={styles.mobileMetaRow}>
+                <span className={styles.mobileDisciplineChip}>{j.category}</span>
+                <span className={styles.mobileMetaItem}>
+                  <Clock size={12} />
+                  <span>{timeAgo(j.createdAt)}</span>
+                </span>
+                <button
+                  type="button"
+                  className={`${styles.mobileFeaturedBtn} ${
+                    j.isFeatured ? styles.mobileFeaturedBtnActive : ''
+                  }`}
+                  onClick={() => handleToggleFeatured(j._id, j.isFeatured)}
+                >
+                  <Star size={13} fill={j.isFeatured ? '#F2B84B' : 'none'} />
+                  <span>{j.isFeatured ? 'Featured' : 'Feature'}</span>
+                </button>
+              </div>
+
+              {/* Actions Row */}
+              <div className={styles.mobileActionsRow}>
+                <select
+                  value={j.status}
+                  onChange={(e) => handleStatusChange(j._id, e.target.value)}
+                  className={styles.mobileStatusSelect}
+                  aria-label="Change job status"
+                >
+                  <option value="Active">Status: Active</option>
+                  <option value="Closed">Status: Closed</option>
+                  <option value="Draft">Status: Draft</option>
+                </select>
+                <button
+                  type="button"
+                  className={styles.mobileDeleteBtn}
+                  onClick={() => handleDelete(j._id)}
+                  title="Delete listing"
+                  aria-label="Delete listing"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

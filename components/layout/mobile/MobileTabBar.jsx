@@ -38,9 +38,9 @@ export default function MobileTabBar({
     if (role === 'employer') {
       return [
         { label: 'Home', href: '/dashboard/employer', icon: LayoutDashboard },
-        { label: 'My Jobs', href: '/dashboard/employer/my-jobs', icon: Briefcase },
+        { label: 'Jobs', href: '/dashboard/employer/my-jobs', icon: Briefcase },
         { label: 'Post', href: '/dashboard/employer/post-job', icon: PlusCircle, isCta: true },
-        { label: 'Applicants', href: '/dashboard/employer/applicants', icon: Users },
+        { label: 'Pipeline', href: '/dashboard/employer/applicants', icon: Users, badge: applicationsBadge },
         { label: 'Company', href: '/dashboard/employer/company', icon: Building },
       ];
     }

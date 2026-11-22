@@ -174,6 +174,63 @@
   color: #9C2E27;
 }
 
+.wizardStepperWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.wizardTrackRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.wizardNode {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.stepNum {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.singleStepLabelRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.singleStepLabel {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.singleStepLabel strong {
+  color: var(--green-900);
+}
+
+.thinProgressBarTrack {
+  width: 100%;
+  height: 3px;
+  background-color: var(--border, #DCEBE1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.thinProgressBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, #2FB36A, #1E9A56);
+  border-radius: 999px;
+  transition: width 240ms ease;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pulseHalo {
     animation: none;

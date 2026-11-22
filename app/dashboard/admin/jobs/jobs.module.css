@@ -1,0 +1,252 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--green-900);
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.filterCard {
+  width: 200px;
+}
+
+/* =========================================================================
+   DESKTOP TABLE (>= 1024px) - 100% UNTOUCHED
+   ========================================================================= */
+.desktopTableCard {
+  display: block;
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  overflow-x: auto;
+  box-shadow: var(--shadow-sm);
+}
+
+.desktopTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.desktopTh {
+  padding: 16px 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--green-900);
+  background-color: var(--bg-soft);
+  border-bottom: 1px solid var(--border);
+}
+
+.desktopThRight {
+  padding: 16px 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--green-900);
+  background-color: var(--bg-soft);
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+}
+
+.desktopTr {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.desktopTd {
+  padding: 16px 20px;
+}
+
+.mobileCardsStack {
+  display: none;
+}
+
+/* =========================================================================
+   MOBILE CARDS (< 1024px) - ZERO SIDE SCROLLING, BEAUTIFUL UI
+   ========================================================================= */
+@media (max-width: 1023.98px) {
+  .headerRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .headerRow button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .filterCard {
+    width: 100%;
+  }
+
+  .desktopTableCard {
+    display: none !important;
+  }
+
+  .mobileCardsStack {
+    display: flex !important;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .mobileJobCard {
+    background-color: var(--white);
+    border: 1px solid rgba(16, 64, 40, 0.08);
+    border-radius: 18px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 1px 2px rgba(16, 64, 40, 0.04), 0 6px 20px rgba(16, 64, 40, 0.05);
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .mobileCardHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .mobileTitleGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .mobileJobTitle {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--green-900);
+    text-decoration: none;
+    line-height: 1.25;
+  }
+
+  .mobileCompanyLine {
+    font-size: 13px;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobileMetaRow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 12px;
+    background-color: var(--bg-soft);
+    border-radius: 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .mobileDisciplineChip {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 11px;
+    background-color: var(--mint-100);
+    color: var(--green-800);
+  }
+
+  .mobileFeaturedBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    background: none;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    touch-action: manipulation;
+    background-color: var(--white);
+  }
+
+  .mobileFeaturedBtnActive {
+    border-color: #F2B84B;
+    background-color: #FEF8ED;
+    color: #B57F0E;
+  }
+
+  .mobileMetaItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .mobileActionsRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 4px;
+  }
+
+  .mobileStatusSelect {
+    flex: 1;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+    background-color: var(--white);
+    outline: none;
+  }
+
+  .mobileDeleteBtn {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid rgba(229, 88, 79, 0.25);
+    background-color: #FFF5F5;
+    color: var(--danger);
+    cursor: pointer;
+    touch-action: manipulation;
+    flex-shrink: 0;
+  }
+
+  .mobileEmptyState {
+    padding: 36px 16px;
+    text-align: center;
+    background-color: var(--white);
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+}

@@ -23,9 +23,11 @@ import {
 import MobileTopBar from '@/components/layout/mobile/MobileTopBar';
 import MobileTabBar from '@/components/layout/mobile/MobileTabBar';
 import AccountSheet from '@/components/layout/mobile/AccountSheet';
+import useMobileLayoutCheck from '@/hooks/useMobileLayoutCheck';
 import styles from './adminLayout.module.css';
 
 export default function AdminDashboardLayout({ children }) {
+  useMobileLayoutCheck();
   const pathname = usePathname();
   const router = useRouter();
   const { data: session } = useSession();

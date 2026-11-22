@@ -1,0 +1,422 @@
+/* ==========================================================================
+   VERDANT NATIVE APP INSTALL POPUP
+   Ultra-premium, attractive, unique & professional floating card anchored
+   in the bottom-right corner.
+   ========================================================================== */
+
+.promptWrapper {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  width: 100%;
+  max-width: 360px;
+  pointer-events: auto;
+  animation: slideUpEntrance 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUpEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.promptCard {
+  position: relative;
+  overflow: hidden;
+  background: #FFFFFF;
+  border: 1px solid rgba(15, 92, 51, 0.16);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 
+    0 4px 6px -1px rgba(11, 61, 36, 0.05),
+    0 16px 36px -4px rgba(11, 61, 36, 0.16),
+    0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+
+.promptCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 10px -1px rgba(11, 61, 36, 0.06),
+    0 20px 44px -4px rgba(11, 61, 36, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+}
+
+/* Jewel Emerald Accent Line */
+.topAccentBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #5CC689 0%, #1E9A56 50%, #0F5C33 100%);
+}
+
+/* Subtle corner leaf burst background glow */
+.cardGlowBg {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(92, 198, 137, 0.25) 0%, rgba(30, 154, 86, 0.05) 50%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Header Row */
+.headerRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.brandGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.appIconContainer {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2FB36A 0%, #0F5C33 100%);
+  box-shadow: 0 6px 18px rgba(15, 92, 51, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.appIconImg {
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.liveIndicatorPulse {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #2FB36A;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 0 8px rgba(47, 179, 106, 0.8);
+}
+
+.titleMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.titleText {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: #0B3D24;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.badgePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #167A44;
+}
+
+.badgeDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #1E9A56;
+}
+
+.closeBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: #8FAE9A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.closeBtn:hover {
+  background-color: rgba(15, 92, 51, 0.08);
+  color: #0B3D24;
+}
+
+/* Feature Highlights Bar */
+.featuresRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.featureTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background-color: #EEF7F1;
+  border: 1px solid rgba(15, 92, 51, 0.08);
+  font-size: 11px;
+  font-weight: 600;
+  color: #0F5C33;
+}
+
+.featureTag svg {
+  color: #1E9A56;
+}
+
+/* Action Buttons Row */
+.actionsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.dismissBtn {
+  background: none;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: #5E7A6B;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 12px;
+  touch-action: manipulation;
+  transition: all 0.2s ease;
+}
+
+.dismissBtn:hover {
+  color: #0B3D24;
+  background-color: rgba(15, 92, 51, 0.05);
+}
+
+.installPrimaryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1E9A56 0%, #0F5C33 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(30, 154, 86, 0.32);
+  touch-action: manipulation;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  flex: 1;
+  justify-content: center;
+}
+
+.installPrimaryBtn:hover {
+  background: linear-gradient(135deg, #2FB36A 0%, #167A44 100%);
+  box-shadow: 0 6px 20px rgba(30, 154, 86, 0.45);
+  transform: translateY(-1px);
+}
+
+.installPrimaryBtn:active {
+  transform: scale(0.97);
+}
+
+/* iOS Safari Modal Overlay */
+.iosModalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(11, 61, 36, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  animation: fadeIn 0.25s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.iosModalCard {
+  background: #FFFFFF;
+  border: 1px solid rgba(15, 92, 51, 0.12);
+  border-radius: 28px;
+  width: 100%;
+  max-width: 380px;
+  padding: 24px;
+  box-shadow: 0 24px 60px rgba(11, 61, 36, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  box-sizing: border-box;
+  animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes scaleUp {
+  from { transform: translateY(20px) scale(0.95); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.iosAppIcon {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #2FB36A 0%, #0F5C33 100%);
+  box-shadow: 0 8px 24px rgba(15, 92, 51, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.iosModalTitle {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 700;
+  color: #0B3D24;
+  margin: 0;
+}
+
+.iosModalSub {
+  font-size: 13px;
+  color: #5E7A6B;
+  margin: 4px 0 0 0;
+  line-height: 1.4;
+}
+
+.iosStepsList {
+  width: 100%;
+  background-color: #F7FBF8;
+  border: 1px solid #DCEBE1;
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.iosStepItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: #12372A;
+  line-height: 1.4;
+}
+
+.iosStepNumber {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #1E9A56;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iosStepText {
+  flex: 1;
+}
+
+.iosCloseBtn {
+  width: 100%;
+  height: 48px;
+  border-radius: 16px;
+  background-color: #1E9A56;
+  color: #FFFFFF;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(30, 154, 86, 0.25);
+  touch-action: manipulation;
+  transition: background-color 0.2s ease;
+}
+
+.iosCloseBtn:hover {
+  background-color: #167A44;
+}
+
+/* =========================================================================
+   RESPONSIVE ADJUSTMENTS FOR MOBILE VIEWPORTS (< 1024px)
+   Anchors in the bottom-right corner while respecting floating tab bars.
+   ========================================================================= */
+@media (max-width: 1023.98px) {
+  .promptWrapper {
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px) + 16px);
+    right: 16px;
+    max-width: calc(100vw - 32px);
+  }
+
+  .promptCard {
+    padding: 16px;
+    border-radius: 22px;
+    gap: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .promptWrapper {
+    bottom: 24px;
+    right: 24px;
+    max-width: 360px;
+  }
+}
