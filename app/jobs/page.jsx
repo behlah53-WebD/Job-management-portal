@@ -321,11 +321,14 @@ function JobsContent() {
 
       <div className={styles.mobileOnlyHeader}>
         {isSeeker ? (
-          <MobileTopBar
-            title="Find Jobs"
-            onOpenAccount={() => setAccountSheetOpen(true)}
-            hasSearch={true}
-          />
+          <>
+            <MobileTopBar
+              title="Find Jobs"
+              onOpenAccount={() => setAccountSheetOpen(true)}
+              hasSearch={true}
+            />
+            <div className={styles.mobileTopBarSpacer} aria-hidden="true" />
+          </>
         ) : (
           <Navbar />
         )}

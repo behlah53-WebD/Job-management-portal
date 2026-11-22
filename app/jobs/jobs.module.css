@@ -17,6 +17,10 @@
   display: none;
 }
 
+.mobileTopBarSpacer {
+  display: none;
+}
+
 .desktopLayout {
   display: block;
 }
@@ -484,6 +488,14 @@
 
   .mobileOnlyHeader {
     display: block !important;
+  }
+
+  .mobileTopBarSpacer {
+    display: block !important;
+    width: 100%;
+    height: calc(64px + env(safe-area-inset-top, 0px));
+    flex-shrink: 0;
+    pointer-events: none;
   }
 
   .desktopLayout {
