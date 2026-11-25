@@ -7,7 +7,8 @@ import ShowcasePanel from './ShowcasePanel';
 import SproutIllustration from './SproutIllustration';
 import styles from './AuthShell.module.css';
 
-export default function AuthShell({ children }) {
+export default function AuthShell({ children, mode = 'login' }) {
+  const isRegister = mode === 'register';
   return (
     <div className={styles.pageContainer}>
       {/* Background Soft Blobs */}
@@ -29,7 +30,9 @@ export default function AuthShell({ children }) {
 
           <div className={styles.mobileHeroBody}>
             <div className={styles.mobileHeroText}>
-              <span className={styles.mobileTagline}>WELCOME BACK</span>
+              <span className={styles.mobileTagline}>
+                {isRegister ? 'GET STARTED' : 'WELCOME BACK'}
+              </span>
               <h2 className={styles.mobileHeadline}>
                 Grow your craft with <span className={styles.mobileHighlight}>intention</span>.
               </h2>
@@ -45,11 +48,14 @@ export default function AuthShell({ children }) {
       <main className={styles.gridShell}>
         {/* DESKTOP/TABLET SHOWCASE PANEL */}
         <aside className={styles.showcaseSlot} aria-label="Verdant Highlights">
-          <ShowcasePanel />
+          <ShowcasePanel mode={mode} />
         </aside>
 
         {/* FORM SLOT */}
-        <section className={styles.formSlot} aria-label="Sign in credentials">
+        <section
+          className={styles.formSlot}
+          aria-label={isRegister ? 'Create an account' : 'Sign in credentials'}
+        >
           <div className={styles.formCenterWrapper}>
             {children}
           </div>

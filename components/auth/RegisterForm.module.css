@@ -1,0 +1,96 @@
+.roleToggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  background-color: var(--bg-soft, #EEF7F1);
+  border: 1px solid var(--border, #DCEBE1);
+  border-radius: 9999px;
+  padding: 4px;
+  margin-bottom: 20px;
+  animation: roleFadeUp 0.4s ease-out 0.22s both;
+}
+
+@keyframes roleFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.roleOption {
+  padding: 10px 14px;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted, #5E7A6B);
+  cursor: pointer;
+  min-height: 40px;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.roleOption:hover:not(.roleActive):not(:disabled) {
+  color: var(--green-800, #0F5C33);
+}
+
+.roleOption:focus-visible {
+  outline: 2px solid var(--green-500, #2FB36A);
+  outline-offset: 2px;
+}
+
+.roleOption:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.roleActive {
+  background: linear-gradient(135deg, #2FB36A 0%, #1E9A56 100%);
+  color: #FFFFFF;
+  box-shadow: 0 3px 10px rgba(30, 154, 86, 0.25);
+}
+
+.strengthMeter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.meterBars {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.meterBar {
+  height: 4px;
+  flex: 1;
+  border-radius: 2px;
+  transition: background-color 0.15s ease;
+}
+
+.strengthLabel {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (max-width: 360px) {
+  .roleOption {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roleToggle {
+    animation: none !important;
+  }
+}

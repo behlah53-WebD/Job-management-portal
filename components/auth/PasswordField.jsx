@@ -8,6 +8,7 @@ import styles from './PasswordField.module.css';
 export default function PasswordField({
   id = 'password',
   name = 'password',
+  label = 'Password',
   value,
   onChange,
   onBlur,
@@ -15,6 +16,8 @@ export default function PasswordField({
   disabled = false,
   required = true,
   placeholder = '••••••••',
+  showForgotPassword = true,
+  autoComplete = 'current-password',
 }) {
   const [showPassword, setShowPassword] = useState(false);
   const [capsLockActive, setCapsLockActive] = useState(false);
@@ -37,17 +40,19 @@ export default function PasswordField({
     <div className={styles.fieldWrapper}>
       <div className={styles.labelRow}>
         <label htmlFor={id} className={styles.label}>
-          Password {required && <span className={styles.requiredStar}>*</span>}
+          {label} {required && <span className={styles.requiredStar}>*</span>}
         </label>
-        <button
-          suppressHydrationWarning
-          type="button"
-          onClick={handleForgotPassword}
-          className={styles.forgotLink}
-          tabIndex={0}
-        >
-          Forgot password?
-        </button>
+        {showForgotPassword && (
+          <button
+            suppressHydrationWarning
+            type="button"
+            onClick={handleForgotPassword}
+            className={styles.forgotLink}
+            tabIndex={0}
+          >
+            Forgot password?
+          </button>
+        )}
       </div>
 
       <div
@@ -76,7 +81,7 @@ export default function PasswordField({
           placeholder={placeholder}
           disabled={disabled}
           required={required}
-          autoComplete="current-password"
+          autoComplete={autoComplete}
           className={styles.nativeInput}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${id}-error` : undefined}

@@ -31,7 +31,8 @@ const QUOTES = [
   },
 ];
 
-export default function ShowcasePanel() {
+export default function ShowcasePanel({ mode = 'login' }) {
+  const isRegister = mode === 'register';
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timeoutRef = useRef(null);
@@ -100,8 +101,8 @@ export default function ShowcasePanel() {
             </div>
           </Link>
 
-          <Link href="/register" className={styles.glassRegisterPill}>
-            <span>New here? Create account</span>
+          <Link href={isRegister ? '/login' : '/register'} className={styles.glassRegisterPill}>
+            <span>{isRegister ? 'Already a member? Sign in' : 'New here? Create account'}</span>
             <ArrowRight size={13} className={styles.pillArrow} />
           </Link>
         </div>

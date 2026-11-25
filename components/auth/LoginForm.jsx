@@ -8,14 +8,15 @@ import {
   Mail,
   ArrowRight,
   Sparkles,
-  CheckCircle2,
   AlertCircle,
   Check,
   RotateCw,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import AuthInputField from './AuthInputField';
 import PasswordField from './PasswordField';
 import DemoAccounts from './DemoAccounts';
+import authStyles from './AuthForm.module.css';
 import styles from './LoginForm.module.css';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -194,28 +195,28 @@ export default function LoginForm() {
   };
 
   return (
-    <div className={styles.formContainer}>
+    <div className={authStyles.formContainer}>
       {/* 1. Lime-tinted Eyebrow Pill */}
-      <div className={styles.eyebrowPill}>
-        <Sparkles size={13} className={styles.eyebrowIcon} />
+      <div className={authStyles.eyebrowPill}>
+        <Sparkles size={13} className={authStyles.eyebrowIcon} />
         <span>WELCOME BACK</span>
       </div>
 
       {/* 2. Main Title */}
-      <h1 className={styles.title}>
-        Sign in to Verdant <span className={styles.titleEmoji} aria-hidden="true">🌿</span>
+      <h1 className={authStyles.title}>
+        Sign in to Verdant <span className={authStyles.titleEmoji} aria-hidden="true">🌿</span>
       </h1>
 
       {/* 3. Subtitle */}
-      <p className={styles.subtitle}>
+      <p className={authStyles.subtitle}>
         Sign in to manage your applications or your candidate pipeline.
       </p>
 
       {/* Error Alert Banner */}
       {authError && (
-        <div className={styles.errorAlertBanner} role="alert" aria-live="assertive">
-          <AlertCircle size={18} className={styles.errorIcon} />
-          <span className={styles.errorText}>{authError}</span>
+        <div className={authStyles.errorAlertBanner} role="alert" aria-live="assertive">
+          <AlertCircle size={18} className={authStyles.errorIcon} />
+          <span className={authStyles.errorText}>{authError}</span>
         </div>
       )}
 
@@ -223,62 +224,34 @@ export default function LoginForm() {
       <form
         onSubmit={handleSubmit}
         noValidate
-        className={`${styles.form} ${hasShaken ? styles.shakeForm : ''}`}
+        className={`${authStyles.form} ${hasShaken ? authStyles.shakeForm : ''}`}
       >
         {/* Email Field */}
-        <div className={styles.fieldGroup}>
-          <label htmlFor="login-email" className={styles.fieldLabel}>
-            Work or personal email <span className={styles.requiredStar}>*</span>
-          </label>
-
-          <div
-            className={`${styles.inputBox} ${emailError ? styles.boxError : ''} ${
-              pulseHighlight ? styles.boxPulse : ''
-            }`}
-          >
-            <span className={styles.inputLeftIcon} aria-hidden="true">
-              <Mail size={20} />
-            </span>
-
-            <input
-              ref={emailInputRef}
-              id="login-email"
-              type="email"
-              name="email"
-              value={email}
-              onChange={handleEmailChange}
-              onBlur={handleEmailBlur}
-              placeholder="name@company.com"
-              autoComplete="username"
-              inputMode="email"
-              autoCapitalize="none"
-              spellCheck={false}
-              disabled={status === 'loading' || status === 'success'}
-              required
-              className={styles.nativeInput}
-              aria-invalid={Boolean(emailError)}
-              aria-describedby={emailError ? 'login-email-error' : undefined}
-              suppressHydrationWarning
-            />
-
-            {/* Valid Check Icon */}
-            {isEmailValid && !emailError && (
-              <span className={styles.validCheckIcon} aria-hidden="true">
-                <CheckCircle2 size={18} />
-              </span>
-            )}
-          </div>
-
-          {emailError && (
-            <p id="login-email-error" className={styles.fieldErrorMessage} role="alert">
-              {emailError}
-            </p>
-          )}
-        </div>
+        <AuthInputField
+          id="login-email"
+          name="email"
+          label="Work or personal email"
+          type="email"
+          icon={Mail}
+          inputRef={emailInputRef}
+          value={email}
+          onChange={handleEmailChange}
+          onBlur={handleEmailBlur}
+          placeholder="name@company.com"
+          autoComplete="username"
+          inputMode="email"
+          autoCapitalize="none"
+          spellCheck={false}
+          disabled={status === 'loading' || status === 'success'}
+          required
+          error={emailError}
+          isValid={isEmailValid}
+          pulseHighlight={pulseHighlight}
+        />
 
         {/* Password Field */}
-        <div className={styles.fieldGroup}>
-          <div className={pulseHighlight ? styles.boxPulse : ''}>
+        <div className={authStyles.fieldGroup}>
+          <div className={pulseHighlight ? authStyles.boxPulse : ''}>
             <PasswordField
               id="login-password"
               name="password"
@@ -315,28 +288,28 @@ export default function LoginForm() {
           type="submit"
           disabled={status === 'loading' || status === 'success'}
           aria-busy={status === 'loading'}
-          className={`${styles.submitBtn} ${status === 'success' ? styles.submitSuccess : ''}`}
+          className={`${authStyles.submitBtn} ${status === 'success' ? authStyles.submitSuccess : ''}`}
         >
-          <span className={styles.shimmerEffect} aria-hidden="true" />
+          <span className={authStyles.shimmerEffect} aria-hidden="true" />
 
           {status === 'loading' && (
-            <span className={styles.btnContent}>
-              <RotateCw size={18} className={styles.spinner} />
+            <span className={authStyles.btnContent}>
+              <RotateCw size={18} className={authStyles.spinner} />
               <span>Signing you in...</span>
             </span>
           )}
 
           {status === 'success' && (
-            <span className={styles.btnContent}>
-              <Check size={20} className={styles.successCheck} />
+            <span className={authStyles.btnContent}>
+              <Check size={20} className={authStyles.successCheck} />
               <span>Welcome back!</span>
             </span>
           )}
 
           {status !== 'loading' && status !== 'success' && (
-            <span className={styles.btnContent}>
+            <span className={authStyles.btnContent}>
               <span>Sign in to Verdant</span>
-              <ArrowRight size={18} className={styles.submitArrow} />
+              <ArrowRight size={18} className={authStyles.submitArrow} />
             </span>
           )}
         </button>
@@ -346,22 +319,22 @@ export default function LoginForm() {
       <DemoAccounts onSelectAccount={handleSelectDemo} />
 
       {/* 6. Footer Links */}
-      <div className={styles.formFooter}>
-        <p className={styles.registerPrompt}>
+      <div className={authStyles.formFooter}>
+        <p className={authStyles.registerPrompt}>
           New to Verdant?{' '}
-          <Link href="/register" className={styles.registerLink}>
+          <Link href="/register" className={authStyles.registerLink}>
             <span>Create an account</span>
-            <ArrowRight size={14} className={styles.registerArrow} />
+            <ArrowRight size={14} className={authStyles.registerArrow} />
           </Link>
         </p>
 
-        <p className={styles.legalNotice}>
+        <p className={authStyles.legalNotice}>
           By continuing you agree to our{' '}
-          <Link href="/terms" className={styles.legalLink}>
+          <Link href="/terms" className={authStyles.legalLink}>
             Terms
           </Link>{' '}
           and{' '}
-          <Link href="/privacy" className={styles.legalLink}>
+          <Link href="/privacy" className={authStyles.legalLink}>
             Privacy Policy
           </Link>
           .
